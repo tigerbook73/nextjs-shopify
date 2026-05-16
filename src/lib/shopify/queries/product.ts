@@ -1,4 +1,4 @@
-const PRODUCT_CARD_FRAGMENT = `
+const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
   fragment ProductCard on Product {
     id
     title
@@ -16,7 +16,7 @@ const PRODUCT_CARD_FRAGMENT = `
   }
 `;
 
-export const GET_PRODUCTS_QUERY = `
+export const GET_PRODUCTS_QUERY = /* GraphQL */ `
   query GetProducts($first: Int!) {
     products(first: $first) {
       nodes {
@@ -27,7 +27,7 @@ export const GET_PRODUCTS_QUERY = `
   ${PRODUCT_CARD_FRAGMENT}
 `;
 
-export const GET_PRODUCT_BY_HANDLE_QUERY = `
+export const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
   query GetProductByHandle($handle: String!) {
     product(handle: $handle) {
       id

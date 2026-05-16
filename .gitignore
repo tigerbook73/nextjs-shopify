@@ -30,3 +30,6 @@ pnpm-debug.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# GraphQL schema（运行 pnpm schema:fetch 生成，不提交）
+schema.graphql

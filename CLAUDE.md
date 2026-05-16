@@ -7,7 +7,7 @@
 
 ## 当前开发阶段
 
-**Phase 0（基础搭建）已完成 → Phase 1（商品浏览）即将开始**
+**Phase 1（商品浏览）已完成 → Phase 2（Collection 导航与 SEO）即将开始**
 
 完整阶段规划见 `BLUEPRINT.md`。开始某个 Phase 前，先确认当前阶段状态。
 

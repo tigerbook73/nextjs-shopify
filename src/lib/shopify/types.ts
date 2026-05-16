@@ -18,6 +18,31 @@ export interface Product {
   featuredImage: ProductImage | null
 }
 
+interface SelectedOption {
+  name: string
+  value: string
+}
+
+export interface ProductVariant {
+  id: string
+  title: string
+  availableForSale: boolean
+  selectedOptions: SelectedOption[]
+  price: MoneyV2
+  compareAtPrice: MoneyV2 | null
+}
+
+export interface ProductDetail extends Product {
+  description: string
+  descriptionHtml: string
+  images: { nodes: ProductImage[] }
+  variants: { nodes: ProductVariant[] }
+  options: {
+    name: string
+    values: string[]
+  }[]
+}
+
 export interface Collection {
   id: string
   title: string

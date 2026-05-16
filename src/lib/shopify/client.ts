@@ -1,8 +1,32 @@
+import type { Product, ProductDetail } from './types'
+import {
+  GET_PRODUCTS_QUERY,
+  GET_PRODUCT_BY_HANDLE_QUERY,
+} from './queries/product'
+
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN!
 const SHOPIFY_STOREFRONT_ACCESS_TOKEN =
   process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!
 
 const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/2024-10/graphql.json`
+
+export async function getProducts(first = 20): Promise<Product[]> {
+  const data = await shopifyFetch<{ products: { nodes: Product[] } }>({
+    query: GET_PRODUCTS_QUERY,
+    variables: { first },
+  })
+  return data.products.nodes
+}
+
+export async function getProductByHandle(
+  handle: string,
+): Promise<ProductDetail | null> {
+  const data = await shopifyFetch<{ product: ProductDetail | null }>({
+    query: GET_PRODUCT_BY_HANDLE_QUERY,
+    variables: { handle },
+  })
+  return data.product
+}
 
 export async function shopifyFetch<T>({
   query,

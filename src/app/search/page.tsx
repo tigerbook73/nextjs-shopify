@@ -1,21 +1,21 @@
-import { Suspense } from 'react'
-import type { Metadata } from 'next'
-import SearchResults from '@/components/search/SearchResults'
-import SearchResultsSkeleton from '@/components/search/SearchResultsSkeleton'
-import SearchBox from '@/components/search/SearchBox'
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import SearchResults from "@/components/search/SearchResults";
+import SearchResultsSkeleton from "@/components/search/SearchResultsSkeleton";
+import SearchBox from "@/components/search/SearchBox";
 
-type Props = { searchParams: Promise<{ q?: string }> }
+type Props = { searchParams: Promise<{ q?: string }> };
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const { q } = await searchParams
+  const { q } = await searchParams;
   return {
-    title: q ? `Search: ${q}` : 'Search',
-  }
+    title: q ? `Search: ${q}` : "Search",
+  };
 }
 
 export default async function SearchPage({ searchParams }: Props) {
-  const { q } = await searchParams
-  const query = q?.trim() ?? ''
+  const { q } = await searchParams;
+  const query = q?.trim() ?? "";
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -33,5 +33,5 @@ export default async function SearchPage({ searchParams }: Props) {
         <p className="text-gray-500">Enter a keyword above to search products and collections.</p>
       )}
     </main>
-  )
+  );
 }

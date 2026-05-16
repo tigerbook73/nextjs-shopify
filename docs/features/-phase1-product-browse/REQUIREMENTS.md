@@ -37,24 +37,24 @@
 
 ## 业务规则
 
-| 规则 | 说明 |
-|------|------|
-| BR-1 | 商品列表每页最多加载 20 条，Phase 1 不实现分页 UI（列表固定 first: 20） |
-| BR-2 | Variant 选择为纯 UI 交互，不实现加入购物车（Phase 4 负责） |
-| BR-3 | 商品主图使用 `next/image`，必须配置 `remotePatterns` 允许 Shopify CDN 域名 |
-| BR-4 | `generateStaticParams` 只预生成前 20 个商品的 handle，冷门商品走 ISR |
+| 规则 | 说明                                                                                 |
+| ---- | ------------------------------------------------------------------------------------ |
+| BR-1 | 商品列表每页最多加载 20 条，Phase 1 不实现分页 UI（列表固定 first: 20）              |
+| BR-2 | Variant 选择为纯 UI 交互，不实现加入购物车（Phase 4 负责）                           |
+| BR-3 | 商品主图使用 `next/image`，必须配置 `remotePatterns` 允许 Shopify CDN 域名           |
+| BR-4 | `generateStaticParams` 只预生成前 20 个商品的 handle，冷门商品走 ISR                 |
 | BR-5 | 商品描述字段（`descriptionHtml`）若含 HTML 标签，使用 `dangerouslySetInnerHTML` 渲染 |
 
 ---
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 |
-|----|------|---------|
-| AC-1 | `/products` 展示商品卡片网格，每张卡片含图片、名称、价格 | 浏览器访问 |
-| AC-2 | 点击商品卡片可导航至 `/products/[handle]` | 浏览器点击验证 |
-| AC-3 | 详情页展示商品主图、标题、价格 | 浏览器访问 |
-| AC-4 | 有 Variant 的商品详情页显示选择器，选择后价格更新 | 浏览器交互验证 |
-| AC-5 | 访问不存在 handle 返回 404 | 浏览器访问无效 URL |
-| AC-6 | `pnpm build` 成功，`generateStaticParams` 预生成商品路由可见于构建输出 | 构建日志 |
-| AC-7 | `pnpm lint` + `pnpm typecheck` 通过 | 终端无错误 |
+| ID   | 标准                                                                   | 验证方式           |
+| ---- | ---------------------------------------------------------------------- | ------------------ |
+| AC-1 | `/products` 展示商品卡片网格，每张卡片含图片、名称、价格               | 浏览器访问         |
+| AC-2 | 点击商品卡片可导航至 `/products/[handle]`                              | 浏览器点击验证     |
+| AC-3 | 详情页展示商品主图、标题、价格                                         | 浏览器访问         |
+| AC-4 | 有 Variant 的商品详情页显示选择器，选择后价格更新                      | 浏览器交互验证     |
+| AC-5 | 访问不存在 handle 返回 404                                             | 浏览器访问无效 URL |
+| AC-6 | `pnpm build` 成功，`generateStaticParams` 预生成商品路由可见于构建输出 | 构建日志           |
+| AC-7 | `pnpm lint` + `pnpm typecheck` 通过                                    | 终端无错误         |

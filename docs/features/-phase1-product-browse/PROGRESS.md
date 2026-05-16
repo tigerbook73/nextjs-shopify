@@ -29,15 +29,15 @@
 
 ## 验收标准完成情况
 
-| ID | 标准 | 状态 |
-|----|------|------|
-| AC-1 | `/products` 展示商品卡片网格 | ✅ |
-| AC-2 | 商品卡片可导航至详情页 | ✅ |
-| AC-3 | 详情页展示主图、标题、价格 | ✅ |
-| AC-4 | Variant 选择器切换后价格更新 | ✅ |
-| AC-5 | 无效 handle 返回 404 | ✅ |
-| AC-6 | `pnpm build` 预生成商品路由 | ✅ |
-| AC-7 | lint + typecheck 通过 | ✅ |
+| ID   | 标准                         | 状态 |
+| ---- | ---------------------------- | ---- |
+| AC-1 | `/products` 展示商品卡片网格 | ✅   |
+| AC-2 | 商品卡片可导航至详情页       | ✅   |
+| AC-3 | 详情页展示主图、标题、价格   | ✅   |
+| AC-4 | Variant 选择器切换后价格更新 | ✅   |
+| AC-5 | 无效 handle 返回 404         | ✅   |
+| AC-6 | `pnpm build` 预生成商品路由  | ✅   |
+| AC-7 | lint + typecheck 通过        | ✅   |
 
 ---
 
@@ -50,6 +50,7 @@
 ## 下一步入口
 
 Phase 2 — Collection 导航与 SEO：
+
 - `/collections` 系列列表页
 - `/collections/[handle]` 系列商品页（分页）
 - 全站 `generateMetadata`

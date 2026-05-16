@@ -5,4 +5,4 @@ export const GET_SHOP_QUERY = /* GraphQL */ `
       description
     }
   }
-`
+`;

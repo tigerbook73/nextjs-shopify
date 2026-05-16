@@ -2,15 +2,15 @@
 
 ## 技术栈（固定，不得随意替换）
 
-| 层次 | 技术 | 说明 |
-| ---- | ---- | ---- |
-| 框架 | Next.js 16 App Router + TypeScript 5 | 使用 `src/` 目录结构 |
-| 样式 | Tailwind CSS v4 + shadcn/ui（@base-ui/react） | UI Token 在 `globals.css`，不新增 `tailwind.config.ts` 用于 token |
-| Shopify | Storefront API（GraphQL） | 只用 Storefront API，不用 Admin API |
-| 数据获取 | 原生 `fetch` + 手写 GraphQL query | 不引入 Apollo、urql、graphql-request |
-| 状态管理 | 无客户端状态库 | Cart 和账户状态通过 Cookie + Server Actions 管理 |
-| Checkout | 跳转 Shopify 原生结账页 | 不自建 Checkout UI |
-| 包管理器 | pnpm | 不混用 npm / yarn |
+| 层次     | 技术                                          | 说明                                                              |
+| -------- | --------------------------------------------- | ----------------------------------------------------------------- |
+| 框架     | Next.js 16 App Router + TypeScript 5          | 使用 `src/` 目录结构                                              |
+| 样式     | Tailwind CSS v4 + shadcn/ui（@base-ui/react） | UI Token 在 `globals.css`，不新增 `tailwind.config.ts` 用于 token |
+| Shopify  | Storefront API（GraphQL）                     | 只用 Storefront API，不用 Admin API                               |
+| 数据获取 | 原生 `fetch` + 手写 GraphQL query             | 不引入 Apollo、urql、graphql-request                              |
+| 状态管理 | 无客户端状态库                                | Cart 和账户状态通过 Cookie + Server Actions 管理                  |
+| Checkout | 跳转 Shopify 原生结账页                       | 不自建 Checkout UI                                                |
+| 包管理器 | pnpm                                          | 不混用 npm / yarn                                                 |
 
 决策背景见 `../adr/`。
 
@@ -45,15 +45,15 @@ src/types/                  ← 应用内部 TypeScript 类型（非 Shopify 原
 
 ## 明确禁止事项
 
-| 禁止 | 原因 |
-| ---- | ---- |
-| 引入 Apollo Client / urql / graphql-request | ADR-0002：原生 fetch 更轻量、更直观 |
-| 引入 Zustand / Redux / Jotai 等客户端状态库 | ADR-0006：Cookie + Server Actions 已覆盖所有状态需求 |
-| 调用 Shopify Admin API | Admin API 需要私密凭证，面向后台管理，非前端场景 |
-| 自建 Checkout UI | ADR-0003：成本极高，Shopify 原生 Checkout 已覆盖所有复杂逻辑 |
-| 在 Client Component 中直接调用 Shopify API | 会将 Storefront Access Token 暴露到客户端 |
-| 在 `app/` 页面文件中写业务逻辑 | 违反分层规则，导致页面难以测试和维护 |
-| 使用 `any` 类型 | 见 `coding.md` |
+| 禁止                                        | 原因                                                         |
+| ------------------------------------------- | ------------------------------------------------------------ |
+| 引入 Apollo Client / urql / graphql-request | ADR-0002：原生 fetch 更轻量、更直观                          |
+| 引入 Zustand / Redux / Jotai 等客户端状态库 | ADR-0006：Cookie + Server Actions 已覆盖所有状态需求         |
+| 调用 Shopify Admin API                      | Admin API 需要私密凭证，面向后台管理，非前端场景             |
+| 自建 Checkout UI                            | ADR-0003：成本极高，Shopify 原生 Checkout 已覆盖所有复杂逻辑 |
+| 在 Client Component 中直接调用 Shopify API  | 会将 Storefront Access Token 暴露到客户端                    |
+| 在 `app/` 页面文件中写业务逻辑              | 违反分层规则，导致页面难以测试和维护                         |
+| 使用 `any` 类型                             | 见 `coding.md`                                               |
 
 ## 引入新依赖的规则
 

@@ -69,7 +69,7 @@ export async function searchProducts(query: string, first = 20): Promise<SearchR
   const data = await shopifyFetch<{ search: SearchResult }>({
     query: SEARCH_QUERY,
     variables: { query, first },
-    cache: 'no-store',
+    cache: "no-store",
   });
   return data.search;
 }

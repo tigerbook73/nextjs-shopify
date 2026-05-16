@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-export default function SearchBox({ defaultValue = '' }: { defaultValue?: string }) {
+export default function SearchBox({ defaultValue = "" }: { defaultValue?: string }) {
   return (
     <form method="get" action="/search" className="flex w-full max-w-sm items-center gap-2">
       <input
@@ -8,7 +8,7 @@ export default function SearchBox({ defaultValue = '' }: { defaultValue?: string
         name="q"
         defaultValue={defaultValue}
         placeholder="Search products..."
-        className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+        className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:ring-2 focus:ring-gray-900 focus:outline-none"
       />
       <button
         type="submit"
@@ -17,5 +17,5 @@ export default function SearchBox({ defaultValue = '' }: { defaultValue?: string
         Search
       </button>
     </form>
-  )
+  );
 }

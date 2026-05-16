@@ -28,29 +28,29 @@ src/
 
 ```typescript
 interface SelectedOption {
-  name: string
-  value: string
+  name: string;
+  value: string;
 }
 
 export interface ProductVariant {
-  id: string
-  title: string
-  availableForSale: boolean
-  selectedOptions: SelectedOption[]
-  price: MoneyV2
-  compareAtPrice: MoneyV2 | null
+  id: string;
+  title: string;
+  availableForSale: boolean;
+  selectedOptions: SelectedOption[];
+  price: MoneyV2;
+  compareAtPrice: MoneyV2 | null;
 }
 
 // 商品详情页专用，扩展 Product
 export interface ProductDetail extends Product {
-  description: string
-  descriptionHtml: string
-  images: { nodes: ProductImage[] }
-  variants: { nodes: ProductVariant[] }
+  description: string;
+  descriptionHtml: string;
+  images: { nodes: ProductImage[] };
+  variants: { nodes: ProductVariant[] };
   options: {
-    name: string
-    values: string[]
-  }[]
+    name: string;
+    values: string[];
+  }[];
 }
 ```
 
@@ -75,19 +75,34 @@ query GetProductByHandle($handle: String!) {
     description
     descriptionHtml
     priceRange {
-      minVariantPrice { amount currencyCode }
+      minVariantPrice {
+        amount
+        currencyCode
+      }
     }
     images(first: 5) {
-      nodes { url altText }
+      nodes {
+        url
+        altText
+      }
     }
     variants(first: 100) {
       nodes {
         id
         title
         availableForSale
-        selectedOptions { name value }
-        price { amount currencyCode }
-        compareAtPrice { amount currencyCode }
+        selectedOptions {
+          name
+          value
+        }
+        price {
+          amount
+          currencyCode
+        }
+        compareAtPrice {
+          amount
+          currencyCode
+        }
       }
     }
     options {
@@ -106,13 +121,13 @@ query GetProductByHandle($handle: String!) {
 
 ```typescript
 // src/lib/shopify/client.ts 中新增
-export async function getProducts(first = 20): Promise<Product[]>
+export async function getProducts(first = 20): Promise<Product[]>;
 ```
 
 ### `getProductByHandle()` — 新增
 
 ```typescript
-export async function getProductByHandle(handle: string): Promise<ProductDetail | null>
+export async function getProductByHandle(handle: string): Promise<ProductDetail | null>;
 ```
 
 返回 `null` 时，调用方执行 `notFound()`。
@@ -141,8 +156,8 @@ export async function getProductByHandle(handle: string): Promise<ProductDetail 
 
 ```typescript
 interface VariantSelectorProps {
-  options: { name: string; values: string[] }[]
-  variants: ProductVariant[]
+  options: { name: string; values: string[] }[];
+  variants: ProductVariant[];
 }
 ```
 
@@ -169,26 +184,26 @@ images: {
 
 ## 实施阶段
 
-| 阶段 | 内容 | 关键文件 |
-|------|------|---------|
-| 1 | 扩展类型定义 | `src/lib/shopify/types.ts` |
-| 2 | 新增 GraphQL 查询 + API 函数 | `src/lib/shopify/queries/product.ts`, `src/lib/shopify/client.ts` |
-| 3 | 配置 next.config.ts（图片域名） | `next.config.ts` |
-| 4 | 实现 `ProductCard` 组件 | `src/components/product/ProductCard.tsx` |
-| 5 | 实现 `/products` 列表页 | `src/app/products/page.tsx` |
-| 6 | 实现 `VariantSelector` 组件 | `src/components/product/VariantSelector.tsx` |
-| 7 | 实现 `/products/[handle]` 详情页 | `src/app/products/[handle]/page.tsx` |
-| 8 | 验收：lint + typecheck + build + 浏览器测试 | — |
+| 阶段 | 内容                                        | 关键文件                                                          |
+| ---- | ------------------------------------------- | ----------------------------------------------------------------- |
+| 1    | 扩展类型定义                                | `src/lib/shopify/types.ts`                                        |
+| 2    | 新增 GraphQL 查询 + API 函数                | `src/lib/shopify/queries/product.ts`, `src/lib/shopify/client.ts` |
+| 3    | 配置 next.config.ts（图片域名）             | `next.config.ts`                                                  |
+| 4    | 实现 `ProductCard` 组件                     | `src/components/product/ProductCard.tsx`                          |
+| 5    | 实现 `/products` 列表页                     | `src/app/products/page.tsx`                                       |
+| 6    | 实现 `VariantSelector` 组件                 | `src/components/product/VariantSelector.tsx`                      |
+| 7    | 实现 `/products/[handle]` 详情页            | `src/app/products/[handle]/page.tsx`                              |
+| 8    | 验收：lint + typecheck + build + 浏览器测试 | —                                                                 |
 
 ---
 
 ## 测试计划
 
-| 测试项 | 方式 |
-|--------|------|
-| 商品列表渲染 | 浏览器访问 `/products`，确认网格布局与真实数据 |
-| 商品详情渲染 | 访问已知商品 handle，确认图片、标题、价格正确 |
-| Variant 切换 | 选择不同 Variant，确认价格更新 |
-| 404 场景 | 访问 `/products/invalid-handle-xyz`，确认返回 404 |
-| 静态生成 | `pnpm build` 后检查构建输出中商品路由标记为 `○`（Static） |
-| 类型与 lint | `pnpm typecheck` + `pnpm lint` 无错误 |
+| 测试项       | 方式                                                      |
+| ------------ | --------------------------------------------------------- |
+| 商品列表渲染 | 浏览器访问 `/products`，确认网格布局与真实数据            |
+| 商品详情渲染 | 访问已知商品 handle，确认图片、标题、价格正确             |
+| Variant 切换 | 选择不同 Variant，确认价格更新                            |
+| 404 场景     | 访问 `/products/invalid-handle-xyz`，确认返回 404         |
+| 静态生成     | `pnpm build` 后检查构建输出中商品路由标记为 `○`（Static） |
+| 类型与 lint  | `pnpm typecheck` + `pnpm lint` 无错误                     |

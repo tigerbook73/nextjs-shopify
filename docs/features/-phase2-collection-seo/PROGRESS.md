@@ -28,18 +28,18 @@
 
 ## 验收标准完成情况
 
-| ID | 标准 | 状态 |
-|----|------|------|
-| AC-1 | `/collections` 展示系列卡片网格 | ⏳ |
-| AC-2 | 系列卡片点击跳转详情 | ⏳ |
-| AC-3 | `/collections/[handle]` 展示系列商品 | ⏳ |
-| AC-4 | cursor 分页，URL 追加 after 参数 | ⏳ |
-| AC-5 | 无效 handle 返回 404 | ⏳ |
-| AC-6 | `<title>` 格式为 `页面 \| 店铺名` | ⏳ |
-| AC-7 | 商品详情页 og:image 标签 | ⏳ |
-| AC-8 | `/sitemap.xml` 返回合法 XML | ⏳ |
-| AC-9 | `pnpm build` 预生成路由 | ⏳ |
-| AC-10 | lint + typecheck 通过 | ⏳ |
+| ID    | 标准                                 | 状态 |
+| ----- | ------------------------------------ | ---- |
+| AC-1  | `/collections` 展示系列卡片网格      | ⏳   |
+| AC-2  | 系列卡片点击跳转详情                 | ⏳   |
+| AC-3  | `/collections/[handle]` 展示系列商品 | ⏳   |
+| AC-4  | cursor 分页，URL 追加 after 参数     | ⏳   |
+| AC-5  | 无效 handle 返回 404                 | ⏳   |
+| AC-6  | `<title>` 格式为 `页面 \| 店铺名`    | ⏳   |
+| AC-7  | 商品详情页 og:image 标签             | ⏳   |
+| AC-8  | `/sitemap.xml` 返回合法 XML          | ⏳   |
+| AC-9  | `pnpm build` 预生成路由              | ⏳   |
+| AC-10 | lint + typecheck 通过                | ⏳   |
 
 ---
 

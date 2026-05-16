@@ -1,4 +1,4 @@
-import { PRODUCT_CARD_FRAGMENT } from './product'
+import { PRODUCT_CARD_FRAGMENT } from "./product";
 
 export const SEARCH_QUERY = /* GraphQL */ `
   query Search($query: String!, $first: Int!) {
@@ -13,4 +13,4 @@ export const SEARCH_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
-`
+`;

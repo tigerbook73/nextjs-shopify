@@ -14,13 +14,13 @@
 
 ## 命名约定
 
-| 场景 | 格式 | 示例 |
-|------|------|------|
-| React 组件 | PascalCase | `ProductCard` |
-| 普通函数 / 变量 | camelCase | `getProductByHandle` |
-| 文件名 | kebab-case | `product-card.tsx` |
-| 常量 | SCREAMING_SNAKE_CASE | `MAX_PRODUCTS_PER_PAGE` |
-| GraphQL Fragment | `<Type>Fragment` | `ProductCardFragment` |
+| 场景             | 格式                 | 示例                    |
+| ---------------- | -------------------- | ----------------------- |
+| React 组件       | PascalCase           | `ProductCard`           |
+| 普通函数 / 变量  | camelCase            | `getProductByHandle`    |
+| 文件名           | kebab-case           | `product-card.tsx`      |
+| 常量             | SCREAMING_SNAKE_CASE | `MAX_PRODUCTS_PER_PAGE` |
+| GraphQL Fragment | `<Type>Fragment`     | `ProductCardFragment`   |
 
 ## 注释规则
 

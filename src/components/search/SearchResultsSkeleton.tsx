@@ -11,5 +11,5 @@ export default function SearchResultsSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }

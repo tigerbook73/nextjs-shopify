@@ -25,15 +25,15 @@ const getProduct = async (handle: any) => { ... }
 
 ## 命名约定
 
-| 场景 | 格式 | 示例 |
-| ---- | ---- | ---- |
-| React 组件（文件 + 函数） | PascalCase | `ProductCard.tsx` / `function ProductCard` |
-| 普通函数、变量、参数 | camelCase | `getProductByHandle`, `cartLineId` |
-| 文件名（非组件） | kebab-case | `format-price.ts`, `parse-gid.ts` |
-| 常量（模块级固定值） | SCREAMING_SNAKE_CASE | `MAX_PRODUCTS_PER_PAGE` |
-| GraphQL Fragment 常量 | `<TYPE>_<CONTEXT>_FRAGMENT` | `PRODUCT_CARD_FRAGMENT` |
-| GraphQL Query 常量 | `GET_<RESOURCE>_QUERY` | `GET_PRODUCT_QUERY` |
-| GraphQL Mutation 常量 | `<ACTION>_<RESOURCE>_MUTATION` | `CART_CREATE_MUTATION` |
+| 场景                      | 格式                           | 示例                                       |
+| ------------------------- | ------------------------------ | ------------------------------------------ |
+| React 组件（文件 + 函数） | PascalCase                     | `ProductCard.tsx` / `function ProductCard` |
+| 普通函数、变量、参数      | camelCase                      | `getProductByHandle`, `cartLineId`         |
+| 文件名（非组件）          | kebab-case                     | `format-price.ts`, `parse-gid.ts`          |
+| 常量（模块级固定值）      | SCREAMING_SNAKE_CASE           | `MAX_PRODUCTS_PER_PAGE`                    |
+| GraphQL Fragment 常量     | `<TYPE>_<CONTEXT>_FRAGMENT`    | `PRODUCT_CARD_FRAGMENT`                    |
+| GraphQL Query 常量        | `GET_<RESOURCE>_QUERY`         | `GET_PRODUCT_QUERY`                        |
+| GraphQL Mutation 常量     | `<ACTION>_<RESOURCE>_MUTATION` | `CART_CREATE_MUTATION`                     |
 
 ## 注释规则
 
@@ -50,6 +50,7 @@ const getProduct = async (handle: any) => { ... }
 **默认写 Server Component**（不加 `'use client'`）。
 
 只在以下情况加 `'use client'`：
+
 - 使用 `useState` / `useReducer` / `useEffect`
 - 使用浏览器 API（`window`、`document`、`localStorage` 等）
 - 注册事件监听器
@@ -85,12 +86,12 @@ refactor(client): extract getCollectionHandles function
 
 常用 type：
 
-| type | 用途 |
-| ---- | ---- |
-| `feat` | 新功能 |
-| `fix` | Bug 修复 |
+| type       | 用途             |
+| ---------- | ---------------- |
+| `feat`     | 新功能           |
+| `fix`      | Bug 修复         |
 | `refactor` | 重构（不改行为） |
-| `chore` | 构建、依赖、工具 |
-| `docs` | 文档、规范、ADR |
-| `test` | 测试相关 |
-| `ci` | CI/CD 配置 |
+| `chore`    | 构建、依赖、工具 |
+| `docs`     | 文档、规范、ADR  |
+| `test`     | 测试相关         |
+| `ci`       | CI/CD 配置       |

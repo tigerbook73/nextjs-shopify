@@ -5,17 +5,20 @@
 ## 交付物清单
 
 ### 数据层
+
 - [x] `src/lib/shopify/queries/search.ts` — SEARCH_QUERY
 - [x] `src/lib/shopify/types.ts` — SearchResultItem / SearchResult 类型
 - [x] `src/lib/shopify/client.ts` — searchProducts() 函数
 
 ### 组件层
+
 - [x] `src/components/layout/Header.tsx` — 全局 Header
 - [x] `src/components/search/SearchBox.tsx` — 搜索框（Client Component）
 - [x] `src/components/search/SearchResults.tsx` — 结果列表（async RSC）
 - [x] `src/components/search/SearchResultsSkeleton.tsx` — 骨架屏
 
 ### 路由层
+
 - [x] `src/app/layout.tsx` — 插入 Header
 - [x] `src/app/search/page.tsx` — 搜索页（Suspense 边界）
 - [x] `src/app/search/loading.tsx` — 路由级 loading

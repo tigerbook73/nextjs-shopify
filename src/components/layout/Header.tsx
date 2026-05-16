@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import SearchBox from '@/components/search/SearchBox'
+import Link from "next/link";
+import SearchBox from "@/components/search/SearchBox";
 
 export default function Header() {
   return (
@@ -21,5 +21,5 @@ export default function Header() {
         <SearchBox />
       </div>
     </header>
-  )
+  );
 }

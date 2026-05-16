@@ -1,38 +1,36 @@
-import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import type { Metadata } from 'next'
-import { getProductByHandle, getProducts } from '@/lib/shopify/client'
-import VariantSelector from '@/components/product/VariantSelector'
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import type { Metadata } from "next";
+import { getProductByHandle, getProducts } from "@/lib/shopify/client";
+import VariantSelector from "@/components/product/VariantSelector";
 
-type Props = { params: Promise<{ handle: string }> }
+type Props = { params: Promise<{ handle: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { handle } = await params
-  const product = await getProductByHandle(handle)
+  const { handle } = await params;
+  const product = await getProductByHandle(handle);
 
-  if (!product) return {}
+  if (!product) return {};
 
   return {
     title: product.seo.title ?? product.title,
     description: product.seo.description ?? product.description ?? undefined,
-    openGraph: product.featuredImage
-      ? { images: [{ url: product.featuredImage.url }] }
-      : undefined,
-  }
+    openGraph: product.featuredImage ? { images: [{ url: product.featuredImage.url }] } : undefined,
+  };
 }
 
 export async function generateStaticParams() {
-  const products = await getProducts(20)
-  return products.map((p) => ({ handle: p.handle }))
+  const products = await getProducts(20);
+  return products.map((p) => ({ handle: p.handle }));
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { handle } = await params
-  const product = await getProductByHandle(handle)
+  const { handle } = await params;
+  const product = await getProductByHandle(handle);
 
-  if (!product) notFound()
+  if (!product) notFound();
 
-  const hasVariantOptions = product.options.some((o) => o.values.length > 1)
+  const hasVariantOptions = product.options.some((o) => o.values.length > 1);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -49,9 +47,7 @@ export default async function ProductPage({ params }: Props) {
               priority
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-gray-400">
-              No image
-            </div>
+            <div className="flex h-full items-center justify-center text-gray-400">No image</div>
           )}
         </div>
 
@@ -60,19 +56,13 @@ export default async function ProductPage({ params }: Props) {
           <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
 
           {hasVariantOptions ? (
-            <VariantSelector
-              options={product.options}
-              variants={product.variants.nodes}
-            />
+            <VariantSelector options={product.options} variants={product.variants.nodes} />
           ) : (
             <p className="text-2xl font-semibold text-gray-900">
-              {new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency:
-                  product.priceRange.minVariantPrice.currencyCode,
-              }).format(
-                parseFloat(product.priceRange.minVariantPrice.amount),
-              )}
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: product.priceRange.minVariantPrice.currencyCode,
+              }).format(parseFloat(product.priceRange.minVariantPrice.amount))}
             </p>
           )}
 
@@ -85,5 +75,5 @@ export default async function ProductPage({ params }: Props) {
         </div>
       </div>
     </main>
-  )
+  );
 }

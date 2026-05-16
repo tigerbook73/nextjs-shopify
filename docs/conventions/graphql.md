@@ -12,11 +12,11 @@ export async function shopifyFetch<T>({
   cache,
   tags,
 }: {
-  query: string
-  variables?: Record<string, unknown>
-  cache?: RequestCache
-  tags?: string[]
-}): Promise<T>
+  query: string;
+  variables?: Record<string, unknown>;
+  cache?: RequestCache;
+  tags?: string[];
+}): Promise<T>;
 ```
 
 禁止在组件或页面中直接调用 `fetch` 访问 Shopify API。
@@ -41,12 +41,12 @@ src/lib/shopify/
 
 ## 命名规范
 
-| 类型 | 格式 | 示例 |
-| ---- | ---- | ---- |
-| Query 常量 | `GET_<RESOURCE>_QUERY` | `GET_PRODUCT_QUERY`、`GET_PRODUCTS_QUERY` |
-| Mutation 常量 | `<ACTION>_<RESOURCE>_MUTATION` | `CART_CREATE_MUTATION`、`CART_LINES_ADD_MUTATION` |
-| Fragment 常量 | `<TYPE>_<CONTEXT>_FRAGMENT` | `PRODUCT_CARD_FRAGMENT`、`PRODUCT_DETAIL_FRAGMENT` |
-| GraphQL 操作名 | PascalCase | `query GetProduct`、`mutation CartCreate` |
+| 类型           | 格式                           | 示例                                               |
+| -------------- | ------------------------------ | -------------------------------------------------- |
+| Query 常量     | `GET_<RESOURCE>_QUERY`         | `GET_PRODUCT_QUERY`、`GET_PRODUCTS_QUERY`          |
+| Mutation 常量  | `<ACTION>_<RESOURCE>_MUTATION` | `CART_CREATE_MUTATION`、`CART_LINES_ADD_MUTATION`  |
+| Fragment 常量  | `<TYPE>_<CONTEXT>_FRAGMENT`    | `PRODUCT_CARD_FRAGMENT`、`PRODUCT_DETAIL_FRAGMENT` |
+| GraphQL 操作名 | PascalCase                     | `query GetProduct`、`mutation CartCreate`          |
 
 ## Fragment 规范
 
@@ -64,14 +64,20 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
     title
     handle
     priceRange {
-      minVariantPrice { amount currencyCode }
+      minVariantPrice {
+        amount
+        currencyCode
+      }
     }
-    featuredImage { url altText }
+    featuredImage {
+      url
+      altText
+    }
   }
-`
+`;
 
 // src/lib/shopify/queries/collection.ts
-import { PRODUCT_CARD_FRAGMENT } from './product'
+import { PRODUCT_CARD_FRAGMENT } from "./product";
 
 export const GET_COLLECTION_BY_HANDLE_QUERY = /* GraphQL */ `
   query GetCollectionByHandle($handle: String!, $first: Int!, $after: String) {
@@ -84,7 +90,7 @@ export const GET_COLLECTION_BY_HANDLE_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
-`
+`;
 ```
 
 ## 错误处理规范
@@ -96,17 +102,17 @@ GraphQL 永远返回 HTTP 200，业务错误通过响应体传递，必须主动
 const result = await shopifyFetch<CartCreateMutation>({
   query: CART_CREATE_MUTATION,
   variables: { input },
-})
+});
 
 if (result.errors) {
-  throw new Error(result.errors[0].message)
+  throw new Error(result.errors[0].message);
 }
 
 if (result.data.cartCreate.userErrors.length > 0) {
-  return { success: false, error: result.data.cartCreate.userErrors[0].message }
+  return { success: false, error: result.data.cartCreate.userErrors[0].message };
 }
 
-return { success: true, cart: result.data.cartCreate.cart }
+return { success: true, cart: result.data.cartCreate.cart };
 ```
 
 ## 分页规范
@@ -133,11 +139,11 @@ query GetProducts($first: Int!, $after: String) {
 
 为 Shopify 查询添加缓存标签，支持按需失效（Phase 5 起生效）：
 
-| 标签 | 对应数据 |
-| ---- | -------- |
-| `'products'` | 所有商品数据 |
-| `'collections'` | 所有系列数据 |
-| `'cart'` | 购物车数据（通常不缓存） |
-| `'customers'` | 用户数据（不缓存） |
-| `` `product-${handle}` `` | 单个商品 |
-| `` `collection-${handle}` `` | 单个系列 |
+| 标签                         | 对应数据                 |
+| ---------------------------- | ------------------------ |
+| `'products'`                 | 所有商品数据             |
+| `'collections'`              | 所有系列数据             |
+| `'cart'`                     | 购物车数据（通常不缓存） |
+| `'customers'`                | 用户数据（不缓存）       |
+| `` `product-${handle}` ``    | 单个商品                 |
+| `` `collection-${handle}` `` | 单个系列                 |

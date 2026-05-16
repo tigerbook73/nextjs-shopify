@@ -14,20 +14,22 @@
 
 ## 考虑过的替代方案
 
-| 方案 | 优点 | 缺点 / 排除原因 |
-| ---- | ---- | -------------- |
+| 方案         | 优点                 | 缺点 / 排除原因                                        |
+| ------------ | -------------------- | ------------------------------------------------------ |
 | Pages Router | 生态成熟，文档示例多 | 不支持 RSC 和 Server Actions，无法覆盖本项目的学习目标 |
-| 混合使用 | 渐进迁移场景适用 | 新项目没有存量代码，混合只会增加心智负担 |
+| 混合使用     | 渐进迁移场景适用     | 新项目没有存量代码，混合只会增加心智负担               |
 
 ## 后果
 
 ### 正面影响
+
 - 原生支持 React Server Components，数据获取在服务端完成，无客户端 fetch 泄漏
 - Server Actions 简化表单和 Cart 操作，无需手写 API Route
 - Streaming + Suspense 支持逐步渲染，改善感知性能
 - `generateMetadata`、`generateStaticParams`、`sitemap.ts` 等 SEO 能力开箱即用
 
 ### 负面影响 / 约束
+
 - App Router 生态中部分第三方库尚未完全兼容（引入新依赖时需验证）
 - `'use client'` / Server Component 边界需要主动管理，见 `docs/conventions/coding.md`
 - 调试体验相比 Pages Router 略复杂

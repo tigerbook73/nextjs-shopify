@@ -13,34 +13,38 @@
 
 根据改动文件类型，读取对应规范文件：
 
-| 改动类型 | 需读取的规范 |
-| -------- | ---------- |
+| 改动类型           | 需读取的规范                                                       |
+| ------------------ | ------------------------------------------------------------------ |
 | `src/lib/shopify/` | `docs/conventions/graphql.md` + `docs/conventions/architecture.md` |
-| `src/components/` | `docs/conventions/coding.md` + `docs/conventions/directory.md` |
-| `src/lib/actions/` | `docs/conventions/coding.md`（错误处理部分） |
-| `src/app/` | `docs/conventions/directory.md` + `docs/conventions/coding.md` |
-| 测试文件 | `docs/conventions/testing.md` |
-| 任意文件 | `docs/conventions/architecture.md`（禁止事项部分） |
+| `src/components/`  | `docs/conventions/coding.md` + `docs/conventions/directory.md`     |
+| `src/lib/actions/` | `docs/conventions/coding.md`（错误处理部分）                       |
+| `src/app/`         | `docs/conventions/directory.md` + `docs/conventions/coding.md`     |
+| 测试文件           | `docs/conventions/testing.md`                                      |
+| 任意文件           | `docs/conventions/architecture.md`（禁止事项部分）                 |
 
 ## 步骤 3：逐项检查
 
 **架构合规**
+
 - [ ] 是否有 Client Component 直接调用 Shopify API？
 - [ ] 是否引入了禁止的依赖（Apollo、Zustand、urql 等）？
 - [ ] 分层是否正确（API 调用在正确层次）？
 
 **编码规范**
+
 - [ ] 是否使用了 `any` 类型？
 - [ ] Server Function 是否有明确的返回类型？
 - [ ] 文件命名是否遵循规范（组件 PascalCase，工具函数 kebab-case）？
 
 **GraphQL 规范**（如有相关改动）
+
 - [ ] 是否通过 `shopifyFetch<T>()` 统一入口调用？
 - [ ] Mutation 是否检查了 `userErrors`？
 - [ ] Fragment 命名是否符合 `<TYPE>_<CONTEXT>_FRAGMENT` 格式？
 - [ ] 跨文件共享的 Fragment 是否已导出和导入？
 
 **目录结构**
+
 - [ ] 新文件是否放在正确目录下？
 - [ ] 测试文件是否与源文件共置？
 

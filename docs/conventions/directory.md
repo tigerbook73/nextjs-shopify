@@ -83,13 +83,13 @@ src/
 
 ## 文件命名规则
 
-| 场景 | 格式 | 示例 |
-| ---- | ---- | ---- |
-| Next.js 约定文件 | 小写 | `page.tsx`、`layout.tsx`、`loading.tsx`、`error.tsx`、`route.ts` |
-| React 组件文件 | PascalCase | `ProductCard.tsx`、`CollectionCard.tsx` |
-| 工具函数文件 | kebab-case | `format-price.ts`、`parse-gid.ts` |
-| 测试文件 | `<源文件>.test.ts` | `format-price.test.ts` |
-| GraphQL 查询文件 | kebab-case（按领域） | `product.ts`、`collection.ts` |
+| 场景             | 格式                 | 示例                                                             |
+| ---------------- | -------------------- | ---------------------------------------------------------------- |
+| Next.js 约定文件 | 小写                 | `page.tsx`、`layout.tsx`、`loading.tsx`、`error.tsx`、`route.ts` |
+| React 组件文件   | PascalCase           | `ProductCard.tsx`、`CollectionCard.tsx`                          |
+| 工具函数文件     | kebab-case           | `format-price.ts`、`parse-gid.ts`                                |
+| 测试文件         | `<源文件>.test.ts`   | `format-price.test.ts`                                           |
+| GraphQL 查询文件 | kebab-case（按领域） | `product.ts`、`collection.ts`                                    |
 
 ## docs/ 文档结构
 

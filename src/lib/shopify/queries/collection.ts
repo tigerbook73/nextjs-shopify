@@ -1,4 +1,4 @@
-import { PRODUCT_CARD_FRAGMENT } from './product'
+import { PRODUCT_CARD_FRAGMENT } from "./product";
 
 export const GET_COLLECTIONS_QUERY = /* GraphQL */ `
   query GetCollections($first: Int!) {
@@ -19,7 +19,7 @@ export const GET_COLLECTIONS_QUERY = /* GraphQL */ `
       }
     }
   }
-`
+`;
 
 export const GET_COLLECTION_BY_HANDLE_QUERY = /* GraphQL */ `
   query GetCollectionByHandle($handle: String!, $first: Int!, $after: String) {
@@ -48,7 +48,7 @@ export const GET_COLLECTION_BY_HANDLE_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
-`
+`;
 
 export const GET_COLLECTION_HANDLES_QUERY = /* GraphQL */ `
   query GetCollectionHandles($first: Int!) {
@@ -58,4 +58,4 @@ export const GET_COLLECTION_HANDLES_QUERY = /* GraphQL */ `
       }
     }
   }
-`
+`;

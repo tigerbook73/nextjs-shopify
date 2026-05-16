@@ -8,6 +8,16 @@ interface ProductImage {
   altText: string | null
 }
 
+interface SEO {
+  title: string | null
+  description: string | null
+}
+
+export interface Shop {
+  name: string
+  description: string | null
+}
+
 export interface Product {
   id: string
   title: string
@@ -35,6 +45,7 @@ export interface ProductVariant {
 export interface ProductDetail extends Product {
   description: string
   descriptionHtml: string
+  seo: SEO
   images: { nodes: ProductImage[] }
   variants: { nodes: ProductVariant[] }
   options: {
@@ -47,6 +58,19 @@ export interface Collection {
   id: string
   title: string
   handle: string
+  description: string
+  image: ProductImage | null
+  seo: SEO
+}
+
+export interface CollectionDetail extends Collection {
+  products: {
+    nodes: Product[]
+    pageInfo: {
+      hasNextPage: boolean
+      endCursor: string | null
+    }
+  }
 }
 
 export interface Cart {

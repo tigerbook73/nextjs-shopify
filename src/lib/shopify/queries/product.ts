@@ -1,4 +1,4 @@
-const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
+export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
   fragment ProductCard on Product {
     id
     title
@@ -36,21 +36,43 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       description
       descriptionHtml
       priceRange {
-        minVariantPrice { amount currencyCode }
+        minVariantPrice {
+          amount
+          currencyCode
+        }
       }
-      featuredImage { url altText }
+      featuredImage {
+        url
+        altText
+      }
       images(first: 5) {
-        nodes { url altText }
+        nodes {
+          url
+          altText
+        }
       }
       variants(first: 100) {
         nodes {
           id
           title
           availableForSale
-          selectedOptions { name value }
-          price { amount currencyCode }
-          compareAtPrice { amount currencyCode }
+          selectedOptions {
+            name
+            value
+          }
+          price {
+            amount
+            currencyCode
+          }
+          compareAtPrice {
+            amount
+            currencyCode
+          }
         }
+      }
+      seo {
+        title
+        description
       }
       options {
         name

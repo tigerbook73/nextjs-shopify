@@ -1,18 +1,32 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import { getProductByHandle, getProducts } from '@/lib/shopify/client'
 import VariantSelector from '@/components/product/VariantSelector'
+
+type Props = { params: Promise<{ handle: string }> }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { handle } = await params
+  const product = await getProductByHandle(handle)
+
+  if (!product) return {}
+
+  return {
+    title: product.seo.title ?? product.title,
+    description: product.seo.description ?? product.description ?? undefined,
+    openGraph: product.featuredImage
+      ? { images: [{ url: product.featuredImage.url }] }
+      : undefined,
+  }
+}
 
 export async function generateStaticParams() {
   const products = await getProducts(20)
   return products.map((p) => ({ handle: p.handle }))
 }
 
-export default async function ProductPage({
-  params,
-}: {
-  params: Promise<{ handle: string }>
-}) {
+export default async function ProductPage({ params }: Props) {
   const { handle } = await params
   const product = await getProductByHandle(handle)
 

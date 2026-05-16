@@ -1,8 +1,14 @@
-import { getProducts } from '@/lib/shopify/client'
-import ProductCard from '@/components/product/ProductCard'
+import type { Metadata } from "next";
+import { getProducts } from "@/lib/shopify/client";
+import ProductCard from "@/components/product/ProductCard";
+
+export const metadata: Metadata = {
+  title: "All Products",
+  description: "Browse our full catalog of products.",
+};
 
 export default async function ProductsPage() {
-  const products = await getProducts(20)
+  const products = await getProducts(20);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -13,5 +19,5 @@ export default async function ProductsPage() {
         ))}
       </div>
     </main>
-  )
+  );
 }

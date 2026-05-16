@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: Props) {
 
   if (!product) notFound();
 
-  const hasVariantOptions = product.options.some((o) => o.values.length > 1);
+  const hasVariantOptions = product.options.some((o) => o.optionValues.length > 1);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">

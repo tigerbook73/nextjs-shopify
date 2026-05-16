@@ -50,7 +50,7 @@ export interface ProductDetail extends Product {
   variants: { nodes: ProductVariant[] };
   options: {
     name: string;
-    values: string[];
+    optionValues: { name: string }[];
   }[];
 }
 

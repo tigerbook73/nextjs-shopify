@@ -5,7 +5,7 @@ import type { ProductVariant } from "@/lib/shopify/types";
 
 interface Option {
   name: string;
-  values: string[];
+  optionValues: { name: string }[];
 }
 
 interface VariantSelectorProps {
@@ -22,7 +22,7 @@ function formatPrice(amount: string, currencyCode: string) {
 
 export default function VariantSelector({ options, variants }: VariantSelectorProps) {
   const [selected, setSelected] = useState<Record<string, string>>(() =>
-    Object.fromEntries(options.map((o) => [o.name, o.values[0]])),
+    Object.fromEntries(options.map((o) => [o.name, o.optionValues[0]?.name ?? ""])),
   );
 
   const matchedVariant = variants.find((v) => v.selectedOptions.every((o) => selected[o.name] === o.value));
@@ -41,9 +41,9 @@ export default function VariantSelector({ options, variants }: VariantSelectorPr
             value={selected[option.name]}
             onChange={(e) => handleChange(option.name, e.target.value)}
           >
-            {option.values.map((value) => (
-              <option key={value} value={value}>
-                {value}
+            {option.optionValues.map(({ name }) => (
+              <option key={name} value={name}>
+                {name}
               </option>
             ))}
           </select>

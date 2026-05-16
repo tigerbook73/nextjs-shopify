@@ -6,13 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "format": "prettier --write .",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "schema:fetch": "node scripts/fetch-schema.mjs",
     "env:check": "node scripts/check-env.mjs",
     "shopify:login": "shopify auth login",
     "shopify:logout": "shopify auth logout",
-    "shopify:version": "shopify version"
+    "shopify:version": "shopify version",
+    "prepare": "husky"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -36,8 +38,19 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "graphql": "^16.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.4",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs}": [
+      "prettier --write",
+      "eslint --max-warnings 0"
+    ],
+    "*.{json,md,yml,css}": "prettier --write"
   },
   "packageManager": "pnpm@10.33.3+sha512.a19744364a7e248b92657a4ca5973f9354d21caf982579674b1c539f32c7420c47138ad8b1254df07aba9bc782d9b3029e3db34d5dbff974326eb74dac8ff489"
 }

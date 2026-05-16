@@ -76,7 +76,9 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       }
       options {
         name
-        values
+        optionValues {
+          name
+        }
       }
     }
   }

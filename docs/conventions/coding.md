@@ -72,16 +72,25 @@ const getProduct = async (handle: any) => { ... }
 
 ## 提交规范
 
-格式：`<phase>/<scope>: <中文描述>`
+格式：`type(scope): description`（Conventional Commits，英文描述）
 
 ```
-phase0/setup: 初始化 Next.js App Router 项目
-phase2/collection-seo: 实现系列列表页与商品分页
-phase4/cart: 实现 Server Action addToCart
-tooling: 安装 @shopify/cli，添加 env:check 脚本
+feat(collections): add collection list and detail pages
+feat(seo): add generateMetadata and sitemap route
+fix(graphql): remove multi-line comment in collection query
+chore(tooling): install @shopify/cli and add env:check script
+docs(conventions): update architecture layering rule
+refactor(client): extract getCollectionHandles function
 ```
 
-- `phase` 对应当前开发阶段（phase0–phase7，或 tooling/docs 等非功能类）
-- `scope` 为改动的功能模块
-- 描述使用中文，动词开头，简洁说明做了什么
-- 功能类提交可附带 feature-id：`phase1/products(feat-product-list): 完成商品分页`
+常用 type：
+
+| type | 用途 |
+| ---- | ---- |
+| `feat` | 新功能 |
+| `fix` | Bug 修复 |
+| `refactor` | 重构（不改行为） |
+| `chore` | 构建、依赖、工具 |
+| `docs` | 文档、规范、ADR |
+| `test` | 测试相关 |
+| `ci` | CI/CD 配置 |

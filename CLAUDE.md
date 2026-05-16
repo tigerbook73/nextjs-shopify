@@ -42,11 +42,12 @@
 
 ## 提交规范
 
-格式：`<phase>/<scope>: <中文描述>`
+格式：`type(scope): description`（Conventional Commits，英文描述）
 
 示例：
-- `phase0/setup: 初始化 Next.js App Router 项目`
-- `phase2/collection-seo: 实现系列列表页与商品分页`
-- `phase4/cart: 实现 Server Action addToCart`
+- `feat(collections): add collection list and detail pages`
+- `fix(graphql): remove multi-line comment in collection query`
+- `chore(tooling): install @shopify/cli and add env:check script`
+- `docs(conventions): update architecture layering rule`
 
-功能类提交可附带 feature-id：`phase1/products(feat-product-list): 完成商品分页`
+完整 type 列表见 `docs/conventions/coding.md`。

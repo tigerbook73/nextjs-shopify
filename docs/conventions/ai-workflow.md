@@ -26,9 +26,10 @@
    └── 3+ 文件 / 影响用户可见行为 / 新功能 → 进入规划模式
    └── 等待用户确认后再实现
 
-4. 功能文档（较大功能）
-   └── 在 docs/features/<feature-id>/ 创建三件套文档
+4. 功能文档（每个 Phase 必须，Plan Gate 批准后第一步）
+   └── 在 docs/features/phase<N>-<name>/ 创建三件套文档
    └── REQUIREMENTS.md → DESIGN.md → PROGRESS.md
+   └── 文档确认后再开始写代码，不得跳过或与代码同步生成
 
 5. 实现
    └── 按规范编写代码
@@ -39,7 +40,7 @@
    └── 有偏离 → 修正代码 或 走 /update-convention 流程
 
 7. 提交
-   └── 格式：<phase>/<scope>: <中文描述>
+   └── 格式：type(scope): description（Conventional Commits，英文）
    └── 较大功能更新 PROGRESS.md
 ```
 

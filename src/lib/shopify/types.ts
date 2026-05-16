@@ -77,3 +77,10 @@ export interface Cart {
   id: string
   checkoutUrl: string
 }
+
+export type SearchResultItem = Product & { __typename: 'Product' }
+
+export interface SearchResult {
+  totalCount: number
+  nodes: SearchResultItem[]
+}

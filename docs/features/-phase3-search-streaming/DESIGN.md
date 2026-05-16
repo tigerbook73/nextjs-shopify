@@ -46,33 +46,27 @@ SearchPage（Server Component，立即返回）
 
 ```graphql
 query Search($query: String!, $first: Int!) {
-  search(query: $query, first: $first, types: [PRODUCT, COLLECTION]) {
+  search(query: $query, first: $first, types: [PRODUCT]) {
     totalCount
     nodes {
       __typename
       ... on Product {
         ...ProductCard           # 复用现有 Fragment
       }
-      ... on Collection {
-        id
-        title
-        handle
-        description
-        image { url altText }
-      }
     }
   }
 }
 ```
 
+> **注意：** Shopify `search` 的 `SearchType` 枚举只支持 `PRODUCT`、`PAGE`、`ARTICLE`，不含 `COLLECTION`。Collection 搜索需用 `predictiveSearch`（Phase 3 范围外）。
+
 **GraphQL 新概念（Phase 3 学习重点）：**
 
 | 概念 | 体现 |
 |------|------|
-| Input Types | `types: [PRODUCT, COLLECTION]` — 枚举值列表作为参数 |
-| Union Types | `search.nodes` 可能是 `Product \| Collection` |
-| Inline Fragments | `... on Product { }` / `... on Collection { }` |
-| `__typename` | 用于运行时判断实际类型，驱动条件渲染 |
+| Input Types | `types: [PRODUCT]` — 枚举值列表作为参数 |
+| Inline Fragments | `... on Product { }` — 类型条件字段选择 |
+| `__typename` | 查询返回类型名，为后续 Union 扩展保留 |
 
 ## 类型设计
 

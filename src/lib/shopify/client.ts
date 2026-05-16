@@ -1,4 +1,4 @@
-import type { Product, ProductDetail, Collection, CollectionDetail, Shop } from "./types";
+import type { Product, ProductDetail, Collection, CollectionDetail, Shop, SearchResult } from "./types";
 import { GET_PRODUCTS_QUERY, GET_PRODUCT_BY_HANDLE_QUERY } from "./queries/product";
 import {
   GET_COLLECTIONS_QUERY,
@@ -6,6 +6,7 @@ import {
   GET_COLLECTION_HANDLES_QUERY,
 } from "./queries/collection";
 import { GET_SHOP_QUERY } from "./queries/shop";
+import { SEARCH_QUERY } from "./queries/search";
 
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN!;
 const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!;
@@ -62,6 +63,15 @@ export async function getCollectionHandles(): Promise<{ handle: string }[]> {
     variables: { first: 250 },
   });
   return data.collections.nodes;
+}
+
+export async function searchProducts(query: string, first = 20): Promise<SearchResult> {
+  const data = await shopifyFetch<{ search: SearchResult }>({
+    query: SEARCH_QUERY,
+    variables: { query, first },
+    cache: 'no-store',
+  });
+  return data.search;
 }
 
 export async function getShop(): Promise<Shop> {

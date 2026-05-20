@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { createCart, addCartLines, updateCartLines, removeCartLines } from "@/lib/shopify/client";
+import { TAGS } from "@/lib/shopify/cache-tags";
 import type { CartActionResult } from "@/lib/shopify/types";
 
 const CART_COOKIE = "cartId";
@@ -31,7 +32,7 @@ export async function addToCart(variantId: string, quantity = 1): Promise<CartAc
   try {
     const cartId = await getOrCreateCartId();
     await addCartLines(cartId, [{ merchandiseId: variantId, quantity }]);
-    revalidatePath("/", "layout");
+    revalidateTag(TAGS.cart, {});
     return { success: true };
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to add to cart" };
@@ -44,7 +45,7 @@ export async function removeFromCart(lineId: string): Promise<CartActionResult> 
     if (!cartId) return { success: false, error: "Cart not found" };
 
     await removeCartLines(cartId, [lineId]);
-    revalidatePath("/", "layout");
+    revalidateTag(TAGS.cart, {});
     return { success: true };
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to remove from cart" };
@@ -61,7 +62,7 @@ export async function updateCartQuantity(lineId: string, quantity: number): Prom
     } else {
       await updateCartLines(cartId, [{ id: lineId, quantity }]);
     }
-    revalidatePath("/", "layout");
+    revalidateTag(TAGS.cart, {});
     return { success: true };
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to update cart" };

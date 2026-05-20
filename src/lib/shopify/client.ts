@@ -8,6 +8,7 @@ import {
 import { GET_SHOP_QUERY } from "./queries/shop";
 import { SEARCH_QUERY } from "./queries/search";
 import { GET_CART_QUERY } from "./queries/cart";
+import { TAGS } from "./cache-tags";
 import {
   CART_CREATE_MUTATION,
   CART_LINES_ADD_MUTATION,
@@ -24,6 +25,7 @@ export async function getProducts(first = 20): Promise<Product[]> {
   const data = await shopifyFetch<{ products: { nodes: Product[] } }>({
     query: GET_PRODUCTS_QUERY,
     variables: { first },
+    tags: [TAGS.products],
   });
   return data.products.nodes;
 }
@@ -32,6 +34,7 @@ export async function getProductByHandle(handle: string): Promise<ProductDetail 
   const data = await shopifyFetch<{ product: ProductDetail | null }>({
     query: GET_PRODUCT_BY_HANDLE_QUERY,
     variables: { handle },
+    tags: [TAGS.products, TAGS.product(handle)],
   });
   return data.product;
 }
@@ -40,6 +43,7 @@ export async function getProductHandles(): Promise<{ handle: string }[]> {
   const data = await shopifyFetch<{ products: { nodes: { handle: string }[] } }>({
     query: GET_PRODUCTS_QUERY,
     variables: { first: 250 },
+    tags: [TAGS.products],
   });
   return data.products.nodes;
 }
@@ -48,6 +52,7 @@ export async function getCollections(first = 20): Promise<Collection[]> {
   const data = await shopifyFetch<{ collections: { nodes: Collection[] } }>({
     query: GET_COLLECTIONS_QUERY,
     variables: { first },
+    tags: [TAGS.collections],
   });
   return data.collections.nodes;
 }
@@ -60,6 +65,7 @@ export async function getCollectionByHandle(
   const data = await shopifyFetch<{ collection: CollectionDetail | null }>({
     query: GET_COLLECTION_BY_HANDLE_QUERY,
     variables: { handle, first, after: after ?? null },
+    tags: [TAGS.collections, TAGS.collection(handle)],
   });
   return data.collection;
 }
@@ -68,6 +74,7 @@ export async function getCollectionHandles(): Promise<{ handle: string }[]> {
   const data = await shopifyFetch<{ collections: { nodes: { handle: string }[] } }>({
     query: GET_COLLECTION_HANDLES_QUERY,
     variables: { first: 250 },
+    tags: [TAGS.collections],
   });
   return data.collections.nodes;
 }
@@ -99,11 +106,12 @@ function throwOnUserErrors(userErrors: UserError[]): void {
   }
 }
 
-export async function getCart(cartId: string): Promise<Cart | null> {
+export async function getCart(cartId: string, tags?: string[]): Promise<Cart | null> {
   const data = await shopifyFetch<{ cart: Cart | null }>({
     query: GET_CART_QUERY,
     variables: { cartId },
-    cache: "no-store",
+    cache: tags ? "force-cache" : "no-store",
+    tags,
   });
   return data.cart;
 }

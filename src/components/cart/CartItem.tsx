@@ -1,6 +1,7 @@
 "use client";
 
 import { useOptimistic, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { updateCartQuantity, removeFromCart } from "@/lib/actions/cart";
 import type { CartLine } from "@/lib/shopify/types";
@@ -11,6 +12,7 @@ interface CartItemProps {
 }
 
 export default function CartItem({ line }: CartItemProps) {
+  const router = useRouter();
   const [optimisticQuantity, updateOptimisticQuantity] = useOptimistic(
     line.quantity,
     (_current: number, next: number) => next,
@@ -27,6 +29,7 @@ export default function CartItem({ line }: CartItemProps) {
       } else {
         await updateCartQuantity(line.id, newQuantity);
       }
+      router.refresh();
     });
   };
 

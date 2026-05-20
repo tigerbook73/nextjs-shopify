@@ -1,4 +1,4 @@
-# nextjs-shoptify 项目规范（Codex / ChatGPT）
+# nextjs-shopify 项目规范（Codex / ChatGPT）
 
 > 本文件适用于 OpenAI Codex 及 ChatGPT 辅助开发场景。
 > 所有规范以 `docs/conventions/` 为权威来源，本文件只说明使用协议，不重复规范内容。

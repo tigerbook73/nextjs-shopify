@@ -1,9 +1,9 @@
-interface MoneyV2 {
+export interface MoneyV2 {
   amount: string;
   currencyCode: string;
 }
 
-interface ProductImage {
+export interface ProductImage {
   url: string;
   altText: string | null;
 }
@@ -28,7 +28,7 @@ export interface Product {
   featuredImage: ProductImage | null;
 }
 
-interface SelectedOption {
+export interface SelectedOption {
   name: string;
   value: string;
 }
@@ -73,10 +73,39 @@ export interface CollectionDetail extends Collection {
   };
 }
 
+export interface CartLineMerchandise {
+  id: string;
+  title: string;
+  selectedOptions: SelectedOption[];
+  price: MoneyV2;
+  product: {
+    title: string;
+    handle: string;
+    featuredImage: ProductImage | null;
+  };
+}
+
+export interface CartLine {
+  id: string;
+  quantity: number;
+  merchandise: CartLineMerchandise;
+}
+
+export interface CartCost {
+  subtotalAmount: MoneyV2;
+  totalTaxAmount: MoneyV2 | null;
+  totalAmount: MoneyV2;
+}
+
 export interface Cart {
   id: string;
   checkoutUrl: string;
+  totalQuantity: number;
+  lines: { nodes: CartLine[] };
+  cost: CartCost;
 }
+
+export type CartActionResult = { success: true } | { success: false; error: string };
 
 export type SearchResultItem = Product & { __typename: "Product" };
 

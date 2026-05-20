@@ -131,7 +131,7 @@ query GetProducts($first: Int!) {
 | `SHOPIFY_STORE_DOMAIN`            | 店铺域名（无 https://）            | `your-store.myshopify.com` |
 | `SHOPIFY_STOREFRONT_ACCESS_TOKEN` | Storefront API Public Access Token | `shpat_xxxxxxxx`           |
 
-> 注：现有 `.env.local` 中的 `SHOPTIFY_STORE_CLIENT_ID` / `SHOPTIFY_STORE_SECRET` 为旧占位符，Phase 0 实施时替换为以上正确变量名。
+> 注：现有 `.env.local` 中的 `SHOPIFY_STORE_CLIENT_ID` / `SHOPIFY_STORE_SECRET` 为旧占位符，Phase 0 实施时替换为以上正确变量名。
 
 ---
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ProductVariant } from "@/lib/shopify/types";
+import { formatPrice } from "@/lib/utils/format-price";
 
 interface Option {
   name: string;
@@ -11,13 +12,6 @@ interface Option {
 interface VariantSelectorProps {
   options: Option[];
   variants: ProductVariant[];
-}
-
-function formatPrice(amount: string, currencyCode: string) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(parseFloat(amount));
 }
 
 export default function VariantSelector({ options, variants }: VariantSelectorProps) {

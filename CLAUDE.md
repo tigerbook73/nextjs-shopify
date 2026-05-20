@@ -1,4 +1,4 @@
-# nextjs-shoptify 项目规范（Claude Code）
+# nextjs-shopify 项目规范（Claude Code）
 
 > 本文件为项目级补充规则，与全局 `~/.claude/CLAUDE.md` 叠加生效。
 > Plan Gate、文件删除保护、Git 操作限制等核心规则见全局配置，此处不重复。

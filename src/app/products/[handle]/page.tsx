@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { getProductByHandle, getProducts } from "@/lib/shopify/client";
-import VariantSelector from "@/components/product/VariantSelector";
+import ProductForm from "@/components/product/ProductForm";
 
 type Props = { params: Promise<{ handle: string }> };
 
@@ -30,8 +30,6 @@ export default async function ProductPage({ params }: Props) {
 
   if (!product) notFound();
 
-  const hasVariantOptions = product.options.some((o) => o.optionValues.length > 1);
-
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
@@ -55,16 +53,7 @@ export default async function ProductPage({ params }: Props) {
         <div className="flex flex-col gap-6">
           <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
 
-          {hasVariantOptions ? (
-            <VariantSelector options={product.options} variants={product.variants.nodes} />
-          ) : (
-            <p className="text-2xl font-semibold text-gray-900">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: product.priceRange.minVariantPrice.currencyCode,
-              }).format(parseFloat(product.priceRange.minVariantPrice.amount))}
-            </p>
-          )}
+          <ProductForm options={product.options} variants={product.variants.nodes} />
 
           {product.descriptionHtml && (
             <div

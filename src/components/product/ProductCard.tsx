@@ -1,13 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify/types";
-
-function formatPrice(amount: string, currencyCode: string) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(parseFloat(amount));
-}
+import { formatPrice } from "@/lib/utils/format-price";
 
 export default function ProductCard({ product }: { product: Product }) {
   const { handle, title, featuredImage, priceRange } = product;

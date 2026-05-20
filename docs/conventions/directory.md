@@ -3,7 +3,7 @@
 ## 顶层结构
 
 ```
-nextjs-shoptify/
+nextjs-shopify/
 ├── src/                        ← 所有源代码
 ├── docs/                       ← 项目文档（规范、ADR、功能文档）
 ├── public/                     ← 静态资源

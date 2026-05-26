@@ -338,14 +338,15 @@ Phase 7 → 性能与收尾（Edge + 优化）
 
 ---
 
-## Phase 7 — 性能优化与收尾
+## Phase 7 — 验收能力、性能优化与收尾
 
 ### 目标
 
-提升整体性能体验，探索 Edge 能力，完善产品化细节。
+补齐 Playwright 阶段验收能力，提升整体性能体验，探索 Edge 能力，完善产品化细节。
 
 ### 交付物
 
+- Playwright 自动化验收 Phase 7 自身交付物
 - Middleware 实现地区检测（`geo` 对象）+ 货币提示（可选）
 - 关键页面切换到 Edge Runtime（探索成本与收益）
 - `next/font` 本地字体优化（消除 CLS）
@@ -361,6 +362,7 @@ Phase 7 → 性能与收尾（Edge + 优化）
 | `next/font`                   | 字体预加载 + 消除布局偏移               |
 | `error.tsx` / `not-found.tsx` | 统一错误边界处理                        |
 | `@next/bundle-analyzer`       | 可视化分析客户端 bundle 构成            |
+| Playwright                    | 自动化验收 Phase 7 自身交付物           |
 
 ### Shopify 知识点
 

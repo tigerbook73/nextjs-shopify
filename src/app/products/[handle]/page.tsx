@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProductByHandle, getProducts } from "@/lib/shopify/client";
 import ProductForm from "@/components/product/ProductForm";
 import ProductGallery from "@/components/product/ProductGallery";
+import RelatedProducts from "@/components/product/RelatedProducts";
 
 type Props = { params: Promise<{ handle: string }> };
 
@@ -50,6 +52,12 @@ export default async function ProductPage({ params }: Props) {
           )}
         </div>
       </div>
+
+      {product.collections.nodes[0] && (
+        <Suspense fallback={null}>
+          <RelatedProducts currentHandle={handle} collectionHandle={product.collections.nodes[0].handle} />
+        </Suspense>
+      )}
     </main>
   );
 }

@@ -86,6 +86,11 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
           name
         }
       }
+      collections(first: 1) {
+        nodes {
+          handle
+        }
+      }
     }
   }
 `;

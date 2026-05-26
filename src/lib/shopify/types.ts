@@ -56,6 +56,7 @@ export interface ProductDetail extends Product {
     name: string;
     optionValues: { name: string }[];
   }[];
+  collections: { nodes: { handle: string }[] };
 }
 
 export interface Collection {

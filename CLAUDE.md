@@ -5,9 +5,9 @@
 
 ## 当前开发阶段
 
-**Phase 2（Collection 导航与 SEO）已完成 → Phase 3（搜索与 Streaming）即将开始**
+**Phase 7（性能与收尾）已完成 → 全部 8 个阶段（Phase -1 ~ Phase 7）均已交付**
 
-完整阶段规划见 `BLUEPRINT.md`。开始某个 Phase 前，先确认当前阶段状态。
+完整阶段规划见 `BLUEPRINT.md`。若继续扩展，需先在 `BLUEPRINT.md` 中新增阶段定义，再按任务流程开启新 Phase。
 
 ## 规范体系
 

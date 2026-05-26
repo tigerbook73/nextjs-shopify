@@ -1,413 +1,251 @@
-# Next.js × Shopify 学习项目蓝图
+# Next.js × Shopify 专业化蓝图
 
-> 定位：学习型 + 产品化实践｜循序渐进｜每阶段独立可运行
+> 前置状态：Phase -1 ~ Phase 7 已全部完成，核心电商功能（商品/Collection/搜索/购物车/账户/缓存）均已交付。
+> 本蓝图目标：将功能完整的 MVP 打磨为视觉专业、体验流畅的真实可用电商站点。
 
 ---
 
-## 项目概览
+## 现状差距
 
-| 项目          | 说明                                                                      |
-| ------------- | ------------------------------------------------------------------------- |
-| 技术栈        | Next.js App Router · TypeScript · Tailwind CSS · shadcn/ui                |
-| Shopify 接入  | Storefront API（GraphQL）                                                 |
-| Checkout 策略 | Cart 完成后跳转 Shopify 原生结账页，不自建 Checkout UI                    |
-| 目标          | 覆盖 Next.js 高级 SSR 能力 + 系统学习 GraphQL + 建立完整 Shopify 产品认知 |
+| 问题                  | 具体表现                               |
+| --------------------- | -------------------------------------- |
+| 首页是调试页          | 仍显示"Phase 0 API 连通验证"，极其简陋 |
+| Footer 完全缺失       | 无任何底部导航、版权信息               |
+| 无移动端菜单          | 小屏幕导航无法使用                     |
+| 购物车体验落后        | 加入购物车后跳转 /cart，打断浏览流     |
+| 商品图片单一          | 数据支持 5 张，但只展示 1 张           |
+| Collection 无发现能力 | 无筛选、无排序，浏览体验差             |
+| 商品卡片无状态标识    | Sale / Sold Out 数据已有但未展示       |
+| 操作无反馈            | 加入购物车、登录等操作无 Toast 提示    |
 
 ---
 
 ## 阶段总览
 
 ```
-Phase -1 → AI 工程脚手架（规范体系 + 多工具配置 + Git 初始化）✅ 已完成
-Phase 0 → 基础搭建
-Phase 1 → 商品浏览（RSC + 动态路由）
-Phase 2 → Collection 导航（SEO + Metadata）
-Phase 3 → 搜索与 Streaming
-Phase 4 → 购物车（Server Actions + Session）
-Phase 5 → 缓存策略（Data Cache + Webhook）
-Phase 6 → 用户账户（Customer Auth + Middleware）
-Phase 7 → 性能与收尾（Edge + 优化）
+Phase A → 布局 & 首页    （最大视觉冲击，优先做）
+Phase B → 商品 & 浏览    （数据驱动体验升级）
+Phase C → 交互 & 收尾    （Cart Drawer + Toast + 账户完善）
 ```
 
 ---
 
-## GraphQL 渐进学习路径
-
-> Shopify Storefront API 是纯 GraphQL API，本项目每个阶段都会自然引入新的 GraphQL 概念，无需单独学习 GraphQL 再上手。
-
-| 阶段    | GraphQL 新概念                                     | 具体体现                                                                               |
-| ------- | -------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Phase 0 | Query · Schema · Type · Field · 变量（Variables）  | 写第一个 `query { shop { name } }`                                                     |
-| Phase 1 | Connection 分页模式 · Cursor · `first/after`       | 商品列表分页，`products(first: 20, after: $cursor)`                                    |
-| Phase 2 | Fragments · Alias                                  | 抽取 `ProductCardFragment`，多个查询复用字段                                           |
-| Phase 3 | Input Types · 复合过滤 · Union Types               | `search(query: $q, types: [PRODUCT])`                                                  |
-| Phase 4 | Mutations · Input Object · Payload 模式 · 错误处理 | `cartCreate` / `cartLinesAdd` + `userErrors`                                           |
-| Phase 5 | GraphQL over HTTP 与缓存的关系 · POST vs GET       | 理解为什么 Next.js 需要额外包装 GraphQL 请求来实现缓存                                 |
-| Phase 6 | 带鉴权 Header 的请求 · Token 传递                  | Customer API 需要在 Header 中携带 `X-Shopify-Storefront-Access-Token` + Customer Token |
-| Phase 7 | （可选）Persisted Queries · 查询复杂度分析         | Shopify 的 query cost 机制，防止过度查询                                               |
-
-### GraphQL 工具推荐
-
-- **Shopify GraphiQL App**：在 Shopify 后台直接测试 Storefront API，有 schema 自动补全
-- **VS Code 插件**：`GraphQL: Language Feature Support`，本地 `.graphql` 文件高亮与补全
-- **类型策略**：Phase 0–2 手写 TypeScript 类型（建立肌肉记忆），Phase 5+ 按需引入 `@shopify/storefront-api-types`
-
----
-
-## Phase 0 — 基础搭建
+## Phase A — 布局 & 首页
 
 ### 目标
 
-搭建可运行的项目骨架，验证 Shopify Storefront API 连通性。
+消除"调试页"印象，建立完整的品牌框架（Header + 首页 + Footer）。
 
 ### 交付物
 
-- Next.js App Router + TypeScript 项目初始化
-- Tailwind CSS + shadcn/ui 集成
-- Shopify Storefront API 客户端封装（基于 fetch + GraphQL）
-- 基础 TypeScript 类型定义（Product、Collection、Cart 骨架）
-- 首页展示一条 Shopify 商品数据（验证 API 通）
-- `.env.local` 变量规范文档
+#### 1. 首页重设计 (`src/app/page.tsx` — 完全重写)
 
-### Next.js 能力
+| 区块     | 内容来源                           | 说明                            |
+| -------- | ---------------------------------- | ------------------------------- |
+| Hero     | 静态（本地图片 + 固定文案）        | 全宽大图、大标题、2 个 CTA 按钮 |
+| 特色系列 | Shopify `getCollections(first: 4)` | 横排 CollectionCard 网格        |
+| 热门商品 | Shopify `getProducts(first: 8)`    | ProductCard 四列网格            |
 
-| 能力                                | 用途                       |
-| ----------------------------------- | -------------------------- |
-| App Router 目录结构                 | 建立 `app/` 布局与路由骨架 |
-| 环境变量（`NEXT_PUBLIC_` / 服务端） | 安全存放 Shopify API Key   |
-| Root Layout + Global CSS            | Tailwind 全局注入          |
+Hero CTA：「探索全部商品 → /products」 + 「浏览系列 → /collections」
 
-### Shopify 知识点
+#### 2. Footer 组件（新建 `src/components/layout/Footer.tsx`）
 
-- **Storefront API**：面向前端的公开 GraphQL API，与 Admin API 区别
-- API Key 权限范围（`unauthenticated_read_product_listings` 等）
+- 四列布局：品牌简介 ｜ 导购链接 ｜ 账户链接 ｜ 联系 & 社交
+- 底部版权行
+- Newsletter 邮件输入框（UI only）
+- 在 `src/app/layout.tsx` 末尾引入
 
-### GraphQL 知识点（Phase 0）
+#### 3. 移动端菜单（更新 `src/components/layout/Header.tsx`）
 
-- **Query**：最基础的读操作，`query { shop { name } }`
-- **Schema & Type System**：GraphQL 的所有字段都有类型约束，IDE 可静态校验
-- **Variables**：将参数从 query 中抽离，`query GetProduct($handle: String!) { ... }`
-- **客户端封装模式**：统一的 `shopifyFetch<T>(query, variables)` 函数，所有后续 API 调用复用此入口
+- `md:hidden` 汉堡图标（`lucide-react` Menu / X）
+- 全屏覆盖导航层，含所有导航链接 + 搜索入口
+- ESC / 点击遮罩关闭
 
-### 学习价值评估
+#### 4. Announcement Bar（新建 `src/components/layout/AnnouncementBar.tsx`）
 
-> Storefront API 是本项目所有 Shopify 能力的入口，搭好这一层后续所有阶段都可以复用。GraphQL 的类型系统与 TypeScript 天然互补，在这里打好基础收益持续整个项目。
+- 全宽细条，置于 Header 上方
+- 静态促销文案（"全场包邮 · 满 299 立减 50"）
+- `×` 关闭按钮，`localStorage` 记忆 dismiss（Client Component）
+
+### 文件变更
+
+| 文件                                        | 变更类型                      |
+| ------------------------------------------- | ----------------------------- |
+| `src/app/page.tsx`                          | 完全重写                      |
+| `src/app/layout.tsx`                        | 引入 Footer + AnnouncementBar |
+| `src/components/layout/Header.tsx`          | 添加移动菜单                  |
+| `src/components/layout/Footer.tsx`          | 新建                          |
+| `src/components/layout/AnnouncementBar.tsx` | 新建                          |
+| `public/hero.jpg`                           | 新增静态资源                  |
+
+### Next.js 知识点
+
+- RSC 页面中混合静态内容与服务端 fetch（无 useEffect，直接顶层 await）
+- Client / Server 组件边界：AnnouncementBar（localStorage）是 Client，首页主体是 Server
+- 布局层组件的插入位置与 CSS 层叠顺序
 
 ---
 
-## Phase 1 — 商品浏览
+## Phase B — 商品 & 浏览体验
 
 ### 目标
 
-实现商品列表页 + 商品详情页，掌握 RSC 数据获取与动态路由。
+让商品详情页和 Collection 页具备真实电商站点的浏览深度。
 
 ### 交付物
 
-- `/products` — 商品列表（RSC，服务端直接 fetch）
-- `/products/[handle]` — 商品详情页（动态路由 + 变体选择）
-- `generateStaticParams` 预渲染已知商品
-- `next/image` 展示商品主图
-- 商品 Variant 选择（颜色 / 尺寸下拉，纯 UI 交互）
+#### 1. 商品图片画廊（新建 `src/components/product/ProductGallery.tsx`）
 
-### Next.js 能力
+- 左侧缩略图纵列 + 右侧主图（或顶部缩略图横条，根据布局定）
+- 点击缩略图切换主图（纯 Client Component UI 状态，`useState`）
+- 数据来源：`ProductDetail.images`（已支持最多 5 张）
+- 在 `src/app/products/[handle]/page.tsx` 中替换现有单张图片
 
-| 能力                   | 用途                       | 为什么用                           |
-| ---------------------- | -------------------------- | ---------------------------------- |
-| React Server Component | 服务端直接调用 Shopify API | 无需客户端 fetch + 零 bundle 体积  |
-| 动态路由 `[handle]`    | 每个商品独立 URL           | 利于 SEO 与直接分享                |
-| `generateStaticParams` | 构建时预生成商品页         | 热门商品首屏秒开，ISR 兜底冷门商品 |
-| `next/image`           | 自动 WebP 转换 + 懒加载    | Shopify CDN 图片体积优化           |
+#### 2. 相关商品推荐（新建 `src/components/product/RelatedProducts.tsx`）
 
-### Shopify 知识点
+- 显示"同系列更多商品"（4 张 ProductCard）
+- **GraphQL 扩展**：`GET_PRODUCT_BY_HANDLE_QUERY` 增加 `collections(first: 1) { nodes { handle } }`
+- 服务端：取第一个 collection handle → `getCollectionByHandle(handle, 5)` → 过滤当前商品
+- 用 `<Suspense>` 包裹，独立请求不阻塞页面渲染
 
-- **Product 体系**：`Product → ProductVariant → SelectedOptions`
-- `handle`：Shopify 商品的 URL-friendly 唯一标识符
-- `priceRange`、`compareAtPrice`：价格字段结构
-- `images.nodes`：商品图片列表
+#### 3. Collection 筛选 & 排序（更新 Collection 详情页）
 
-### GraphQL 知识点（Phase 1）
+**排序**（URL 参数 `?sort=`）
 
-- **Connection 分页模式**：Shopify 所有列表字段都是 Connection，`products { edges { node { ... } } pageInfo { hasNextPage endCursor } }`
-- **Cursor-based 分页**：`first: 20, after: $cursor`，比 offset 分页更适合实时数据
-- **`nodes` 简写**：新版 API 支持 `products { nodes { ... } }` 省略 `edges.node` 层级
+| 参数值         | Shopify sortKey | reverse |
+| -------------- | --------------- | ------- |
+| `price-asc`    | `PRICE`         | false   |
+| `price-desc`   | `PRICE`         | true    |
+| `newest`       | `CREATED`       | true    |
+| `best-selling` | `BEST_SELLING`  | false   |
 
-### 注意
+**筛选**：`?available=true` → Shopify `filters: [{ available: true }]`
 
-> `generateStaticParams` 只预生成"热门/已知"商品，`fallback: 'blocking'` 行为由 Next.js ISR 接管，适合商品数量大的场景。
+- 新建 `src/components/collection/CollectionFilters.tsx`（Client Component，router.push 更新 URL）
+- 更新 `src/lib/shopify/queries/collection.ts`（添加 sortKey / reverse / filters 变量）
+- 更新 `src/lib/shopify/client.ts`（`getCollectionByHandle` 增加 sortKey / filters 参数）
+
+#### 4. 商品徽章（更新 `src/components/product/ProductCard.tsx`）
+
+| 条件                              | 徽章     | 样式             |
+| --------------------------------- | -------- | ---------------- |
+| `compareAtPrice` 存在且 > `price` | SALE     | 红色绝对定位     |
+| `availableForSale === false`      | SOLD OUT | 灰色，图片半透明 |
+
+数据已完全支持，纯 UI 改动。
+
+### 文件变更
+
+| 文件                                              | 变更类型                        |
+| ------------------------------------------------- | ------------------------------- |
+| `src/app/products/[handle]/page.tsx`              | 集成 Gallery + RelatedProducts  |
+| `src/components/product/ProductGallery.tsx`       | 新建                            |
+| `src/components/product/RelatedProducts.tsx`      | 新建                            |
+| `src/components/product/ProductCard.tsx`          | 添加徽章                        |
+| `src/app/collections/[handle]/page.tsx`           | 集成 Filters，传入 searchParams |
+| `src/components/collection/CollectionFilters.tsx` | 新建                            |
+| `src/lib/shopify/queries/product.ts`              | 添加 collections 字段           |
+| `src/lib/shopify/queries/collection.ts`           | 添加 sortKey / filters 变量     |
+| `src/lib/shopify/client.ts`                       | 更新函数签名                    |
+| `src/lib/shopify/types.ts`                        | 扩展 ProductDetail 类型         |
+
+### Next.js 知识点
+
+- `searchParams` prop 在 Server Component 中读取 URL 参数（无需 useSearchParams）
+- `<Suspense>` 细粒度拆分：RelatedProducts 独立 Suspense 边界，不影响主内容
+- Client Component 只负责交互（下拉选择）→ URL 更新触发 Server 重渲染
 
 ---
 
-## Phase 2 — Collection 导航与 SEO
+## Phase C — 交互 & 收尾
 
 ### 目标
 
-实现 Collection 分类体系，并为全站配置 SEO 元数据。
+补齐操作反馈、购物车体验、账户视觉，让整站体验流畅完整。
 
 ### 交付物
 
-- `/collections` — 系列列表页
-- `/collections/[handle]` — 系列商品页（分页）
-- 全站 `generateMetadata`（title / description / og:image）
-- 商品详情页 OG 标签（社交分享预览）
-- `sitemap.ts` — 自动生成 sitemap
-- 导航栏从 Shopify Menu 动态读取（可选）
+#### 1. Cart Drawer（最核心改造）
 
-### Next.js 能力
-
-| 能力                                   | 用途                   | 为什么用                                |
-| -------------------------------------- | ---------------------- | --------------------------------------- |
-| `generateMetadata`                     | 每页动态注入 meta 标签 | SEO 与社交分享必需，App Router 原生支持 |
-| `opengraph-image.tsx`                  | OG 图片动态生成        | 提升社交分享点击率                      |
-| `sitemap.ts` Route                     | 输出 XML sitemap       | 帮助搜索引擎索引所有商品和系列页        |
-| Parallel Routes / Intercepting（可选） | 弹窗展示商品详情       | 不强制，按兴趣探索                      |
-
-### Shopify 知识点
-
-- **Collection 体系**：手动系列 vs 自动系列（Smart Collection）
-- `collection.products`：系列内商品 GraphQL 查询
-- Shopify Menu API：导航菜单的动态读取
-- `seo.title` / `seo.description`：Shopify 商品的 SEO 字段
-
-### GraphQL 知识点（Phase 2）
-
-- **Fragments**：将重复的字段集合抽成可复用单元，`fragment ProductCard on Product { id title ... }`
-- **Alias**：同一查询中多次调用同一字段时重命名，`featuredCollection: collection(handle: "featured") { ... }`
-
----
-
-## Phase 3 — 搜索与 Streaming
-
-### 目标
-
-实现全站搜索，深度理解 Streaming 与 Suspense 边界设计。
-
-### 交付物
-
-- `/search?q=xxx` — 搜索结果页
-- 搜索结果使用 Streaming 逐步渲染（骨架屏 → 真实内容）
-- `loading.tsx` 展示全局加载态
-- 搜索框（Client Component）+ 结果区（RSC + Suspense）
-- URL 参数驱动搜索（`searchParams`）
-
-### Next.js 能力
-
-| 能力                        | 用途                          | 为什么用                   |
-| --------------------------- | ----------------------------- | -------------------------- |
-| Streaming + Suspense        | 先展示骨架，数据到达后替换    | 搜索延迟不阻塞整个页面渲染 |
-| `loading.tsx`               | 路由切换时的全局 loading 状态 | App Router 内置约定文件    |
-| `searchParams` prop         | 服务端读取 URL 查询参数       | 无需客户端 JS 解析参数     |
-| RSC + Client Component 边界 | 搜索框是交互组件，结果是 RSC  | 最小化客户端 bundle        |
-
-### Shopify 知识点
-
-- `predictiveSearch` vs `search` query：两种搜索 API 的适用场景
-- `SearchResultItemConnection`：搜索结果的类型结构
-- 搜索可以跨 Product / Collection / Article 联合检索
-
-### GraphQL 知识点（Phase 3）
-
-- **Input Types**：复杂参数的结构化传递，`search(query: $q, types: [PRODUCT, COLLECTION])`
-- **Union Types**：搜索结果可能是 `Product | Collection | Article`，需要用 `... on Product { }` inline fragment 处理
-- **`__typename`**：查询返回的类型名，用于在 Union 场景中做类型区分
-
-### 关键学习点
-
-> Streaming 的核心是"让慢的不阻塞快的"，本阶段会明确感受到 Suspense 边界划分对用户体验的影响。
-
----
-
-## Phase 4 — 购物车
-
-### 目标
-
-实现完整的购物车流程，掌握 Server Actions 与 Cookie Session。
-
-### 交付物
-
-- 商品详情页"加入购物车"按钮
-- `/cart` — 购物车页面（数量增减、删除商品）
-- Cart ID 存入 Cookie，跨页面保持
-- 购物车 icon 显示商品数量（Layout 层共享状态）
-- "结账"按钮跳转 Shopify 原生 Checkout URL（`cart.checkoutUrl`）
-- Optimistic UI（操作后立即更新 UI，无需等待 API）
-
-### Next.js 能力
-
-| 能力             | 用途                                             | 为什么用                                        |
-| ---------------- | ------------------------------------------------ | ----------------------------------------------- |
-| Server Actions   | 处理 addToCart / removeFromCart / updateQuantity | 无需手写 API Route，表单/按钮直接调用服务端函数 |
-| `cookies()` API  | 存取 Shopify Cart ID                             | Cart 状态跨请求持久化                           |
-| `useOptimistic`  | 操作后立即更新 UI                                | 消除购物车操作的网络延迟感                      |
-| `revalidatePath` | 购物车变更后刷新相关页面缓存                     | 保持服务端数据与 UI 同步                        |
-
-### Shopify 知识点
-
-- **Cart API**（Storefront）：`cartCreate` → `cartLinesAdd` → `cartLinesUpdate` → `cartLinesRemove`
-- Cart 与 Checkout 的关系：Cart 是状态存储，`cart.checkoutUrl` 指向 Shopify 托管结账页
-- `cart.cost.totalAmount`：购物车总价
-- Shopify Cart 的生命周期（无过期配置 = 永久有效，有过期 = 按 policy）
-
-### GraphQL 知识点（Phase 4）
-
-- **Mutations**：写操作的标准形式，`mutation CartCreate($input: CartInput!) { cartCreate(input: $input) { cart { ... } } }`
-- **Payload 模式**：每个 Mutation 返回一个 Payload 对象，包含操作结果（`cart`）和错误列表（`userErrors`）
-- **`userErrors` vs HTTP 错误**：GraphQL 始终返回 200，业务错误通过 `userErrors` 字段传递，需主动检查
-- **乐观更新与 Mutation**：Server Action 触发 Mutation，`useOptimistic` 在等待响应期间先更新 UI
-
-### 重要取舍
-
-> **不自建 Checkout UI**。Shopify 原生 Checkout 已处理支付、税率、优惠码、物流等复杂逻辑，自建成本极高，实际产品中 99% 的 Headless 项目也跳转原生 Checkout。
-
----
-
-## Phase 5 — 缓存策略
-
-### 目标
-
-为商品数据设计合理缓存层，实现 Webhook 触发的按需更新。
-
-### 交付物
-
-- 为 Shopify 查询添加 `fetch` 缓存标签（`next: { tags: [...] }`）
-- `/api/revalidate` Route Handler — 接收 Shopify Webhook 并触发 `revalidateTag`
-- 梳理全站各页面的缓存策略（静态 / ISR / 动态）
-- 在 Shopify 后台配置 `product/update` Webhook
-- 验证：修改 Shopify 商品后，页面在 N 秒内自动更新
-
-### Next.js 能力
-
-| 能力                   | 用途                        | 为什么用                         |
-| ---------------------- | --------------------------- | -------------------------------- |
-| `fetch` cache + `tags` | 细粒度标记缓存条目          | 按 tag 精准失效，不必全量重建    |
-| `revalidateTag`        | 服务端按需清除缓存          | 配合 Webhook 实现近实时更新      |
-| `revalidatePath`       | 清除指定路由缓存            | 适合购物车、账户等频繁变更的页面 |
-| Route Handlers         | 暴露 `/api/revalidate` 端点 | 接收外部 Webhook 请求            |
-
-### Shopify 知识点
-
-- **Webhook**：Shopify 事件驱动通知机制（`product/update`、`orders/create` 等）
-- HMAC 验证：验证 Webhook 来源合法性（安全关键）
-- Webhook delivery 失败重试机制
-
-### GraphQL 知识点（Phase 5）
-
-- **GraphQL over HTTP 与缓存**：GraphQL 默认用 POST，HTTP 缓存层（CDN / 浏览器）不缓存 POST；Next.js 通过在 `fetch` 层拦截实现服务端缓存，需理解这一层包装
-- **Shopify Query Cost**：每个 GraphQL 查询有成本上限（throttling），可通过 `extensions.cost` 字段查看消耗，指导查询优化
-
-### 学习价值评估
-
-> 这个阶段是理解 Next.js Data Cache 最直观的实践场景，"触发 Webhook → 页面自动更新"的闭环很有成就感。
-
----
-
-## Phase 6 — 用户账户
-
-### 目标
-
-实现 Customer 登录 / 注册，以及受保护的账户页面。
-
-### 交付物
-
-- `/account/login` — 登录页（Server Action 提交）
-- `/account/register` — 注册页
-- `/account` — 账户主页（显示姓名 / 邮箱）
-- `/account/orders` — 历史订单列表
-- Middleware 拦截未登录访问 `/account/*`
-- Customer Access Token 存入 httpOnly Cookie
-
-### Next.js 能力
-
-| 能力                   | 用途                       | 为什么用                            |
-| ---------------------- | -------------------------- | ----------------------------------- |
-| Middleware             | 路由级权限拦截             | 统一处理 `/account/*` 的未登录跳转  |
-| Server Actions         | 登录 / 注册表单提交        | 无需额外 API Route，直接操作 Cookie |
-| `cookies()` (httpOnly) | 存储 Customer Access Token | httpOnly 防止 XSS 读取 token        |
-| `redirect()`           | 登录后跳转                 | Server Action 内直接调用            |
-
-### Shopify 知识点
-
-- **Customer API**（Storefront）：`customerCreate`、`customerAccessTokenCreate`
-- Customer Access Token：有时效（默认 2 小时 / 最长 30 天）
-- `customer.orders`：订单历史 GraphQL 查询
-- 注意：Storefront Customer API 与 Customer Account API（新版 OAuth）的区别
-  - 本阶段使用旧版 Storefront Customer API，足够学习；新版 OAuth 复杂度显著更高
-
-### 重要提示
-
-> Customer 密码在 Shopify 端管理，前端只处理 Token，不接触明文密码存储。
-
----
-
-## Phase 7 — 验收能力、性能优化与收尾
-
-### 目标
-
-补齐 Playwright 阶段验收能力，提升整体性能体验，探索 Edge 能力，完善产品化细节。
-
-### 交付物
-
-- Playwright 自动化验收 Phase 7 自身交付物
-- Proxy 评估地区检测（`geo` 对象）+ 货币提示（可选）
-- 关键页面切换到 Edge Runtime（探索成本与收益）
-- `next/font` 本地字体优化（消除 CLS）
-- 构建输出与客户端 bundle 风险检查
-- Lighthouse 评分审计 + 针对性优化
-- 404 / Error 页面完善（`not-found.tsx` / `error.tsx`）
-
-### Next.js 能力
-
-| 能力                          | 用途                              |
-| ----------------------------- | --------------------------------- |
-| Edge Runtime                  | Proxy / 特定 Route 在请求边界执行 |
-| `next/font`                   | 字体预加载 + 消除布局偏移         |
-| `error.tsx` / `not-found.tsx` | 统一错误边界处理                  |
-| Playwright                    | 自动化验收 Phase 7 自身交付物     |
-
-### Shopify 知识点
-
-- Shopify Markets：多地区 / 多货币的产品级支持（了解即可，不深入实现）
-- `context.buyerIdentity`：Cart 中传入地区信息影响税率和货币
-
----
-
-## Shopify 能力取舍建议
-
-| 能力                             | 建议            | 原因                                 |
-| -------------------------------- | --------------- | ------------------------------------ |
-| Storefront API + Cart            | ✅ 重点学习     | 核心链路，覆盖 80% 的场景            |
-| Collections + Search             | ✅ 重点学习     | 基础商品浏览体验                     |
-| Customer（旧版 Storefront）      | ✅ 学习         | 账户体系入门，复杂度适中             |
-| Webhooks                         | ✅ 学习         | 理解事件驱动 + 缓存失效              |
-| Checkout UI 自建                 | ⚠️ 暂不投入     | 复杂度极高，真实产品也不推荐         |
-| Customer Account API（新 OAuth） | ⚠️ 了解即可     | 方向正确但配置复杂，后续再探索       |
-| Shopify Markets（多货币/多地区） | ⚠️ 浅尝         | Phase 7 可简单触碰，不深入           |
-| Metafields                       | ⚠️ 按需         | 商品扩展字段，用到时再学             |
-| Admin API                        | ❌ 本项目不涉及 | 面向后台管理，与 Storefront 完全分离 |
-| Shopify Functions / App Proxy    | ❌ 超出范围     | 面向 Shopify App 开发，非本项目目标  |
-
----
-
-## 推荐开发顺序与节奏
+**架构**：最小 React Context，只管理 `isOpen` 布尔值
 
 ```
-Week 1:  Phase 0 + Phase 1    → 项目跑起来，看到真实商品数据
-Week 2:  Phase 2 + Phase 3    → Collection 分类 + 搜索体验
-Week 3:  Phase 4              → 购物车完整流程（本阶段最复杂）
-Week 4:  Phase 5              → 缓存策略（偏"理解型"）
-Week 5:  Phase 6              → 用户账户
-Week 6:  Phase 7 + 收尾       → 性能优化 + 整体打磨
+src/context/CartContext.tsx       ← 新建，Provider + useCart hook
+src/components/cart/CartDrawer.tsx ← 新建，右侧固定浮层
 ```
 
-> 每个 Phase 完成后建议做一次"完整回顾"：这个阶段用了什么 Next.js 能力、解决了什么问题、Shopify 的哪个 API 对应了哪个业务场景。这种自我总结比代码本身更有长期价值。
+- CartDrawer：`position: fixed right-0`，覆盖遮罩，复用现有 `CartItem` + `CartSummary`
+- `AddToCartButton`：成功后调用 `openCart()`
+- Header 购物车 icon：点击调用 `openCart()`
+- `/cart` 页面**保留**（直接访问 URL 仍可用）
+- 在 `src/app/layout.tsx` 中：`<CartProvider>` 包裹全局，渲染 `<CartDrawer />`
+
+#### 2. Toast 通知（安装 `sonner`）
+
+- `src/app/layout.tsx` 引入 `<Toaster />`
+- 触发点：
+  - 加入购物车成功 → `toast.success("已加入购物车")`
+  - 登录/注册成功 → `toast.success(...)`
+  - 表单校验失败 → `toast.error(...)`
+- Server Action 返回状态 → Client Component `useEffect` 监听 → 触发 toast
+
+#### 3. 骨架屏补齐
+
+- `src/app/products/loading.tsx` — 新建（ProductCard 骨架 4 列网格）
+- `src/app/collections/loading.tsx` — 新建（CollectionCard 骨架）
+- 与现有 `src/app/search/loading.tsx` 视觉风格保持一致
+
+#### 4. 账户页视觉完善
+
+- `src/app/account/page.tsx`：顶部 Avatar（姓名首字母 + Tailwind 圆形背景）+ 订单数量统计
+- `src/app/account/layout.tsx`：侧边导航从 Tab 改为竖排链接列表（桌面端）
+
+### 文件变更
+
+| 文件                                      | 变更类型                                 |
+| ----------------------------------------- | ---------------------------------------- |
+| `src/context/CartContext.tsx`             | 新建                                     |
+| `src/components/cart/CartDrawer.tsx`      | 新建                                     |
+| `src/components/cart/AddToCartButton.tsx` | 调用 openCart                            |
+| `src/components/layout/Header.tsx`        | 购物车 icon 触发 Drawer                  |
+| `src/app/layout.tsx`                      | 引入 CartProvider + CartDrawer + Toaster |
+| `src/app/products/loading.tsx`            | 新建                                     |
+| `src/app/collections/loading.tsx`         | 新建                                     |
+| `src/app/account/page.tsx`                | 视觉升级                                 |
+| `src/app/account/layout.tsx`              | 导航改竖排                               |
+| `package.json`                            | 添加 sonner                              |
+
+### Next.js 知识点
+
+- Context Provider 在 `layout.tsx` 中插入（仅需在最外层一次）
+- Server Action 返回值传递给 Client Component → 触发 toast 的模式
+- `loading.tsx` 与 Suspense 的关系：路由级 loading 文件等价于 `<Suspense fallback>`
 
 ---
 
-## 关于架构建议
+## 验收方式
 
-**GraphQL 客户端**：不推荐引入 Apollo / urql，直接用 `fetch` + 手写 GraphQL query，保持依赖轻量，也更直观理解 Storefront API 的查询结构。
+每个 Phase 完成后执行：
 
-**类型生成**：可选择手写 TypeScript 类型（前期学习价值高），或在 Phase 5 后引入 `@shopify/storefront-api-types` / GraphQL codegen（工程化提效）。
+```bash
+pnpm lint    # 无错误
+pnpm build   # 构建通过
+```
 
-**状态管理**：Cart 状态通过 Cookie + Server Actions 管理，不需要引入 Zustand / Redux。账户状态同理。整个项目可以零客户端状态管理库。
+手动验收重点：
 
-**测试策略**：本项目定位学习型，建议只在关键 utility 函数（价格格式化、GraphQL 客户端封装）写单元测试，不强求全覆盖。
+| Phase | 验收项                                                                                                    |
+| ----- | --------------------------------------------------------------------------------------------------------- |
+| A     | 首页三个区块正常渲染、Footer 四列显示、移动菜单开关正常、Announcement Bar dismiss 后不再显示              |
+| B     | 图片缩略图点击切换、相关商品显示（同 Collection）、排序 URL 参数生效、Sale 徽章在有 compareAtPrice 时出现 |
+| C     | 加入购物车触发 Drawer 滑出、Toast 弹出、账户页 Avatar 显示、loading.tsx 在网速慢时可见骨架                |
+
+---
+
+## CLAUDE.md 同步
+
+完成 Phase A 后同步更新 `CLAUDE.md` 的"当前开发阶段"字段：
+
+```
+**Phase A（布局 & 首页）进行中 → Phase B / C 待做**
+```

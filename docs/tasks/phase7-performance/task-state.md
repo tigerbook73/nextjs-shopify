@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## 当前步骤
 
-Step 2
+Step 3
 
 ## 需求阶段
 
@@ -52,11 +52,11 @@ Step 2
 
 ### Step 3：收敛字体与根布局配置
 
-- status: pending
-- Commit: —
-- Date: —
-- auto-check: —
-- manual-check: —
+- status: done
+- Commit: feat(step-3): 收敛字体与根布局配置
+- Date: 2026-05-26
+- auto-check: passed
+- manual-check: passed
 
 ### Step 4：添加 bundle analyzer 能力
 

@@ -6,7 +6,7 @@ Phase 7 不新增核心电商业务能力，采用“小步验收 + 小步收尾
 
 现有 `src/app/layout.tsx` 已使用 `next/font/google` 的 Geist 字体，因此字体步骤以“确认并收敛配置”为主：确保根布局应用稳定、无外部字体 CSS，必要时调整 `lang`、CSS token 或字体变量命名。若后续发现 `next/font/google` 在当前环境下不满足“本地字体优化”的学习目标，再改为 `next/font/local`，但不把字体文件引入作为默认设计。
 
-`@next/bundle-analyzer` 是开发期分析工具，放入 `devDependencies`，通过环境变量或专用脚本启用，不影响普通用户路径。
+取消引入 bundle analyzer。Next.js 16 当前默认 Turbopack 构建，`@next/bundle-analyzer` 需要切换 webpack 分析构建，且会在当前 `next/font/google` 配置下额外依赖网络获取字体元数据。Phase 7 改为通过 `next build` 输出、Client Component 边界检查和依赖审查记录 bundle 风险。
 
 Playwright 作为开发/测试依赖引入，测试范围限定为 Phase 7 自身验收：确认 404 页面、错误边界恢复入口、字体配置可见结果，以及本阶段实际新增的收尾行为。测试不覆盖 Phase 0-6 已有业务流程，不覆盖真实支付、Shopify 后台、真实用户注册登录或完整订单链路。由于 404 和错误边界在 Step 2 才会实现，Step 1 只建立 Playwright 工具链和测试约定，首批业务化验收测试随对应交付物一起落地。
 
@@ -20,8 +20,8 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 - `src/app/error.tsx`：应用级错误边界，作为最小 Client Component，仅用于 `reset()` 交互。
 - `src/app/phase7-error-test/page.tsx`：测试专用错误触发页，仅在 Playwright 环境变量开启时抛出错误，用于验收错误边界。
 - `src/app/layout.tsx`：复核 `next/font` 配置、语言属性和全局字体变量。
-- `next.config.ts`：接入 bundle analyzer 包装配置。
-- `package.json`：新增 bundle 分析脚本或约定环境变量。
+- `next.config.ts`：保持普通 Next.js 配置，不接入 analyzer 包装。
+- `package.json`：保留 Playwright 验收脚本，不新增 analyzer 脚本。
 - `docs/tasks/phase7-performance/design.md`：记录 bundle、Lighthouse、Edge Runtime 的审计结论。
 - `docs/tasks/phase7-performance/task-state.md`：记录步骤状态、提交、自动检查和人工检查结果。
 
@@ -96,26 +96,26 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 - 首屏字体样式稳定，无明显布局跳动。
 - `pnpm test:e2e` 中的字体配置测试通过。
 
-### Step 4：添加 bundle analyzer 能力
+### Step 4：检查客户端 bundle 风险
 
-目标：建立客户端 bundle 可视化分析入口，不影响默认构建。
+目标：在不引入 analyzer 依赖的前提下，检查 Phase 7 是否带来明显客户端 bundle 风险。
 
 改动：
 
-- 安装 `@next/bundle-analyzer` 到 `devDependencies`。
-- 在 `next.config.ts` 中按环境变量启用 analyzer。
-- 在 `package.json` 增加 `analyze` 脚本，例如通过 `ANALYZE=true next build` 触发。
+- 保持 `next.config.ts` 不引入 bundle analyzer 包装。
+- 检查新增 Client Component 边界，确认只有 `error.tsx` 因 Next.js 错误边界约定需要客户端运行。
+- 检查 `package.json` 新增依赖，确认 Phase 7 运行时路径没有新增客户端依赖。
+- 在审计记录中记录 bundle 风险检查结论。
 
 自动验收：
 
 - `pnpm lint`
 - `pnpm typecheck`
 - `pnpm build`
-- `pnpm analyze` 能启动分析构建。
 
 人工验收：
 
-- 记录主要客户端 bundle 来源。
+- 记录客户端 bundle 风险检查结论。
 - 判断是否存在本阶段应处理的明显异常依赖或过大 Client Component。
 
 ### Step 5：执行性能审计并记录结论
@@ -124,7 +124,7 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 
 改动：
 
-- 在设计文档追加“审计记录”章节，记录被审计页面、bundle 观察、Lighthouse 观察、处理结论。
+- 在设计文档追加“审计记录”章节，记录被审计页面、客户端 bundle 风险观察、Lighthouse 观察、处理结论。
 - 对低风险问题做定向修复，例如图片尺寸、无障碍标签、metadata、过大的客户端边界等。
 - 不为追分做大范围 UI 重写。
 
@@ -163,9 +163,7 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 
 ## 审计记录
 
-待实现阶段补充：
-
-- Bundle 分析结论：待记录。
+- 客户端 bundle 风险检查结论：未引入 bundle analyzer；`package.json` 仅新增 Playwright 开发依赖，不进入正常用户运行路径。Phase 7 新增的 Client Component 只有 `src/app/error.tsx`，这是 Next.js 错误边界约定所需；其他 404、测试触发页和字体调整保持服务端路径。当前无明显需要处理的客户端 bundle 风险。
 - Lighthouse 审计页面：首页、商品列表页、商品详情页、购物车页。
 - Playwright 阶段验收结论：待记录。
 - Edge Runtime 结论：待记录。
@@ -174,7 +172,7 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 
 - Playwright 会新增开发依赖和浏览器运行环境要求；本任务只用于 Phase 7 自身验收，避免把学习项目变成高维护成本的全站 e2e 测试矩阵。
 - 测试专用错误触发页必须由 Playwright 环境变量保护，避免普通用户在生产环境访问到可触发错误的入口。
-- `@next/bundle-analyzer` 会新增开发依赖，但只在分析构建时启用，正常用户 bundle 不应受影响。
+- 不引入 bundle analyzer，避免为了收尾阶段增加 webpack 分析构建路径和额外字体网络依赖；本阶段只记录明显 bundle 风险。
 - `error.tsx` 必须是 Client Component，这是 Next.js 错误边界约定带来的必要客户端边界。
 - 地区/货币提示容易滑向完整多市场能力，本任务只允许轻量提示，不改变 Shopify 数据语义。
 - 当前已有 `next/font/google`，如果强行切换为本地字体文件，学习价值有限且会增加静态资源维护成本；默认保持 Next.js 管理字体加载。
@@ -185,4 +183,3 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 - `pnpm typecheck`
 - `pnpm build`
 - `pnpm test:e2e`
-- `pnpm analyze`

@@ -20,13 +20,13 @@ export default function AnnouncementBar() {
 
   return (
     <div className="relative bg-gray-900 px-4 py-2 text-center text-sm text-white">
-      全场包邮 · 满 299 立减 50
+      Free shipping on all orders · Save $50 on orders over $299
       <button
         onClick={() => {
           localStorage.setItem(STORAGE_KEY, "1");
           setDismissedLocal(true);
         }}
-        aria-label="关闭公告"
+        aria-label="Close announcement"
         className="absolute top-1/2 right-4 -translate-y-1/2 text-white/70 hover:text-white"
       >
         ×

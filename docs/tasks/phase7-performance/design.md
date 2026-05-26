@@ -18,7 +18,7 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 - `tests/e2e/`：Phase 7 自身交付物验收测试。
 - `src/app/not-found.tsx`：应用级 404 页面。
 - `src/app/error.tsx`：应用级错误边界，作为最小 Client Component，仅用于 `reset()` 交互。
-- `src/app/__phase7-error-test/page.tsx`：测试专用错误触发页，仅在 Playwright 环境变量开启时抛出错误，用于验收错误边界。
+- `src/app/phase7-error-test/page.tsx`：测试专用错误触发页，仅在 Playwright 环境变量开启时抛出错误，用于验收错误边界。
 - `src/app/layout.tsx`：复核 `next/font` 配置、语言属性和全局字体变量。
 - `next.config.ts`：接入 bundle analyzer 包装配置。
 - `package.json`：新增 bundle 分析脚本或约定环境变量。

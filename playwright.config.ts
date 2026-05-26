@@ -14,10 +14,10 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: `pnpm dev --hostname 127.0.0.1 --port ${PORT}`,
+    command: `PLAYWRIGHT_PHASE7=1 pnpm build && PLAYWRIGHT_PHASE7=1 pnpm start --hostname 127.0.0.1 --port ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 180_000,
   },
   projects: [
     {

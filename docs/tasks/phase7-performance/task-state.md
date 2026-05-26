@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## 当前步骤
 
-Step 1
+Step 2
 
 ## 需求阶段
 
@@ -44,11 +44,11 @@ Step 1
 
 ### Step 2：补齐错误与 404 页面
 
-- status: pending
-- Commit: —
-- Date: —
-- auto-check: —
-- manual-check: —
+- status: done
+- Commit: feat(step-2): 补齐错误与 404 页面
+- Date: 2026-05-26
+- auto-check: passed
+- manual-check: passed
 
 ### Step 3：收敛字体与根布局配置
 

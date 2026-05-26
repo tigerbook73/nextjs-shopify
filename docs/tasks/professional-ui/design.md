@@ -246,7 +246,9 @@ Badge 条件（绝对定位于图片左上角）：
 - `src/lib/shopify/queries/product.ts` — `GET_PRODUCT_BY_HANDLE_QUERY` 增加 `collections(first: 1) { nodes { handle } }`
 - `src/lib/shopify/types.ts` — `ProductDetail` 增加 `collections: { nodes: { handle: string }[] }`
 - `src/components/product/RelatedProducts.tsx` — 新建（async Server Component）
-- `src/app/products/[handle]/page.tsx` — 集成 `<Suspense><RelatedProducts /></Suspense>` + `generateMetadata`
+- `src/app/products/[handle]/page.tsx` — 集成 `<Suspense><RelatedProducts /></Suspense>`
+
+> `generateMetadata` 已存在且完整（含 `seo` 字段和 `openGraph`），**保持现状不改动**。
 
 **关键实现**：
 
@@ -258,15 +260,6 @@ const related = collection?.products.nodes.filter((p) => p.handle !== currentHan
 ```
 
 - 无 collection 或 related 为空时返回 `null`（不渲染区块）
-
-`generateMetadata`：
-
-```ts
-export async function generateMetadata({ params }) {
-  const product = await getProductByHandle(params.handle);
-  return { title: product?.title ?? "Product" };
-}
-```
 
 **验收条件**：
 
@@ -310,7 +303,10 @@ query GetCollectionByHandle(
 `CollectionFilters` 渲染排序下拉 + "In Stock Only"复选框，变更时：
 
 ```ts
-const params = new URLSearchParams(searchParams);
+// searchParams prop 是 Server Component 传入的初始值（用于初始化 UI 状态）
+// 客户端更新 URL 用 useSearchParams() hook 读取当前参数
+const currentParams = useSearchParams();
+const params = new URLSearchParams(currentParams.toString());
 params.set("sort", value);
 router.push(`?${params.toString()}`);
 ```
@@ -370,9 +366,21 @@ export function CartProvider({ children }) {
 CartDrawer：`fixed right-0 top-0 h-full w-80 bg-white shadow-xl transform transition-transform`，`isOpen ? 'translate-x-0' : 'translate-x-full'`
 
 - 遮罩：`fixed inset-0 bg-black/30 z-40`
-- 内部复用 `<CartItem>` + `<CartSummary>`
+- 内부复用 `<CartItem>` + `<CartSummary>`
 
-> **注意**：CartDrawer 内显示购物车内容需要客户端读取 cartId，参考 `CartCount` 的实现方式（cookie → server fetch）
+**购物车数据获取（Client Component 方案）**：
+
+CartDrawer 是 Client Component，无法直接使用 Server Component 方式。采用 Server Action 获取数据：
+
+```ts
+// Drawer 打开时（isOpen 变为 true），调用 Server Action 获取购物车
+const [cart, setCart] = useState<Cart | null>(null);
+useEffect(() => {
+  if (isOpen) getCartAction().then(setCart);
+}, [isOpen]);
+```
+
+`getCartAction`：从 cookie 读取 `cartId` → 调用 `getCart(cartId)` → 返回 `Cart | null`。
 
 **验收条件**：
 

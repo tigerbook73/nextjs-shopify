@@ -1,10 +1,15 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getCart } from "@/lib/shopify/client";
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "Shopping Cart",
+  description: "Review your selected products before checkout.",
+};
 
 export default async function CartPage() {
   const cookieStore = await cookies();

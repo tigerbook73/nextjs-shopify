@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## 当前步骤
 
-Step 5
+Step 6
 
 ## 需求阶段
 
@@ -68,11 +68,11 @@ Step 5
 
 ### Step 5：执行性能审计并记录结论
 
-- status: pending
-- Commit: —
-- Date: —
-- auto-check: —
-- manual-check: —
+- status: done
+- Commit: feat(step-5): 执行性能审计并记录结论
+- Date: 2026-05-26
+- auto-check: passed
+- manual-check: passed
 
 ### Step 6：评估 Edge Runtime 与地区提示
 

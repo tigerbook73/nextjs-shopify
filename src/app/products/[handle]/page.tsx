@@ -41,6 +41,7 @@ export default async function ProductPage({ params }: Props) {
               alt={product.featuredImage.altText ?? product.title}
               width={800}
               height={800}
+              sizes="(min-width: 1024px) 50vw, 100vw"
               className="h-full w-full object-cover"
               priority
             />

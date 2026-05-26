@@ -164,7 +164,7 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 ## 审计记录
 
 - 客户端 bundle 风险检查结论：未引入 bundle analyzer；`package.json` 仅新增 Playwright 开发依赖，不进入正常用户运行路径。Phase 7 新增的 Client Component 只有 `src/app/error.tsx`，这是 Next.js 错误边界约定所需；其他 404、测试触发页和字体调整保持服务端路径。当前无明显需要处理的客户端 bundle 风险。
-- Lighthouse 审计页面：首页、商品列表页、商品详情页、购物车页。
+- Lighthouse 审计页面：首页、商品列表页、商品详情页、购物车页。检查结论：现有页面主体保持 RSC 数据获取，首屏商品详情图已使用 `priority`；本步骤补充商品卡片与商品详情图的 `sizes`，并为购物车页补充 metadata。未发现需要大范围 UI 重写的低风险问题。
 - Playwright 阶段验收结论：待记录。
 - Edge Runtime 结论：待记录。
 

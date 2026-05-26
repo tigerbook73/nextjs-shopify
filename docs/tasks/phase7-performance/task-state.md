@@ -1,34 +1,35 @@
-# Task State: phase7-performance
+# 任务状态：phase7-performance
 
-## Metadata
+## 元数据
 
 - type: feature
 - status: in_progress
 
-## Document Index
+## 文档索引
 
-- `requirements.md` — requirements document
-- `design.md` — design document (with step breakdown)
+- `requirements.md` — 需求文档
+- `design.md` — 设计文档（包含步骤拆分）
 
-## Current Phase
+## 当前阶段
 
-requirements (in_progress)
+requirements (done)
 
-## Current Step
+## 当前步骤
 
 —
 
-## Requirements Phase
+## 需求阶段
 
-- status: in_progress
+- status: done
 - notes:
-  - task just created, requirements pending
+  - 已基于 `BLUEPRINT.md` Phase 7 完成需求整理，范围限定为性能收尾、错误页、字体优化、bundle 分析、Lighthouse 审计，以及 Edge/地区信息评估
 
-## Design Phase
+## 设计阶段
 
 - status: pending
-- notes: []
+- notes:
+  - 可进入设计规划
 
-## Implementation Phase
+## 实现阶段
 
 - status: pending

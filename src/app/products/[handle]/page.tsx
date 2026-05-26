@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import type { Metadata } from "next";
 import { getProductByHandle, getProducts } from "@/lib/shopify/client";
 import ProductForm from "@/components/product/ProductForm";
+import ProductGallery from "@/components/product/ProductGallery";
 
 type Props = { params: Promise<{ handle: string }> };
 
@@ -33,24 +33,10 @@ export default async function ProductPage({ params }: Props) {
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-        {/* 商品图片 */}
-        <div className="aspect-square overflow-hidden rounded-xl bg-gray-100">
-          {product.featuredImage ? (
-            <Image
-              src={product.featuredImage.url}
-              alt={product.featuredImage.altText ?? product.title}
-              width={800}
-              height={800}
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="h-full w-full object-cover"
-              priority
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center text-gray-400">No image</div>
-          )}
-        </div>
+        {/* Product images */}
+        <ProductGallery images={product.images.nodes} />
 
-        {/* 商品信息 */}
+        {/* Product info */}
         <div className="flex flex-col gap-6">
           <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
 

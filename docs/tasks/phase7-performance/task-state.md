@@ -12,11 +12,11 @@
 
 ## 当前阶段
 
-implementation (in_progress)
+implementation (done)
 
 ## 当前步骤
 
-Step 6
+—
 
 ## 需求阶段
 
@@ -32,7 +32,7 @@ Step 6
 
 ## 实现阶段
 
-- status: in_progress
+- status: done
 
 ### Step 1：建立 Phase 7 Playwright 自动化验收
 
@@ -76,8 +76,8 @@ Step 6
 
 ### Step 6：评估 Edge Runtime 与地区提示
 
-- status: pending
-- Commit: —
-- Date: —
-- auto-check: —
-- manual-check: —
+- status: done
+- Commit: feat(step-6): 评估 Edge Runtime 与地区提示
+- Date: 2026-05-26
+- auto-check: passed
+- manual-check: passed

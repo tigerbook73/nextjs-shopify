@@ -10,7 +10,7 @@ Phase 7 不新增核心电商业务能力，采用“小步验收 + 小步收尾
 
 Playwright 作为开发/测试依赖引入，测试范围限定为 Phase 7 自身验收：确认 404 页面、错误边界恢复入口、字体配置可见结果，以及本阶段实际新增的收尾行为。测试不覆盖 Phase 0-6 已有业务流程，不覆盖真实支付、Shopify 后台、真实用户注册登录或完整订单链路。由于 404 和错误边界在 Step 2 才会实现，Step 1 只建立 Playwright 工具链和测试约定，首批业务化验收测试随对应交付物一起落地。
 
-Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户鉴权已使用 Middleware，理论上天然运行在边缘环境；如果要继续使用地区信息，必须避免引入完整 Shopify Markets 行为。
+Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户鉴权已使用 Next.js Proxy 请求边界；如果要继续使用地区信息，必须避免引入完整 Shopify Markets 行为。
 
 ## 文件与模块规划
 
@@ -145,7 +145,8 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 
 改动：
 
-- 评估现有 `src/middleware.ts` 的运行位置、能力边界和当前账户鉴权逻辑。
+- 将已弃用的 `src/middleware.ts` 迁移为 `src/proxy.ts`，并将导出函数改为 `proxy`。
+- 评估现有 Proxy 的运行位置、能力边界和当前账户鉴权逻辑。
 - 判断是否需要在 Middleware 中读取请求地区信息并设置轻量提示。
 - 若实现地区提示，只展示“可能适用的地区/货币提示”，不改变商品价格、税费、Cart buyer identity 或 checkout 行为。
 - 若暂缓实现，在设计文档记录原因。
@@ -158,7 +159,7 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 
 人工验收：
 
-- 文档明确记录 Edge Runtime 采用或暂缓的结论。
+- 文档明确记录 Proxy/Edge 采用或暂缓的结论。
 - 如实现提示，确认不会影响登录、购物车和 checkout 跳转。
 
 ## 审计记录
@@ -166,7 +167,7 @@ Edge Runtime 和地区/货币提示只做适用性评估。当前项目的账户
 - 客户端 bundle 风险检查结论：未引入 bundle analyzer；`package.json` 仅新增 Playwright 开发依赖，不进入正常用户运行路径。Phase 7 新增的 Client Component 只有 `src/app/error.tsx`，这是 Next.js 错误边界约定所需；其他 404、测试触发页和字体调整保持服务端路径。当前无明显需要处理的客户端 bundle 风险。
 - Lighthouse 审计页面：首页、商品列表页、商品详情页、购物车页。检查结论：现有页面主体保持 RSC 数据获取，首屏商品详情图已使用 `priority`；本步骤补充商品卡片与商品详情图的 `sizes`，并为购物车页补充 metadata。未发现需要大范围 UI 重写的低风险问题。
 - Playwright 阶段验收结论：待记录。
-- Edge Runtime 结论：待记录。
+- Edge Runtime 结论：已将账户区鉴权从已弃用的 `middleware.ts` 迁移到 `proxy.ts`，继续用于 `/account/:path*` 请求边界保护。地区/货币提示暂缓实现，因为当前没有完整 Shopify Markets 需求；贸然展示货币提示容易和实际商品价格、Cart buyer identity、Checkout 行为不一致。
 
 ## 风险与取舍
 

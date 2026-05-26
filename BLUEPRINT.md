@@ -347,7 +347,7 @@ Phase 7 → 性能与收尾（Edge + 优化）
 ### 交付物
 
 - Playwright 自动化验收 Phase 7 自身交付物
-- Middleware 实现地区检测（`geo` 对象）+ 货币提示（可选）
+- Proxy 评估地区检测（`geo` 对象）+ 货币提示（可选）
 - 关键页面切换到 Edge Runtime（探索成本与收益）
 - `next/font` 本地字体优化（消除 CLS）
 - 构建输出与客户端 bundle 风险检查
@@ -356,12 +356,12 @@ Phase 7 → 性能与收尾（Edge + 优化）
 
 ### Next.js 能力
 
-| 能力                          | 用途                                    |
-| ----------------------------- | --------------------------------------- |
-| Edge Runtime                  | Middleware / 特定 Route 在 CDN 边缘执行 |
-| `next/font`                   | 字体预加载 + 消除布局偏移               |
-| `error.tsx` / `not-found.tsx` | 统一错误边界处理                        |
-| Playwright                    | 自动化验收 Phase 7 自身交付物           |
+| 能力                          | 用途                              |
+| ----------------------------- | --------------------------------- |
+| Edge Runtime                  | Proxy / 特定 Route 在请求边界执行 |
+| `next/font`                   | 字体预加载 + 消除布局偏移         |
+| `error.tsx` / `not-found.tsx` | 统一错误边界处理                  |
+| Playwright                    | 自动化验收 Phase 7 自身交付物     |
 
 ### Shopify 知识点
 

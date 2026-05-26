@@ -242,6 +242,55 @@ pnpm build   # 构建通过
 
 ---
 
+## 测试账号管理
+
+### Shopify 顾客测试账号
+
+在 Shopify Admin → Customers 中手动创建，专用于本地开发验收，不使用真实个人账号。
+
+| 用途         | Email                  | 密码         | 备注                       |
+| ------------ | ---------------------- | ------------ | -------------------------- |
+| 主测试账号   | `dev-main@test.local`  | `Test1234!`  | 预置历史订单，测试订单列表 |
+| 空账号       | `dev-empty@test.local` | `Test1234!`  | 无订单记录，测试空状态展示 |
+| 错误密码测试 | —                      | 任意错误密码 | 验证登录失败 Toast 提示    |
+
+> **创建步骤**：Shopify Admin → Customers → Add customer → 填写 Email + First name → 保存后在顾客详情页点击 "Send account invite"（或直接在注册页用上表 Email 注册）
+
+账号状态管理：
+
+- 订单数据无法从 Storefront API 删除；若需"清空订单"效果，新建一个空账号即可
+- Cookie 中的 `customerAccessToken` 有效期为 Shopify 默认（24 小时），测试登出流程时可直接清除 Cookie
+
+---
+
+### Shopify 测试支付方式
+
+本项目结账跳转至 Shopify 原生 Checkout，支付环境需在 **开发商店（Development Store）** 中启用 Bogus Gateway。
+
+#### 启用 Bogus Gateway
+
+Shopify Admin → Settings → Payments → 选择 "Bogus Gateway"（仅开发商店可见）
+
+#### Bogus Gateway 测试卡号
+
+| 输入值           | 结果      |
+| ---------------- | --------- |
+| `1`              | 支付成功  |
+| `2`              | 支付失败  |
+| `3`              | 异常/例外 |
+| 任意其他有效卡号 | 支付成功  |
+
+- CVV / 有效期：任意填写（如 `123` / `12/34`）
+- 姓名：任意填写
+
+#### 验收重点
+
+1. 点击 Checkout 跳转至 Shopify 结账页，URL 为 `*.myshopify.com/checkouts/...`
+2. 填写测试地址（如：北京市朝阳区，邮编 100020）
+3. 选择 Bogus Gateway → 输入 `1` → 确认支付 → 跳回成功页
+
+---
+
 ## CLAUDE.md 同步
 
 完成 Phase A 后同步更新 `CLAUDE.md` 的"当前开发阶段"字段：

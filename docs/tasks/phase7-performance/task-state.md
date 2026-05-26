@@ -12,11 +12,11 @@
 
 ## 当前阶段
 
-design (done)
+implementation (in_progress)
 
 ## 当前步骤
 
-—
+Step 1
 
 ## 需求阶段
 
@@ -32,15 +32,15 @@ design (done)
 
 ## 实现阶段
 
-- status: pending
+- status: in_progress
 
 ### Step 1：建立 Phase 7 Playwright 自动化验收
 
-- status: pending
-- Commit: —
-- Date: —
-- auto-check: —
-- manual-check: —
+- status: done
+- Commit: feat(step-1): 建立 Phase 7 Playwright 自动化验收
+- Date: 2026-05-26
+- auto-check: passed
+- manual-check: passed
 
 ### Step 2：补齐错误与 404 页面
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getShop } from "@/lib/shopify/client";
+import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Header from "@/components/layout/Header";
 import "./globals.css";
 
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
+        <AnnouncementBar />
         <Header />
         {children}
       </body>

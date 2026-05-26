@@ -50,6 +50,29 @@ Provider 包裹 `layout.tsx` 全局；CartDrawer 渲染在 Provider 内部；`/c
 
 ---
 
+## 验收协议
+
+### 回归规则
+
+**每个步骤完成后**，运行以下命令，确保本步骤新增测试通过，且所有已完成步骤的历史测试不回归：
+
+```bash
+pnpm test:e2e tests/e2e/professional-ui*.spec.ts
+```
+
+> Playwright `webServer` 会自动完成 `pnpm build && pnpm start`，因此 build 成功是所有 `[auto]` 测试的隐式前提。
+
+### 测试文件与命令速查
+
+| Phase | 步骤      | 测试文件                                     | 单步运行命令（示例）                                                      |
+| ----- | --------- | -------------------------------------------- | ------------------------------------------------------------------------- |
+| A     | Step 1–4  | `tests/e2e/professional-ui-phase-a.spec.ts`  | `pnpm test:e2e tests/e2e/professional-ui-phase-a.spec.ts --grep "Step 1"` |
+| B     | Step 5–8  | `tests/e2e/professional-ui-phase-b.spec.ts`  | `pnpm test:e2e tests/e2e/professional-ui-phase-b.spec.ts --grep "Step 5"` |
+| C     | Step 9–11 | `tests/e2e/professional-ui-phase-c.spec.ts`  | `pnpm test:e2e tests/e2e/professional-ui-phase-c.spec.ts --grep "Step 9"` |
+| 全部  | —         | `tests/e2e/professional-ui*.spec.ts`（glob） | `pnpm test:e2e tests/e2e/professional-ui*.spec.ts`                        |
+
+---
+
 ## 步骤拆分
 
 ### Step 1 — Announcement Bar
@@ -63,15 +86,14 @@ Provider 包裹 `layout.tsx` 全局；CartDrawer 渲染在 Provider 内部；`/c
 
 **关键实现**：
 
-- `'use client'`，`useState` 管理 `visible`
-- `useEffect` 初始化时读 `localStorage.getItem('ann-dismissed')`
-- 点击 `×` → `setVisible(false)` + `localStorage.setItem('ann-dismissed', '1')`
+- `useSyncExternalStore` 读取 `localStorage`（SSR 安全，无 useEffect setState）
+- 点击 `×` → 写 `localStorage` + 本地 state → 立即隐藏
 
 **验收条件**：
 
-- [ ] 首次访问显示促销文案
-- [ ] 点击 `×` 后条消失
-- [ ] 刷新页面后不再显示
+- `[auto]` 首次访问 `/`，促销文案可见 — `--grep "Step 1"`
+- `[auto]` 点击 `×` 后促销条消失 — `--grep "Step 1"`
+- `[auto]` dismiss 后重新导航至 `/`，促销条不再显示（Playwright 保留同一 `storageState`）— `--grep "Step 1"`
 
 ---
 
@@ -86,7 +108,7 @@ Provider 包裹 `layout.tsx` 全局；CartDrawer 渲染在 Provider 内部；`/c
 
 **关键实现**：
 
-- 顶层 `await getCollections(4)` + `await getProducts(8)`（两个并发 `Promise.all`）
+- 顶层 `await Promise.all([getCollections(4), getProducts(8)])`
 - Hero：`<Image src="/hero.jpg" priority fill alt="..." />` — `priority` 必须加，否则 LCP 警告
 - Hero CTA：两个 `<Link>` 按钮，分别指向 `/products` 和 `/collections`
 - 特色系列：`<CollectionCard>` 四列网格（`grid-cols-2 md:grid-cols-4`）
@@ -94,10 +116,11 @@ Provider 包裹 `layout.tsx` 全局；CartDrawer 渲染在 Provider 内部；`/c
 
 **验收条件**：
 
-- [ ] 三个区块正常渲染，无"Phase 0"字样
-- [ ] Hero CTA 链接跳转正确
-- [ ] 开发者工具 Network 面板无 LCP image 警告
-- [ ] `pnpm build` 无警告
+- `[auto]` 首页不含"Phase 0"文字，含"Discover Our Collection"标题 — `--grep "Step 2"`
+- `[auto]` 点击"Shop All Products"跳转至 `/products` — `--grep "Step 2"`
+- `[auto]` 点击"Browse Collections"跳转至 `/collections` — `--grep "Step 2"`
+- `[auto]` 页面含至少 1 个 CollectionCard 和至少 1 个 ProductCard — `--grep "Step 2"`
+- `[manual]` 浏览器 DevTools Console 无 LCP image 警告
 
 ---
 
@@ -118,9 +141,10 @@ Provider 包裹 `layout.tsx` 全局；CartDrawer 渲染在 Provider 内部；`/c
 
 **验收条件**：
 
-- [ ] 四列在 md 以上正常并排
-- [ ] 移动端自动折叠为单列
-- [ ] 底部版权行显示当前年份
+- `[auto]` Footer 含"About Us"、"Shop"、"Account"、"Stay in Touch"四个标题 — `--grep "Step 3"`
+- `[auto]` 版权行包含当前年份数字 — `--grep "Step 3"`
+- `[auto]` Email 输入框和 Join 按钮存在于 DOM — `--grep "Step 3"`
+- `[manual]` 浏览器宽度 ≥ 768px 时四列并排，< 640px 时单列叠放
 
 ---
 
@@ -143,10 +167,11 @@ Provider 包裹 `layout.tsx` 全局；CartDrawer 渲染在 Provider 内部；`/c
 
 **验收条件**：
 
-- [ ] 小屏（< 768px）显示汉堡图标，桌面不显示
-- [ ] 点击汉堡打开全屏菜单
-- [ ] ESC / 遮罩点击 / 点链接均可关闭
-- [ ] 桌面端导航不受影响
+- `[auto]` 移动端视口（375px）下汉堡按钮可见，桌面端（1280px）下不可见 — `--grep "Step 4"`
+- `[auto]` 移动端点击汉堡后，全屏菜单出现并含导航链接 — `--grep "Step 4"`
+- `[auto]` 移动端菜单打开后按 ESC，菜单消失 — `--grep "Step 4"`
+- `[auto]` 移动端点击菜单遮罩区域，菜单消失 — `--grep "Step 4"`
+- `[auto]` 桌面端 nav 链接直接可见，无汉堡按钮 — `--grep "Step 4"`
 
 ---
 
@@ -189,9 +214,10 @@ Badge 条件（绝对定位于图片左上角）：
 
 **验收条件**：
 
-- [ ] 有折扣商品显示红色 SALE 徽章
-- [ ] 缺货商品显示灰色 SOLD OUT 徽章，图片半透明
-- [ ] 无折扣且有货商品不显示任何徽章
+- `[auto]` `/products` 页面正常渲染，无 JS 报错 — `--grep "Step 5"`
+- `[manual]` 在 Shopify Admin 将某商品设为缺货，刷新后该商品卡片显示 SOLD OUT 徽章且图片半透明
+- `[manual]` 在 Shopify Admin 给某商品变体添加 Compare at price，刷新后对应卡片显示 SALE 徽章
+- `[manual]` 正常在售商品无任何徽章
 
 ---
 
@@ -214,9 +240,9 @@ Badge 条件（绝对定位于图片左上角）：
 
 **验收条件**：
 
-- [ ] 多图商品左侧显示缩略图列
-- [ ] 点击缩略图，右侧主图切换为对应图片
-- [ ] 单图商品无缩略图列，正常显示主图
+- `[auto]` 商品详情页正常渲染，主图区域存在于 DOM — `--grep "Step 6"`
+- `[manual]` 多图商品：左侧显示缩略图列；点击第二张缩略图后，主图切换为对应图片
+- `[manual]` 单图商品：无缩略图列，主图正常显示
 
 ---
 
@@ -253,10 +279,9 @@ export async function generateMetadata({ params }) {
 
 **验收条件**：
 
-- [ ] 商品详情页 `<title>` 标签显示商品名（浏览器 Tab 可见）
-- [ ] 有所属 Collection 的商品底部显示最多 4 张相关商品卡片
-- [ ] 相关商品不含当前商品自身
-- [ ] 无 Collection 的商品不渲染相关商品区块
+- `[auto]` 访问任意商品详情页，`<title>` 包含商品名（非 default 店铺名）— `--grep "Step 7"`
+- `[manual]` 属于某 Collection 的商品：页面底部显示"You may also like"区块，含最多 4 张其他商品卡片，不含当前商品
+- `[manual]` 不属于任何 Collection 的商品：页面底部无相关商品区块
 
 ---
 
@@ -291,7 +316,7 @@ query GetCollectionByHandle(
 }
 ```
 
-`CollectionFilters` 渲染排序下拉 + "仅显示有货"复选框，变更时：
+`CollectionFilters` 渲染排序下拉 + "In Stock Only"复选框，变更时：
 
 ```ts
 const params = new URLSearchParams(searchParams);
@@ -302,8 +327,8 @@ router.push(`?${params.toString()}`);
 空状态（`products.nodes.length === 0`）：
 
 ```tsx
-<p>暂无符合条件的商品</p>
-<Link href={`/collections/${handle}`}>重置筛选</Link>
+<p>No products match your filters.</p>
+<Link href={`/collections/${handle}`}>Clear filters</Link>
 ```
 
 `generateMetadata`：
@@ -314,10 +339,11 @@ return { title: collection?.title ?? "Collection" };
 
 **验收条件**：
 
-- [ ] Collection 页 `<title>` 显示系列名
-- [ ] 排序下拉切换后商品列表重新排序（URL 更新）
-- [ ] 勾选"仅显示有货"后缺货商品消失
-- [ ] 筛选结果为空时显示提示文案和重置链接
+- `[auto]` 访问任意 Collection 详情页，`<title>` 包含系列名 — `--grep "Step 8"`
+- `[auto]` 选择排序选项后，URL 含 `?sort=` 参数 — `--grep "Step 8"`
+- `[manual]` 排序切换后商品列表顺序与所选规则一致（需人工比对价格/日期）
+- `[manual]` 勾选"In Stock Only"后，缺货商品从列表消失
+- `[manual]` 手动在 URL 加入不可能匹配的 filter 参数后，页面显示"No products match"提示和"Clear filters"链接
 
 ---
 
@@ -338,7 +364,7 @@ return { title: collection?.title ?? "Collection" };
 CartContext：
 
 ```ts
-'use client';
+"use client";
 const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -354,16 +380,15 @@ CartDrawer：`fixed right-0 top-0 h-full w-80 bg-white shadow-xl transform trans
 
 - 遮罩：`fixed inset-0 bg-black/30 z-40`
 - 内部复用 `<CartItem>` + `<CartSummary>`
-- 数据：`useCart()` 只得 `isOpen`；购物车内容仍从 cookie cartId 服务端拿，或复用现有 cart server actions
 
 > **注意**：CartDrawer 内显示购物车内容需要客户端读取 cartId，参考 `CartCount` 的实现方式（cookie → server fetch）
 
 **验收条件**：
 
-- [ ] 加入购物车后 Drawer 从右侧滑入
-- [ ] 点击遮罩关闭 Drawer
-- [ ] `/cart` 页面直接访问仍正常
-- [ ] `CartProvider` 在 layout 中只包裹一次
+- `[auto]` 商品详情页点击"Add to Cart"后，Drawer 面板出现在 DOM 且可见 — `--grep "Step 9"`
+- `[auto]` Drawer 打开后点击遮罩区域，Drawer 消失 — `--grep "Step 9"`
+- `[auto]` 直接访问 `/cart` 页面，正常渲染不报错 — `--grep "Step 9"`
+- `[manual]` 检查 `layout.tsx`，`<CartProvider>` 仅包裹一次
 
 ---
 
@@ -375,7 +400,7 @@ CartDrawer：`fixed right-0 top-0 h-full w-80 bg-white shadow-xl transform trans
 
 - `package.json` — 添加 `sonner`
 - `src/app/layout.tsx` — 引入 `<Toaster />`
-- `src/components/cart/AddToCartButton.tsx` — 加入 `toast.success("已加入购物车")`
+- `src/components/cart/AddToCartButton.tsx` — 加入 `toast.success("Added to cart")`
 - `src/lib/actions/customer.ts` — login/register action 失败时 return `{ error: string }` 而非 throw
 - `src/components/account/LoginForm.tsx` — `useEffect` 监听 action state → `toast.error`
 - `src/components/account/RegisterForm.tsx` — 同上
@@ -386,7 +411,7 @@ CartDrawer：`fixed right-0 top-0 h-full w-80 bg-white shadow-xl transform trans
 
 ```ts
 await addToCart(variantId);
-toast.success("已加入购物车");
+toast.success("Added to cart");
 openCart(); // Step 9
 ```
 
@@ -394,7 +419,7 @@ Server Action 返回模式（login 为例）：
 
 ```ts
 // 已有：redirect('/account') on success
-// 新增：失败时 return { error: '邮箱或密码错误' }
+// 新增：失败时 return { error: 'Invalid email or password' }
 ```
 
 Form 组件：
@@ -408,10 +433,10 @@ useEffect(() => {
 
 **验收条件**：
 
-- [ ] 加入购物车后出现成功 Toast
-- [ ] 登录失败后出现错误 Toast（不是 alert）
-- [ ] 注册失败后出现错误 Toast
-- [ ] Toast 自动消失（sonner 默认 4s）
+- `[auto]` 商品详情页点击"Add to Cart"后，页面出现 success Toast — `--grep "Step 10"`
+- `[auto]` 登录页填写错误密码提交后，出现 error Toast — `--grep "Step 10"`
+- `[auto]` 注册页填写已注册邮箱提交后，出现 error Toast — `--grep "Step 10"`
+- `[auto]` Toast 出现约 4 秒后自动消失（`waitForSelector` with timeout）— `--grep "Step 10"`
 
 ---
 
@@ -441,30 +466,58 @@ const initials = customer.displayName
   .toUpperCase();
 ```
 
-```tsx
-<div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-900 text-xl font-bold text-white">
-  {initials}
-</div>
-```
-
 订单数：并行 `Promise.all([getCustomer(token), getCustomerOrders(token)])` 获取。
 
 账户布局（桌面侧边栏）：
 
 ```tsx
 <nav className="flex flex-col gap-2 border-r pr-8 md:w-48">
-  <Link ...>账户信息</Link>
-  <Link ...>历史订单</Link>
+  <Link ...>My Account</Link>
+  <Link ...>Order History</Link>
 </nav>
 ```
 
 **验收条件**：
 
-- [ ] 切换到 `/products` 时出现骨架屏（可通过 DevTools 降速网络复现）
-- [ ] 切换到 `/collections` 时出现骨架屏
-- [ ] 账户页顶部显示 Avatar 圆圈 + 姓名首字母
-- [ ] 账户页显示历史订单数量
-- [ ] 桌面端账户布局为侧边栏，移动端退化为横排
+- `[auto]` `loading.tsx` 文件存在且包含 `animate-pulse` 骨架元素 — `--grep "Step 11"`
+- `[manual]` 浏览器 DevTools Network → 调低网速至 Slow 3G，切换至 `/products`，可见骨架屏闪过
+- `[manual]` 同上，切换至 `/collections`，可见骨架屏闪过
+- `[manual]` 以测试账号登录后，账户页顶部显示姓名首字母 Avatar 圆圈
+- `[manual]` 账户页显示历史订单数量
+- `[manual]` 桌面端（≥ 768px）账户页导航为竖排侧边栏
+
+---
+
+## 整体任务验收
+
+所有 11 个步骤完成后执行：
+
+### 自动验收
+
+```bash
+# 1. 代码质量
+pnpm lint
+
+# 2. 类型检查
+pnpm typecheck
+
+# 3. 构建（Playwright webServer 会自动执行，也可单独验证）
+pnpm build
+
+# 4. 全部 E2E 测试（含历史回归）
+pnpm test:e2e tests/e2e/professional-ui*.spec.ts
+
+# 5. 已有历史测试不回归
+pnpm test:e2e tests/e2e/phase7*.spec.ts
+```
+
+### 人工验收重点
+
+| Phase | 核心验收项                                                                          |
+| ----- | ----------------------------------------------------------------------------------- |
+| A     | Announcement Bar dismiss 持久化；首页三区块正确；Footer 四列；移动菜单 ESC/遮罩关闭 |
+| B     | 多图画廊缩略图切换；相关商品过滤自身；排序结果符合规则；SALE/SOLD OUT 徽章正确      |
+| C     | Cart Drawer 滑出不跳转；Toast 各触发点正常；骨架屏可见；账户页 Avatar 显示          |
 
 ---
 

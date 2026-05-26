@@ -16,6 +16,7 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={featuredImage.altText ?? title}
             width={600}
             height={600}
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 50vw"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (

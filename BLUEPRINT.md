@@ -338,29 +338,30 @@ Phase 7 → 性能与收尾（Edge + 优化）
 
 ---
 
-## Phase 7 — 性能优化与收尾
+## Phase 7 — 验收能力、性能优化与收尾
 
 ### 目标
 
-提升整体性能体验，探索 Edge 能力，完善产品化细节。
+补齐 Playwright 阶段验收能力，提升整体性能体验，探索 Edge 能力，完善产品化细节。
 
 ### 交付物
 
-- Middleware 实现地区检测（`geo` 对象）+ 货币提示（可选）
+- Playwright 自动化验收 Phase 7 自身交付物
+- Proxy 评估地区检测（`geo` 对象）+ 货币提示（可选）
 - 关键页面切换到 Edge Runtime（探索成本与收益）
 - `next/font` 本地字体优化（消除 CLS）
-- Bundle 分析（`@next/bundle-analyzer`）
+- 构建输出与客户端 bundle 风险检查
 - Lighthouse 评分审计 + 针对性优化
 - 404 / Error 页面完善（`not-found.tsx` / `error.tsx`）
 
 ### Next.js 能力
 
-| 能力                          | 用途                                    |
-| ----------------------------- | --------------------------------------- |
-| Edge Runtime                  | Middleware / 特定 Route 在 CDN 边缘执行 |
-| `next/font`                   | 字体预加载 + 消除布局偏移               |
-| `error.tsx` / `not-found.tsx` | 统一错误边界处理                        |
-| `@next/bundle-analyzer`       | 可视化分析客户端 bundle 构成            |
+| 能力                          | 用途                              |
+| ----------------------------- | --------------------------------- |
+| Edge Runtime                  | Proxy / 特定 Route 在请求边界执行 |
+| `next/font`                   | 字体预加载 + 消除布局偏移         |
+| `error.tsx` / `not-found.tsx` | 统一错误边界处理                  |
+| Playwright                    | 自动化验收 Phase 7 自身交付物     |
 
 ### Shopify 知识点
 

@@ -22,7 +22,11 @@ export interface Product {
   id: string;
   title: string;
   handle: string;
+  availableForSale: boolean;
   priceRange: {
+    minVariantPrice: MoneyV2;
+  };
+  compareAtPriceRange: {
     minVariantPrice: MoneyV2;
   };
   featuredImage: ProductImage | null;
@@ -52,6 +56,7 @@ export interface ProductDetail extends Product {
     name: string;
     optionValues: { name: string }[];
   }[];
+  collections: { nodes: { handle: string }[] };
 }
 
 export interface Collection {

@@ -1,12 +1,21 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getCollectionByHandle, getCollectionHandles } from "@/lib/shopify/client";
 import ProductCard from "@/components/product/ProductCard";
+import CollectionFilters from "@/components/collection/CollectionFilters";
+
+const SORT_MAP: Record<string, { sortKey: string; reverse: boolean }> = {
+  "price-asc": { sortKey: "PRICE", reverse: false },
+  "price-desc": { sortKey: "PRICE", reverse: true },
+  newest: { sortKey: "CREATED", reverse: true },
+  "best-selling": { sortKey: "BEST_SELLING", reverse: false },
+};
 
 type Props = {
   params: Promise<{ handle: string }>;
-  searchParams: Promise<{ after?: string }>;
+  searchParams: Promise<{ after?: string; sort?: string; available?: string }>;
 };
 
 export async function generateStaticParams() {
@@ -29,15 +38,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CollectionPage({ params, searchParams }: Props) {
   const { handle } = await params;
-  const { after } = await searchParams;
+  const { after, sort, available } = await searchParams;
 
-  const collection = await getCollectionByHandle(handle, 12, after);
+  const sortConfig = sort ? SORT_MAP[sort] : undefined;
+  const filters = available === "true" ? [{ available: true }] : undefined;
+
+  const collection = await getCollectionByHandle(handle, 12, after, sortConfig?.sortKey, sortConfig?.reverse, filters);
 
   if (!collection) notFound();
 
   const { products } = collection;
   const { hasNextPage, endCursor } = products.pageInfo;
   const hasPrevPage = !!after;
+  const hasActiveFilters = !!(sort || available);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -53,8 +66,24 @@ export default async function CollectionPage({ params, searchParams }: Props) {
         {collection.description && <p className="mt-2 text-gray-600">{collection.description}</p>}
       </div>
 
+      <Suspense>
+        <CollectionFilters initialSort={sort} initialAvailable={available === "true"} />
+      </Suspense>
+
       {products.nodes.length === 0 ? (
-        <p className="text-gray-500">No products in this collection.</p>
+        hasActiveFilters ? (
+          <div className="py-12 text-center">
+            <p className="text-gray-500">No products match your filters.</p>
+            <Link
+              href={`/collections/${handle}`}
+              className="mt-4 inline-block text-sm font-medium text-gray-900 underline hover:no-underline"
+            >
+              Clear filters
+            </Link>
+          </div>
+        ) : (
+          <p className="text-gray-500">No products in this collection.</p>
+        )
       ) : (
         <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:grid-cols-4">
           {products.nodes.map((product) => (

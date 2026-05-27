@@ -1,50 +1,59 @@
-import { shopifyFetch } from "@/lib/shopify/client";
-import { GET_PRODUCTS_QUERY } from "@/lib/shopify/queries/product";
-import type { Product } from "@/lib/shopify/types";
-
-interface GetProductsData {
-  products: { nodes: Product[] };
-}
+import Image from "next/image";
+import Link from "next/link";
+import { getCollections, getProducts } from "@/lib/shopify/client";
+import CollectionCard from "@/components/collection/CollectionCard";
+import ProductCard from "@/components/product/ProductCard";
 
 export default async function HomePage() {
-  let products: Product[] = [];
-  let error: string | null = null;
-
-  try {
-    const data = await shopifyFetch<GetProductsData>({
-      query: GET_PRODUCTS_QUERY,
-      variables: { first: 3 },
-      cache: "no-store",
-    });
-    products = data.products.nodes;
-  } catch (e) {
-    error = e instanceof Error ? e.message : "Unknown error";
-  }
+  const [collections, products] = await Promise.all([getCollections(4), getProducts(8)]);
 
   return (
-    <main className="mx-auto max-w-2xl p-8">
-      <h1 className="mb-2 text-2xl font-semibold">Phase 0 — API 连通验证</h1>
-      <p className="text-muted-foreground mb-8 text-sm">来自 Shopify Storefront API 的真实数据</p>
-
-      {error ? (
-        <div className="border-destructive/50 bg-destructive/10 text-destructive rounded-md border p-4 text-sm">
-          <p className="font-medium">API 请求失败</p>
-          <p className="mt-1 font-mono">{error}</p>
+    <main>
+      {/* Hero */}
+      <section className="relative h-[560px] overflow-hidden bg-gray-900">
+        <Image src="/hero.jpg" alt="Store hero" fill priority className="object-cover opacity-60" />
+        <div className="relative flex h-full flex-col items-center justify-center gap-6 px-4 text-center text-white">
+          <h1 className="max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">Discover Our Collection</h1>
+          <p className="max-w-md text-lg text-white/80">Explore handpicked products made for everyday life.</p>
+          <div className="flex gap-4">
+            <Link
+              href="/products"
+              className="rounded-md bg-white px-6 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100"
+            >
+              Shop All Products
+            </Link>
+            <Link
+              href="/collections"
+              className="rounded-md border border-white px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+            >
+              Browse Collections
+            </Link>
+          </div>
         </div>
-      ) : products.length === 0 ? (
-        <p className="text-muted-foreground">店铺中暂无商品</p>
-      ) : (
-        <ul className="space-y-3">
-          {products.map((product) => (
-            <li key={product.id} className="flex items-center justify-between rounded-lg border p-4">
-              <span className="font-medium">{product.title}</span>
-              <span className="text-muted-foreground text-sm">
-                {product.priceRange.minVariantPrice.currencyCode}{" "}
-                {parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}
-              </span>
-            </li>
-          ))}
-        </ul>
+      </section>
+
+      {/* Featured Collections */}
+      {collections.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <h2 className="mb-8 text-2xl font-bold text-gray-900">Featured Collections</h2>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {collections.map((collection) => (
+              <CollectionCard key={collection.id} collection={collection} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Popular Products */}
+      {products.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <h2 className="mb-8 text-2xl font-bold text-gray-900">Popular Products</h2>
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
       )}
     </main>
   );

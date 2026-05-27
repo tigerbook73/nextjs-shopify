@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import SearchBox from "@/components/search/SearchBox";
 import CartCount from "@/components/cart/CartCount";
+import MobileMenu from "@/components/layout/MobileMenu";
+import SearchBox from "@/components/search/SearchBox";
 
 export default function Header() {
   return (
@@ -25,6 +26,7 @@ export default function Header() {
           <Suspense fallback={<div className="h-6 w-6" />}>
             <CartCount />
           </Suspense>
+          <MobileMenu />
         </div>
       </div>
     </header>

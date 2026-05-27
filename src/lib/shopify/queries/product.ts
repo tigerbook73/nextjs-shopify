@@ -3,10 +3,16 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
     id
     title
     handle
+    availableForSale
     priceRange {
       minVariantPrice {
         amount
         currencyCode
+      }
+    }
+    compareAtPriceRange {
+      minVariantPrice {
+        amount
       }
     }
     featuredImage {
@@ -78,6 +84,11 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
         name
         optionValues {
           name
+        }
+      }
+      collections(first: 1) {
+        nodes {
+          handle
         }
       }
     }

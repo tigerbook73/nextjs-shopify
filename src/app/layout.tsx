@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getShop } from "@/lib/shopify/client";
+import AnnouncementBar from "@/components/layout/AnnouncementBar";
+import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import { CartProvider } from "@/context/CartContext";
+import CartDrawer from "@/components/cart/CartDrawer";
+import HydrationMarker from "@/components/layout/HydrationMarker";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,10 +34,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <Header />
-        {children}
+        <HydrationMarker />
+        <CartProvider>
+          <AnnouncementBar />
+          <Header />
+          {children}
+          <Footer />
+          <CartDrawer />
+          <Toaster position="top-right" />
+        </CartProvider>
       </body>
     </html>
   );

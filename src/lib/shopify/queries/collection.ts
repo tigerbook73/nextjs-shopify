@@ -22,7 +22,14 @@ export const GET_COLLECTIONS_QUERY = /* GraphQL */ `
 `;
 
 export const GET_COLLECTION_BY_HANDLE_QUERY = /* GraphQL */ `
-  query GetCollectionByHandle($handle: String!, $first: Int!, $after: String) {
+  query GetCollectionByHandle(
+    $handle: String!
+    $first: Int!
+    $after: String
+    $sortKey: ProductCollectionSortKeys
+    $reverse: Boolean
+    $filters: [ProductFilter!]
+  ) {
     collection(handle: $handle) {
       id
       title
@@ -36,7 +43,7 @@ export const GET_COLLECTION_BY_HANDLE_QUERY = /* GraphQL */ `
         title
         description
       }
-      products(first: $first, after: $after) {
+      products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse, filters: $filters) {
         nodes {
           ...ProductCard
         }

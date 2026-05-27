@@ -78,10 +78,20 @@ export async function getCollectionByHandle(
   handle: string,
   first = 12,
   after?: string,
+  sortKey?: string,
+  reverse?: boolean,
+  filters?: Record<string, unknown>[],
 ): Promise<CollectionDetail | null> {
   const data = await shopifyFetch<{ collection: CollectionDetail | null }>({
     query: GET_COLLECTION_BY_HANDLE_QUERY,
-    variables: { handle, first, after: after ?? null },
+    variables: {
+      handle,
+      first,
+      after: after ?? null,
+      sortKey: sortKey ?? null,
+      reverse: reverse ?? null,
+      filters: filters ?? null,
+    },
     tags: [TAGS.collections, TAGS.collection(handle)],
   });
   return data.collection;

@@ -5,9 +5,19 @@
 
 ## 当前开发阶段
 
-**Phase 7（性能与收尾）已完成 → 全部 8 个阶段（Phase -1 ~ Phase 7）均已交付**
+**professional-ui 任务已完成 → BLUEPRINT.md Phase A / B / C 全部交付（11 个步骤）**
 
-完整阶段规划见 `BLUEPRINT.md`。若继续扩展，需先在 `BLUEPRINT.md` 中新增阶段定义，再按任务流程开启新 Phase。
+- Phase A（布局 & 首页）：Announcement Bar、首页重设计、Footer、移动菜单 ✅
+- Phase B（商品 & 浏览）：商品徽章、图片画廊、相关商品、Collection 筛选/排序 ✅
+- Phase C（交互 & 收尾）：Cart Drawer、Toast 通知、骨架屏、账户视觉 ✅
+
+**已知待做项（下个任务）**
+
+- CartCount 实时更新：当前 `CartCount` 是 Server Component，加购后数字不刷新；
+  方案已规划（见 plan `recursive-finding-ocean`）：将 cartCount 提升至 CartContext，
+  layout.tsx 服务端读取初始值，AddToCartButton/CartDrawer 负责客户端同步。
+
+若继续扩展，需先在 `BLUEPRINT.md` 中新增阶段定义，再按任务流程开启新 Phase。
 
 ## 规范体系
 

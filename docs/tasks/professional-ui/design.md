@@ -52,15 +52,18 @@ Provider 包裹 `layout.tsx` 全局；CartDrawer 渲染在 Provider 内部；`/c
 
 ## 验收协议
 
-每个步骤完成后运行：
+**测试门控**：每个 Step 完成前，必须满足以下两个条件才可标记 `done`：
+
+1. **新增 E2E 测试用例**：每个 Step 的设计文档中列出的测试用例必须在对应 spec 文件中实现
+2. **全量测试通过**：运行以下命令，所有测试（含本 Step 新增测试 + 历史测试）必须全部绿灯
 
 ```bash
 pnpm test:e2e
 ```
 
-**全部测试通过即为验收通过**，包含本步骤新增测试和所有历史测试。
-
 > Playwright `webServer` 会自动执行 `pnpm build && pnpm start`，build 失败等同于测试失败。
+
+人工验收项（标注 `[manual]`）不纳入自动门控，Step 完成后列出清单由用户确认。
 
 ---
 
@@ -80,11 +83,17 @@ pnpm test:e2e
 - `useSyncExternalStore` 读取 `localStorage`（SSR 安全，无 useEffect setState）
 - 点击 `×` → 写 `localStorage` + 本地 state → 立即隐藏
 
-**验收条件**：
+**测试用例**（`tests/e2e/announcement-bar.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` 首次访问 `/`，促销文案可见
-- `[auto]` 点击 `×` 后促销条消失
-- `[auto]` dismiss 后重新导航至 `/`，促销条不再显示（Playwright 保留同一 `storageState`）
+| #   | 测试名称                           |
+| --- | ---------------------------------- |
+| 1   | 首次访问 / 时促销文案可见          |
+| 2   | 点击 × 后促销条消失                |
+| 3   | dismiss 后重新导航，促销条不再显示 |
+
+**人工验收**：
+
+- `[manual]` 无（本 Step 全部验收均由自动测试覆盖）
 
 ---
 
@@ -105,12 +114,17 @@ pnpm test:e2e
 - 特色系列：`<CollectionCard>` 四列网格（`grid-cols-2 md:grid-cols-4`）
 - 热门商品：`<ProductCard>` 四列网格（`grid-cols-2 md:grid-cols-4`）
 
-**验收条件**：
+**测试用例**（`tests/e2e/homepage.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` 首页不含"Phase 0"文字，含"Discover Our Collection"标题
-- `[auto]` 点击"Shop All Products"跳转至 `/products`
-- `[auto]` 点击"Browse Collections"跳转至 `/collections`
-- `[auto]` 页面含至少 1 个 CollectionCard 和至少 1 个 ProductCard
+| #   | 测试名称                                         |
+| --- | ------------------------------------------------ |
+| 1   | 首页不含调试内容，显示 Hero 标题                 |
+| 2   | 点击 Shop All Products 跳转至 /products          |
+| 3   | 点击 Browse Collections 跳转至 /collections      |
+| 4   | 页面含至少一个 CollectionCard 和一个 ProductCard |
+
+**人工验收**：
+
 - `[manual]` 浏览器 DevTools Console 无 LCP image 警告
 
 ---
@@ -130,11 +144,16 @@ pnpm test:e2e
 - 底部版权行：`© {year} 品牌名`，`new Date().getFullYear()` 动态年份
 - Newsletter 输入框：`<input type="email">` UI only，无提交逻辑
 
-**验收条件**：
+**测试用例**（`tests/e2e/footer.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` Footer 含"About Us"、"Shop"、"Account"、"Stay in Touch"四个标题
-- `[auto]` 版权行包含当前年份数字
-- `[auto]` Email 输入框和 Join 按钮存在于 DOM
+| #   | 测试名称                                     |
+| --- | -------------------------------------------- |
+| 1   | Footer 包含四个区块标题                      |
+| 2   | 版权行包含当前年份                           |
+| 3   | Newsletter 区域包含 Email 输入框和 Join 按钮 |
+
+**人工验收**：
+
 - `[manual]` 浏览器宽度 ≥ 768px 时四列并排，< 640px 时单列叠放
 
 ---
@@ -156,13 +175,19 @@ pnpm test:e2e
 - 遮罩 `onClick={closeMenu}`；`<Link onClick={closeMenu}>` 点击链接也关闭
 - Header 中汉堡按钮：`<button className="md:hidden">` + `lucide-react` `Menu` / `X` 图标
 
-**验收条件**：
+**测试用例**（`tests/e2e/mobile-menu.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` 移动端视口（375px）下汉堡按钮可见，桌面端（1280px）下不可见
-- `[auto]` 移动端点击汉堡后，全屏菜单出现并含导航链接
-- `[auto]` 移动端菜单打开后按 ESC，菜单消失
-- `[auto]` 移动端点击菜单遮罩区域，菜单消失
-- `[auto]` 桌面端 nav 链接直接可见，无汉堡按钮
+| #   | 测试名称                                            |
+| --- | --------------------------------------------------- |
+| 1   | 移动端（375px）汉堡按钮可见，桌面端（1280px）不可见 |
+| 2   | 移动端点击汉堡后全屏菜单出现并含导航链接            |
+| 3   | 移动端菜单打开后按 ESC 关闭                         |
+| 4   | 移动端点击遮罩关闭菜单                              |
+| 5   | 桌面端 nav 链接直接可见，无汉堡按钮                 |
+
+**人工验收**：
+
+- `[manual]` 无（本 Step 全部验收均由自动测试覆盖）
 
 ---
 
@@ -203,9 +228,14 @@ Badge 条件（绝对定位于图片左上角）：
 - SALE（红）：`Number(compareAtPriceRange.minVariantPrice.amount) > Number(priceRange.minVariantPrice.amount)`
 - SOLD OUT（灰）：`!availableForSale`；同时图片加 `opacity-50`
 
-**验收条件**：
+**测试用例**（`tests/e2e/product-badges.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` `/products` 页面正常渲染，无 JS 报错
+| #   | 测试名称                           |
+| --- | ---------------------------------- |
+| 1   | /products 页面正常渲染，无 JS 错误 |
+
+**人工验收**：
+
 - `[manual]` 在 Shopify Admin 将某商品设为缺货，刷新后该商品卡片显示 SOLD OUT 徽章且图片半透明
 - `[manual]` 在 Shopify Admin 给某商品变体添加 Compare at price，刷新后对应卡片显示 SALE 徽章
 - `[manual]` 正常在售商品无任何徽章
@@ -229,9 +259,14 @@ Badge 条件（绝对定位于图片左上角）：
 - 只有 1 张图时隐藏缩略图列
 - 主图使用 `<Image fill>` 或固定尺寸；缩略图 `64×64`
 
-**验收条件**：
+**测试用例**（`tests/e2e/product-gallery.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` 商品详情页正常渲染，主图区域存在于 DOM
+| #   | 测试名称                               |
+| --- | -------------------------------------- |
+| 1   | 商品详情页正常渲染，主图区域存在于 DOM |
+
+**人工验收**：
+
 - `[manual]` 多图商品：左侧显示缩略图列；点击第二张缩略图后，主图切换为对应图片
 - `[manual]` 单图商品：无缩略图列，主图正常显示
 
@@ -261,9 +296,14 @@ const related = collection?.products.nodes.filter((p) => p.handle !== currentHan
 
 - 无 collection 或 related 为空时返回 `null`（不渲染区块）
 
-**验收条件**：
+**测试用例**（`tests/e2e/product-seo.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` 访问任意商品详情页，`<title>` 包含商品名（非 default 店铺名）
+| #   | 测试名称                                        |
+| --- | ----------------------------------------------- |
+| 1   | 商品详情页 \<title\> 包含商品名（非默认店铺名） |
+
+**人工验收**：
+
 - `[manual]` 属于某 Collection 的商品：页面底部显示"You may also like"区块，含最多 4 张其他商品卡片，不含当前商品
 - `[manual]` 不属于任何 Collection 的商品：页面底部无相关商品区块
 
@@ -324,10 +364,15 @@ router.push(`?${params.toString()}`);
 return { title: collection?.title ?? "Collection" };
 ```
 
-**验收条件**：
+**测试用例**（`tests/e2e/collection-listing.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` 访问任意 Collection 详情页，`<title>` 包含系列名
-- `[auto]` 选择排序选项后，URL 含 `?sort=` 参数
+| #   | 测试名称                               |
+| --- | -------------------------------------- |
+| 1   | Collection 详情页 \<title\> 包含系列名 |
+| 2   | 选择排序选项后 URL 含 ?sort= 参数      |
+
+**人工验收**：
+
 - `[manual]` 排序切换后商品列表顺序与所选规则一致（需人工比对价格/日期）
 - `[manual]` 勾选"In Stock Only"后，缺货商品从列表消失
 - `[manual]` 手动在 URL 加入不可能匹配的 filter 参数后，页面显示"No products match"提示和"Clear filters"链接
@@ -382,11 +427,16 @@ useEffect(() => {
 
 `getCartAction`：从 cookie 读取 `cartId` → 调用 `getCart(cartId)` → 返回 `Cart | null`。
 
-**验收条件**：
+**测试用例**（`tests/e2e/cart-drawer.spec.ts`，Step 完成后必须全部通过）：
 
-- `[auto]` 商品详情页点击"Add to Cart"后，Drawer 面板出现在 DOM 且可见
-- `[auto]` Drawer 打开后点击遮罩区域，Drawer 消失
-- `[auto]` 直接访问 `/cart` 页面，正常渲染不报错
+| #   | 测试名称                                            |
+| --- | --------------------------------------------------- |
+| 1   | 商品详情页点击 Add to Cart 后 Drawer 面板出现且可见 |
+| 2   | Drawer 打开后点击遮罩，Drawer 消失                  |
+| 3   | 直接访问 /cart 页面正常渲染不报错                   |
+
+**人工验收**：
+
 - `[manual]` 检查 `layout.tsx`，`<CartProvider>` 仅包裹一次
 
 ---
@@ -430,12 +480,18 @@ useEffect(() => {
 }, [state]);
 ```
 
-**验收条件**：
+**测试用例**（`tests/e2e/toast.spec.ts`，需在本 Step 中新建，完成后必须全部通过）：
 
-- `[auto]` 商品详情页点击"Add to Cart"后，页面出现 success Toast
-- `[auto]` 登录页填写错误密码提交后，出现 error Toast
-- `[auto]` 注册页填写已注册邮箱提交后，出现 error Toast
-- `[auto]` Toast 出现约 4 秒后自动消失（`waitForSelector` with timeout）
+| #   | 测试名称                                            |
+| --- | --------------------------------------------------- |
+| 1   | 商品详情页点击 Add to Cart 后页面出现 success Toast |
+| 2   | 登录页填写错误密码提交后出现 error Toast            |
+| 3   | 注册页填写已注册邮箱提交后出现 error Toast          |
+| 4   | Toast 约 4 秒后自动消失                             |
+
+**人工验收**：
+
+- `[manual]` 无（本 Step 全部验收均由自动测试覆盖）
 
 ---
 
@@ -476,9 +532,17 @@ const initials = customer.displayName
 </nav>
 ```
 
-**验收条件**：
+**测试用例**（`tests/e2e/skeleton-screens.spec.ts`，需在本 Step 中新建，完成后必须全部通过）：
 
-- `[auto]` `loading.tsx` 文件存在且包含 `animate-pulse` 骨架元素
+| #   | 测试名称                                                  |
+| --- | --------------------------------------------------------- |
+| 1   | products/loading.tsx 存在且包含 animate-pulse 骨架元素    |
+| 2   | collections/loading.tsx 存在且包含 animate-pulse 骨架元素 |
+
+> 骨架屏 E2E 通过网络拦截（`page.route` + 延迟响应）触发 loading 状态，验证 `animate-pulse` 元素可见。
+
+**人工验收**：
+
 - `[manual]` 浏览器 DevTools Network → 调低网速至 Slow 3G，切换至 `/products`，可见骨架屏闪过
 - `[manual]` 同上，切换至 `/collections`，可见骨架屏闪过
 - `[manual]` 以测试账号登录后，账户页顶部显示姓名首字母 Avatar 圆圈
@@ -500,15 +564,11 @@ pnpm lint
 # 2. 类型检查
 pnpm typecheck
 
-# 3. 构建（Playwright webServer 会自动执行，也可单独验证）
-pnpm build
-
-# 4. 全部 E2E 测试（含历史回归）
-pnpm test:e2e tests/e2e/professional-ui*.spec.ts
-
-# 5. 已有历史测试不回归
-pnpm test:e2e tests/e2e/phase7*.spec.ts
+# 3. 全部 E2E 测试（含历史回归，webServer 自动执行 build）
+pnpm test:e2e
 ```
+
+**`pnpm test:e2e` 全部通过，方可合并。**
 
 ### 人工验收重点
 

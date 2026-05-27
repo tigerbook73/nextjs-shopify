@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { toast } from "sonner";
 import { addToCart } from "@/lib/actions/cart";
 import { useCart } from "@/context/CartContext";
 
@@ -29,6 +30,7 @@ export default function AddToCartButton({ variantId, availableForSale }: AddToCa
       onClick={() => {
         startTransition(async () => {
           await addToCart(variantId);
+          toast.success("Added to cart");
           openCart();
         });
       }}

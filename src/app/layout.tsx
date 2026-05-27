@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header";
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/cart/CartDrawer";
 import HydrationMarker from "@/components/layout/HydrationMarker";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -42,6 +43,7 @@ export default function RootLayout({
           {children}
           <Footer />
           <CartDrawer />
+          <Toaster position="top-right" />
         </CartProvider>
       </body>
     </html>

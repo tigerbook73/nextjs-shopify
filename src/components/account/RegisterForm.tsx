@@ -1,10 +1,15 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 import { register, type AuthFormState } from "@/lib/actions/customer";
 
 export default function RegisterForm() {
   const [state, action, isPending] = useActionState<AuthFormState, FormData>(register, null);
+
+  useEffect(() => {
+    if (state?.error) toast.error(state.error);
+  }, [state]);
 
   return (
     <form action={action} className="space-y-4">

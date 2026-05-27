@@ -72,10 +72,12 @@ Step 9: Cart Drawer
 ### Step 8: Collection Filter/Sort + SEO + Empty State
 
 - status: done
+- Commit: feat(step-8): collection filter/sort, empty state, and SEO
 
 ### Step 9: Cart Drawer
 
-- status: pending
+- status: done
+- Commit: feat(step-9): cart drawer with context, replaces page redirect
 
 ### Step 10: Toast Notifications
 

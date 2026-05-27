@@ -10,7 +10,7 @@ export default async function HomePage() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative h-[560px] overflow-hidden bg-gray-900">
+      <section className="relative h-80 overflow-hidden bg-gray-900">
         <Image src="/hero.jpg" alt="Store hero" fill priority className="object-cover opacity-60" />
         <div className="relative flex h-full flex-col items-center justify-center gap-6 px-4 text-center text-white">
           <h1 className="max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">Discover Our Collection</h1>

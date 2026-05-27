@@ -12,11 +12,11 @@
 
 ## Current Phase
 
-implementation (pending)
+implementation (in_progress)
 
 ## Current Step
 
-—
+Step 9: Cart Drawer
 
 ## Requirements Phase
 
@@ -32,39 +32,46 @@ implementation (pending)
 
 ## Implementation Phase
 
-- status: pending
+- status: in_progress
 
 ### Step 1: Announcement Bar
 
-- status: pending
+- status: done
+- Commit: feat(step-1): announcement bar with localStorage dismiss
 
 ### Step 2: Homepage Rewrite
 
-- status: pending
+- status: done
+- Commit: feat(step-2): homepage hero, collections grid, products grid
 
 ### Step 3: Footer
 
-- status: pending
+- status: done
+- Commit: feat(step-3): footer with 4-column layout
 
 ### Step 4: Mobile Menu
 
-- status: pending
+- status: done
+- Commit: feat(step-4): mobile navigation menu
 
 ### Step 5: Product Badges
 
-- status: pending
+- status: done
+- Commit: feat(step-5): sale and sold-out badges on product cards
 
 ### Step 6: Product Gallery
 
-- status: pending
+- status: done
+- Commit: feat(step-6): product image gallery with thumbnail switching
 
 ### Step 7: Related Products + Product Page SEO
 
-- status: pending
+- status: done
+- Commit: feat(step-7): related products with suspense boundary
 
 ### Step 8: Collection Filter/Sort + SEO + Empty State
 
-- status: pending
+- status: done
 
 ### Step 9: Cart Drawer
 

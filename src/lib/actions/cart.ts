@@ -2,9 +2,9 @@
 
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { createCart, addCartLines, updateCartLines, removeCartLines } from "@/lib/shopify/client";
+import { createCart, addCartLines, updateCartLines, removeCartLines, getCart } from "@/lib/shopify/client";
 import { TAGS } from "@/lib/shopify/cache-tags";
-import type { CartActionResult } from "@/lib/shopify/types";
+import type { CartActionResult, Cart } from "@/lib/shopify/types";
 
 const CART_COOKIE = "cartId";
 const COOKIE_OPTIONS = {
@@ -67,4 +67,10 @@ export async function updateCartQuantity(lineId: string, quantity: number): Prom
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to update cart" };
   }
+}
+
+export async function getCartAction(): Promise<Cart | null> {
+  const cartId = await getExistingCartId();
+  if (!cartId) return null;
+  return getCart(cartId);
 }

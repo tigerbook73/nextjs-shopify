@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const SORT_OPTIONS = [
   { label: "Default", value: "" },
@@ -17,6 +17,7 @@ interface CollectionFiltersProps {
 
 export default function CollectionFilters({ initialSort, initialAvailable }: CollectionFiltersProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   function updateParam(key: string, value: string | null) {
@@ -27,7 +28,7 @@ export default function CollectionFilters({ initialSort, initialAvailable }: Col
     } else {
       params.delete(key);
     }
-    router.push(`?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   const currentSort = searchParams.get("sort") ?? initialSort ?? "";

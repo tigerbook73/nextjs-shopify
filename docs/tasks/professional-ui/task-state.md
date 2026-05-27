@@ -3,7 +3,7 @@
 ## Metadata
 
 - type: feature
-- status: in_progress
+- status: done
 
 ## Document Index
 
@@ -12,11 +12,11 @@
 
 ## Current Phase
 
-implementation (in_progress)
+implementation (done)
 
 ## Current Step
 
-Step 9: Cart Drawer
+Step 11: Skeleton Screens + Account Visual
 
 ## Requirements Phase
 
@@ -81,8 +81,10 @@ Step 9: Cart Drawer
 
 ### Step 10: Toast Notifications
 
-- status: pending
+- status: done
+- Commit: feat(step-10): toast notifications with shadcn sonner
 
 ### Step 11: Skeleton Screens + Account Visual
 
-- status: pending
+- status: done
+- Commit: feat(step-11): skeleton screens and account avatar with order count

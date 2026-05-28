@@ -90,5 +90,5 @@ design (in_progress)
 
 ## Task Acceptance
 
-- auto-check: —
-- manual-check: —
+- auto-check: passed
+- manual-check: passed（Search/Collection 翻页因 dev store 数据不足标记 N/A，非功能缺陷）

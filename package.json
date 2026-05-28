@@ -8,6 +8,7 @@
     "start": "next start",
     "format": "prettier --write .",
     "lint": "eslint",
+    "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "schema:fetch": "node scripts/fetch-schema.mjs",
@@ -35,19 +36,24 @@
     "@playwright/test": "^1.60.0",
     "@shopify/cli": "^3.94.3",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.2",
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "graphql": "^16.14.0",
     "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
     "lint-staged": "^17.0.4",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.7"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs}": [

@@ -1,21 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { getCartAction } from "@/lib/actions/cart";
-import type { Cart } from "@/lib/shopify/types";
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
 
 export default function CartDrawer() {
-  const { isOpen, closeCart } = useCart();
-  const [cart, setCart] = useState<Cart | null>(null);
+  const { isOpen, closeCart, cart, refreshCart } = useCart();
 
   useEffect(() => {
     if (!isOpen) return;
-    getCartAction().then(setCart);
-  }, [isOpen]);
+    refreshCart();
+  }, [isOpen, refreshCart]);
 
   const hasItems = cart && cart.lines.nodes.length > 0;
 

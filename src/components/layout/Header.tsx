@@ -1,6 +1,5 @@
-import { Suspense } from "react";
 import Link from "next/link";
-import CartCount from "@/components/cart/CartCount";
+import CartIconButton from "@/components/layout/CartIconButton";
 import MobileMenu from "@/components/layout/MobileMenu";
 import SearchBox from "@/components/search/SearchBox";
 
@@ -23,9 +22,7 @@ export default function Header() {
 
         <div className="flex items-center gap-4">
           <SearchBox />
-          <Suspense fallback={<div className="h-6 w-6" />}>
-            <CartCount />
-          </Suspense>
+          <CartIconButton />
           <MobileMenu />
         </div>
       </div>

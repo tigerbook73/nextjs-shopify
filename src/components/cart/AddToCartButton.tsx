@@ -11,7 +11,7 @@ interface AddToCartButtonProps {
 }
 
 export default function AddToCartButton({ variantId, availableForSale }: AddToCartButtonProps) {
-  const { openCart } = useCart();
+  const { openCart, applyCart, refreshCart } = useCart();
   const [isPending, startTransition] = useTransition();
 
   if (!availableForSale) {
@@ -29,7 +29,16 @@ export default function AddToCartButton({ variantId, availableForSale }: AddToCa
     <button
       onClick={() => {
         startTransition(async () => {
-          await addToCart(variantId);
+          const result = await addToCart(variantId);
+          if (!result.success) {
+            toast.error(result.error);
+            return;
+          }
+          if (result.cart) {
+            applyCart(result.cart);
+          } else {
+            refreshCart();
+          }
           toast.success("Added to cart");
           openCart();
         });

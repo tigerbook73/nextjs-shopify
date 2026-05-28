@@ -2,12 +2,8 @@
 
 import { useCart } from "@/context/CartContext";
 
-interface CartIconButtonProps {
-  count?: number;
-}
-
-export default function CartIconButton({ count = 0 }: CartIconButtonProps) {
-  const { openCart } = useCart();
+export default function CartIconButton() {
+  const { openCart, count } = useCart();
 
   return (
     <button

@@ -4,6 +4,7 @@ import { useOptimistic, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { updateCartQuantity, removeFromCart } from "@/lib/actions/cart";
+import { useCart } from "@/context/CartContext";
 import type { CartLine } from "@/lib/shopify/types";
 import { formatPrice } from "@/lib/utils/format-price";
 
@@ -13,6 +14,7 @@ interface CartItemProps {
 
 export default function CartItem({ line }: CartItemProps) {
   const router = useRouter();
+  const { applyCart, refreshCart } = useCart();
   const [optimisticQuantity, updateOptimisticQuantity] = useOptimistic(
     line.quantity,
     (_current: number, next: number) => next,
@@ -24,11 +26,14 @@ export default function CartItem({ line }: CartItemProps) {
   const handleQuantityChange = (newQuantity: number) => {
     startTransition(async () => {
       updateOptimisticQuantity(newQuantity);
-      if (newQuantity === 0) {
-        await removeFromCart(line.id);
+      const result = newQuantity === 0 ? await removeFromCart(line.id) : await updateCartQuantity(line.id, newQuantity);
+
+      if (result.success) {
+        applyCart(result.cart ?? null);
       } else {
-        await updateCartQuantity(line.id, newQuantity);
+        refreshCart();
       }
+      // still needed to re-render the server-rendered /cart page
       router.refresh();
     });
   };

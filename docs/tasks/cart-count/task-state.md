@@ -47,12 +47,12 @@ Step 2
 
 - step-type: final
 - status: done
-- Commit: —
+- Commit: 02d9248
 - Date: 2026-05-28
 - auto-check: passed
 - manual-check: passed
 
 ## Task Acceptance
 
-- auto-check: —
-- manual-check: —
+- auto-check: passed
+- manual-check: passed

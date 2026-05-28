@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   const products = await getProducts(20);
-  return products.map((p) => ({ handle: p.handle }));
+  return products.nodes.map((p) => ({ handle: p.handle }));
 }
 
 export default async function ProductPage({ params }: Props) {

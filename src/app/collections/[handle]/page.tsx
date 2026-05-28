@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { getCollectionByHandle, getCollectionHandles } from "@/lib/shopify/client";
 import ProductCard from "@/components/product/ProductCard";
 import CollectionFilters from "@/components/collection/CollectionFilters";
+import PaginationBar from "@/components/layout/PaginationBar";
 
 const SORT_MAP: Record<string, { sortKey: string; reverse: boolean }> = {
   "price-asc": { sortKey: "PRICE", reverse: false },
@@ -15,7 +16,7 @@ const SORT_MAP: Record<string, { sortKey: string; reverse: boolean }> = {
 
 type Props = {
   params: Promise<{ handle: string }>;
-  searchParams: Promise<{ after?: string; sort?: string; available?: string }>;
+  searchParams: Promise<{ after?: string; before?: string; sort?: string; available?: string }>;
 };
 
 export async function generateStaticParams() {
@@ -38,19 +39,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CollectionPage({ params, searchParams }: Props) {
   const { handle } = await params;
-  const { after, sort, available } = await searchParams;
+  const { after, before, sort, available } = await searchParams;
 
   const sortConfig = sort ? SORT_MAP[sort] : undefined;
   const filters = available === "true" ? [{ available: true }] : undefined;
 
-  const collection = await getCollectionByHandle(handle, 12, after, sortConfig?.sortKey, sortConfig?.reverse, filters);
+  const collection = await getCollectionByHandle(
+    handle,
+    20,
+    after,
+    before,
+    sortConfig?.sortKey,
+    sortConfig?.reverse,
+    filters,
+  );
 
   if (!collection) notFound();
 
   const { products } = collection;
-  const { hasNextPage, endCursor } = products.pageInfo;
-  const hasPrevPage = !!after;
   const hasActiveFilters = !!(sort || available);
+
+  const paginationParams: Record<string, string> = {};
+  if (sort) paginationParams.sort = sort;
+  if (available) paginationParams.available = available;
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -92,31 +103,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
         </div>
       )}
 
-      {(hasPrevPage || hasNextPage) && (
-        <div className="mt-12 flex items-center justify-between">
-          {hasPrevPage ? (
-            <Link
-              href={`/collections/${handle}`}
-              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              ← Back to start
-            </Link>
-          ) : (
-            <span />
-          )}
-
-          {hasNextPage && endCursor ? (
-            <Link
-              href={`/collections/${handle}?after=${endCursor}`}
-              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Next page →
-            </Link>
-          ) : (
-            <span />
-          )}
-        </div>
-      )}
+      <PaginationBar pageInfo={products.pageInfo} baseUrl={`/collections/${handle}`} searchParams={paginationParams} />
     </main>
   );
 }

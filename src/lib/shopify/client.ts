@@ -1,5 +1,5 @@
 import type {
-  Product,
+  ProductConnection,
   ProductDetail,
   Collection,
   CollectionDetail,
@@ -38,13 +38,16 @@ const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TO
 
 const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/2024-10/graphql.json`;
 
-export async function getProducts(first = 20): Promise<Product[]> {
-  const data = await shopifyFetch<{ products: { nodes: Product[] } }>({
+export async function getProducts(pageSize = 20, after?: string, before?: string): Promise<ProductConnection> {
+  const variables = before
+    ? { last: pageSize, before, first: null, after: null }
+    : { first: pageSize, after: after ?? null, last: null, before: null };
+  const data = await shopifyFetch<{ products: ProductConnection }>({
     query: GET_PRODUCTS_QUERY,
-    variables: { first },
+    variables,
     tags: [TAGS.products],
   });
-  return data.products.nodes;
+  return data.products;
 }
 
 export async function getProductByHandle(handle: string): Promise<ProductDetail | null> {
@@ -59,7 +62,7 @@ export async function getProductByHandle(handle: string): Promise<ProductDetail 
 export async function getProductHandles(): Promise<{ handle: string }[]> {
   const data = await shopifyFetch<{ products: { nodes: { handle: string }[] } }>({
     query: GET_PRODUCTS_QUERY,
-    variables: { first: 250 },
+    variables: { first: 250, last: null, after: null, before: null },
     tags: [TAGS.products],
   });
   return data.products.nodes;
@@ -76,18 +79,21 @@ export async function getCollections(first = 20): Promise<Collection[]> {
 
 export async function getCollectionByHandle(
   handle: string,
-  first = 12,
+  pageSize = 20,
   after?: string,
+  before?: string,
   sortKey?: string,
   reverse?: boolean,
   filters?: Record<string, unknown>[],
 ): Promise<CollectionDetail | null> {
+  const pagination = before
+    ? { last: pageSize, before, first: null, after: null }
+    : { first: pageSize, after: after ?? null, last: null, before: null };
   const data = await shopifyFetch<{ collection: CollectionDetail | null }>({
     query: GET_COLLECTION_BY_HANDLE_QUERY,
     variables: {
       handle,
-      first,
-      after: after ?? null,
+      ...pagination,
       sortKey: sortKey ?? null,
       reverse: reverse ?? null,
       filters: filters ?? null,
@@ -106,10 +112,18 @@ export async function getCollectionHandles(): Promise<{ handle: string }[]> {
   return data.collections.nodes;
 }
 
-export async function searchProducts(query: string, first = 20): Promise<SearchResult> {
+export async function searchProducts(
+  query: string,
+  pageSize = 20,
+  after?: string,
+  before?: string,
+): Promise<SearchResult> {
+  const pagination = before
+    ? { last: pageSize, before, first: null, after: null }
+    : { first: pageSize, after: after ?? null, last: null, before: null };
   const data = await shopifyFetch<{ search: SearchResult }>({
     query: SEARCH_QUERY,
-    variables: { query, first },
+    variables: { query, ...pagination },
     cache: "no-store",
   });
   return data.search;

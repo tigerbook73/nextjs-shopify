@@ -1,8 +1,15 @@
 import { searchProducts } from "@/lib/shopify/client";
 import ProductCard from "@/components/product/ProductCard";
+import PaginationBar from "@/components/layout/PaginationBar";
 
-export default async function SearchResults({ query }: { query: string }) {
-  const result = await searchProducts(query);
+interface Props {
+  query: string;
+  after?: string;
+  before?: string;
+}
+
+export default async function SearchResults({ query, after, before }: Props) {
+  const result = await searchProducts(query, 20, after, before);
 
   if (result.totalCount === 0) {
     return (
@@ -24,6 +31,7 @@ export default async function SearchResults({ query }: { query: string }) {
           <ProductCard key={item.id} product={item} />
         ))}
       </div>
+      <PaginationBar pageInfo={result.pageInfo} baseUrl="/search" searchParams={{ q: query }} />
     </div>
   );
 }

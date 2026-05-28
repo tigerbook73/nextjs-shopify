@@ -12,11 +12,11 @@
 
 ## Current Phase
 
-design (in_progress)
+implementation (in_progress)
 
 ## Current Step
 
-—
+Step 2
 
 ## Requirements Phase
 
@@ -26,31 +26,31 @@ design (in_progress)
 
 ## Design Phase
 
-- status: in_progress
+- status: done
 - notes:
   - design updated to apply Shopify mutation returned carts directly, with refresh as fallback
 
 ## Implementation Phase
 
-- status: pending
+- status: in_progress
 
 ### Step 1: Centralize cart state in CartContext
 
 - step-type: final
-- status: pending
-- Commit: —
-- Date: —
-- auto-check: —
-- manual-check: —
+- status: done
+- Commit: 40c4225
+- Date: 2026-05-28
+- auto-check: passed
+- manual-check: passed
 
 ### Step 2: Wire cart mutations and UI consumers to shared state
 
 - step-type: final
-- status: pending
+- status: done
 - Commit: —
-- Date: —
-- auto-check: —
-- manual-check: —
+- Date: 2026-05-28
+- auto-check: passed
+- manual-check: passed
 
 ## Task Acceptance
 

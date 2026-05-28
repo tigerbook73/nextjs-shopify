@@ -110,7 +110,7 @@ export interface Cart {
   cost: CartCost;
 }
 
-export type CartActionResult = { success: true } | { success: false; error: string };
+export type CartActionResult = { success: true; cart?: Cart | null } | { success: false; error: string };
 
 export type SearchResultItem = Product & { __typename: "Product" };
 

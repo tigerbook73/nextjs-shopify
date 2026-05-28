@@ -31,9 +31,9 @@ async function getOrCreateCartId(): Promise<string> {
 export async function addToCart(variantId: string, quantity = 1): Promise<CartActionResult> {
   try {
     const cartId = await getOrCreateCartId();
-    await addCartLines(cartId, [{ merchandiseId: variantId, quantity }]);
+    const cart = await addCartLines(cartId, [{ merchandiseId: variantId, quantity }]);
     revalidateTag(TAGS.cart, {});
-    return { success: true };
+    return { success: true, cart };
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to add to cart" };
   }
@@ -44,9 +44,9 @@ export async function removeFromCart(lineId: string): Promise<CartActionResult> 
     const cartId = await getExistingCartId();
     if (!cartId) return { success: false, error: "Cart not found" };
 
-    await removeCartLines(cartId, [lineId]);
+    const cart = await removeCartLines(cartId, [lineId]);
     revalidateTag(TAGS.cart, {});
-    return { success: true };
+    return { success: true, cart };
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to remove from cart" };
   }
@@ -57,13 +57,14 @@ export async function updateCartQuantity(lineId: string, quantity: number): Prom
     const cartId = await getExistingCartId();
     if (!cartId) return { success: false, error: "Cart not found" };
 
+    let cart: Cart;
     if (quantity === 0) {
-      await removeCartLines(cartId, [lineId]);
+      cart = await removeCartLines(cartId, [lineId]);
     } else {
-      await updateCartLines(cartId, [{ id: lineId, quantity }]);
+      cart = await updateCartLines(cartId, [{ id: lineId, quantity }]);
     }
     revalidateTag(TAGS.cart, {});
-    return { success: true };
+    return { success: true, cart };
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to update cart" };
   }

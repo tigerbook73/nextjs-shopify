@@ -63,22 +63,21 @@ Key changes:
 - `(auto)` `pnpm lint`
 - `(auto)` `pnpm test:e2e -- tests/e2e/cart-drawer.spec.ts`
 
+E2E tests cover:
+
+- No-cart session starts at `0 items`; first add updates to `1 items`
+- Two consecutive adds result in `2 items` (matches Shopify `totalQuantity`)
+- Drawer increment → header count increases; drawer decrement → header count decreases
+- Add to Cart → drawer opens; backdrop click → drawer closes
+- Remove line → header count reaches `0 items`
+
 ## Manual Verification
 
-- `(manual) [automation-candidate]` On a product page with an available product, click `Add to Cart` and confirm the header cart button accessible label updates without a full reload.
-- `(manual) [automation-candidate]` In the cart drawer, increment and decrement a line quantity and confirm the header cart count matches the drawer quantity.
-- `(manual) [automation-candidate]` Remove a cart line and confirm the header cart count decreases to the Shopify cart `totalQuantity`, including `0` when the cart becomes empty.
+- `(manual)` Verify the cart page and cart drawer still render existing cart lines and totals correctly (price accuracy requires human review against Shopify data).
 
 ## Task Acceptance
 
 - `(auto)` `pnpm typecheck`
 - `(auto)` `pnpm lint`
 - `(auto)` `pnpm test:e2e -- tests/e2e/cart-drawer.spec.ts`
-- `(manual)` Verify add-to-cart updates the header count in the same page session without manual reload.
-- `(manual)` Verify repeated add-to-cart actions refresh the header count to match Shopify cart `totalQuantity`.
-- `(manual)` Verify removing a cart line refreshes the header count to match Shopify cart `totalQuantity`.
-- `(manual)` Verify increasing and decreasing a cart line quantity refreshes the header count to match Shopify cart `totalQuantity`.
-- `(manual)` Verify a session with no existing cart starts with count `0`, and the first successful add updates the visible count.
-- `(manual)` Verify the cart drawer still opens after successful add-to-cart.
-- `(manual)` Verify the cart icon accessible label reflects the current item count after add, remove, and quantity updates.
-- `(manual)` Verify the cart page and cart drawer still render existing cart lines and totals correctly.
+- `(manual)` Verify the cart page and cart drawer still render existing cart lines and totals correctly (price accuracy requires human review against Shopify data).

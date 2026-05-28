@@ -38,13 +38,14 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const cartId = cookieStore.get("cartId")?.value;
   const initialCart = cartId ? await getCart(cartId, [TAGS.cart]) : null;
+  const annDismissed = cookieStore.get("ann-dismissed")?.value === "1";
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <HydrationMarker />
         <CartProvider initialCart={initialCart}>
-          <AnnouncementBar />
+          <AnnouncementBar dismissed={annDismissed} />
           <Header />
           {children}
           <Footer />

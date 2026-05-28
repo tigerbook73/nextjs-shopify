@@ -31,15 +31,18 @@ test.describe("Pagination", () => {
     expect(newFirstProductText).not.toBe(firstProductText);
   });
 
-  test("All Products — 上一页：回到第一页，URL 不含游标", async ({ page }) => {
+  test("All Products — 上一页：内容回到第一页，不再有「Prev page」按钮", async ({ page }) => {
     await page.goto("/products");
     await page.waitForLoadState("networkidle");
 
     const nextLink = page.getByRole("link", { name: /Next page →/i });
     if (!(await nextLink.isVisible())) {
-      test.skip(true, "商品数量 ≤ 18，无分页按钮");
+      test.skip(true, "商品数量 ≤ 20，无分页按钮");
       return;
     }
+
+    // 记录第一页的第一个商品标题
+    const firstPageTitle = await page.locator(".grid a, .grid article").first().textContent();
 
     await nextLink.click();
     await page.waitForLoadState("networkidle");
@@ -48,8 +51,12 @@ test.describe("Pagination", () => {
     await page.getByRole("link", { name: /← Prev page/i }).click();
     await page.waitForLoadState("networkidle");
 
+    // cursor-based pagination：回到第一页的 URL 可能含 ?before=xxx，但内容应与第一页一致
     await expect(page).not.toHaveURL(/[?&]after=/, { timeout: 10_000 });
-    await expect(page).not.toHaveURL(/[?&]before=/, { timeout: 10_000 });
+    const backTitle = await page.locator(".grid a, .grid article").first().textContent();
+    expect(backTitle).toBe(firstPageTitle);
+    // 第一页无「上一页」按钮
+    await expect(page.getByRole("link", { name: /← Prev page/i })).not.toBeVisible();
   });
 
   // ─── Search ──────────────────────────────────────────────────────────────────

@@ -7,11 +7,12 @@
 
 ## Document Index
 
-- (no documents yet; entries added here as requirements and design documents are created)
+- requirements.md — Cart count refactor requirements
+- design.md — Cart count refactor design
 
 ## Current Phase
 
-requirements (in_progress)
+design (in_progress)
 
 ## Current Step
 
@@ -19,19 +20,37 @@ requirements (in_progress)
 
 ## Requirements Phase
 
-- status: in_progress
+- status: done
 - notes:
-  - task just created, requirements pending
+  - requirements drafted for stale header cart count after add, remove, and quantity updates
 
 ## Design Phase
 
-- status: pending
+- status: in_progress
 - notes:
-  - —
+  - design updated to apply Shopify mutation returned carts directly, with refresh as fallback
 
 ## Implementation Phase
 
 - status: pending
+
+### Step 1: Centralize cart state in CartContext
+
+- step-type: final
+- status: pending
+- Commit: —
+- Date: —
+- auto-check: —
+- manual-check: —
+
+### Step 2: Wire cart mutations and UI consumers to shared state
+
+- step-type: final
+- status: pending
+- Commit: —
+- Date: —
+- auto-check: —
+- manual-check: —
 
 ## Task Acceptance
 

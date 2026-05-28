@@ -12,7 +12,7 @@ type Props = { searchParams: Promise<{ after?: string; before?: string }> };
 
 export default async function ProductsPage({ searchParams }: Props) {
   const { after, before } = await searchParams;
-  const { nodes, pageInfo } = await getProducts(18, after, before);
+  const { nodes, pageInfo } = await getProducts(20, after, before);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">

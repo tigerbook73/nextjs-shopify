@@ -38,7 +38,7 @@ const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TO
 
 const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/2024-10/graphql.json`;
 
-export async function getProducts(pageSize = 18, after?: string, before?: string): Promise<ProductConnection> {
+export async function getProducts(pageSize = 20, after?: string, before?: string): Promise<ProductConnection> {
   const variables = before
     ? { last: pageSize, before, first: null, after: null }
     : { first: pageSize, after: after ?? null, last: null, before: null };
@@ -79,7 +79,7 @@ export async function getCollections(first = 20): Promise<Collection[]> {
 
 export async function getCollectionByHandle(
   handle: string,
-  pageSize = 18,
+  pageSize = 20,
   after?: string,
   before?: string,
   sortKey?: string,
@@ -114,7 +114,7 @@ export async function getCollectionHandles(): Promise<{ handle: string }[]> {
 
 export async function searchProducts(
   query: string,
-  pageSize = 18,
+  pageSize = 20,
   after?: string,
   before?: string,
 ): Promise<SearchResult> {

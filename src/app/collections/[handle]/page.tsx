@@ -46,7 +46,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
 
   const collection = await getCollectionByHandle(
     handle,
-    18,
+    20,
     after,
     before,
     sortConfig?.sortKey,

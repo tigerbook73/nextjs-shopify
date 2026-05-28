@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default async function SearchResults({ query, after, before }: Props) {
-  const result = await searchProducts(query, 18, after, before);
+  const result = await searchProducts(query, 20, after, before);
 
   if (result.totalCount === 0) {
     return (

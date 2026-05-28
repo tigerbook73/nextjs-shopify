@@ -23,10 +23,16 @@ export const PRODUCT_CARD_FRAGMENT = /* GraphQL */ `
 `;
 
 export const GET_PRODUCTS_QUERY = /* GraphQL */ `
-  query GetProducts($first: Int!) {
-    products(first: $first) {
+  query GetProducts($first: Int, $last: Int, $after: String, $before: String) {
+    products(first: $first, last: $last, after: $after, before: $before) {
       nodes {
         ...ProductCard
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
     }
   }

@@ -24,8 +24,10 @@ export const GET_COLLECTIONS_QUERY = /* GraphQL */ `
 export const GET_COLLECTION_BY_HANDLE_QUERY = /* GraphQL */ `
   query GetCollectionByHandle(
     $handle: String!
-    $first: Int!
+    $first: Int
+    $last: Int
     $after: String
+    $before: String
     $sortKey: ProductCollectionSortKeys
     $reverse: Boolean
     $filters: [ProductFilter!]
@@ -43,12 +45,22 @@ export const GET_COLLECTION_BY_HANDLE_QUERY = /* GraphQL */ `
         title
         description
       }
-      products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse, filters: $filters) {
+      products(
+        first: $first
+        last: $last
+        after: $after
+        before: $before
+        sortKey: $sortKey
+        reverse: $reverse
+        filters: $filters
+      ) {
         nodes {
           ...ProductCard
         }
         pageInfo {
           hasNextPage
+          hasPreviousPage
+          startCursor
           endCursor
         }
       }

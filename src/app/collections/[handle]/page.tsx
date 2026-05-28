@@ -43,7 +43,15 @@ export default async function CollectionPage({ params, searchParams }: Props) {
   const sortConfig = sort ? SORT_MAP[sort] : undefined;
   const filters = available === "true" ? [{ available: true }] : undefined;
 
-  const collection = await getCollectionByHandle(handle, 12, after, sortConfig?.sortKey, sortConfig?.reverse, filters);
+  const collection = await getCollectionByHandle(
+    handle,
+    12,
+    after,
+    undefined,
+    sortConfig?.sortKey,
+    sortConfig?.reverse,
+    filters,
+  );
 
   if (!collection) notFound();
 

@@ -68,13 +68,22 @@ export interface Collection {
   seo: SEO;
 }
 
+export interface PageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string | null;
+  endCursor: string | null;
+}
+
+export interface ProductConnection {
+  nodes: Product[];
+  pageInfo: PageInfo;
+}
+
 export interface CollectionDetail extends Collection {
   products: {
     nodes: Product[];
-    pageInfo: {
-      hasNextPage: boolean;
-      endCursor: string | null;
-    };
+    pageInfo: PageInfo;
   };
 }
 
@@ -117,6 +126,7 @@ export type SearchResultItem = Product & { __typename: "Product" };
 export interface SearchResult {
   totalCount: number;
   nodes: SearchResultItem[];
+  pageInfo: PageInfo;
 }
 
 export interface CustomerAccessToken {

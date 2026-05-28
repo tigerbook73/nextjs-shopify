@@ -4,7 +4,7 @@ import SearchResults from "@/components/search/SearchResults";
 import SearchResultsSkeleton from "@/components/search/SearchResultsSkeleton";
 import SearchBox from "@/components/search/SearchBox";
 
-type Props = { searchParams: Promise<{ q?: string }> };
+type Props = { searchParams: Promise<{ q?: string; after?: string; before?: string }> };
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const { q } = await searchParams;
@@ -14,7 +14,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 }
 
 export default async function SearchPage({ searchParams }: Props) {
-  const { q } = await searchParams;
+  const { q, after, before } = await searchParams;
   const query = q?.trim() ?? "";
 
   return (
@@ -27,7 +27,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
       {query ? (
         <Suspense fallback={<SearchResultsSkeleton />}>
-          <SearchResults query={query} />
+          <SearchResults query={query} after={after} before={before} />
         </Suspense>
       ) : (
         <p className="text-gray-500">Enter a keyword above to search products and collections.</p>

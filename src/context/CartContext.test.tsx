@@ -1,3 +1,9 @@
+/**
+ * @test-file   CartContext
+ * @description CartContext provider and useCart hook — state initialization, applyCart, refreshCart, open/close cart
+ * @ai-generated
+ * @reviewed-by
+ */
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { CartProvider, useCart } from "./CartContext";
@@ -33,12 +39,27 @@ describe("CartContext", () => {
     mockGetCartAction.mockReset();
   });
 
+  /**
+   * @test-suite  useCart 在 Provider 外使用
+   * @target      useCart hook — guard when used outside CartProvider
+   * @strategy    unit; renders hook without provider wrapper
+   * @cases
+   *   - [FAIL] 在 CartProvider 外调用时 → 抛出错误
+   */
   describe("useCart 在 Provider 外使用", () => {
-    it("抛出错误", () => {
+    it("在 CartProvider 外调用时 → 抛出错误", () => {
       expect(() => renderHook(() => useCart())).toThrow("useCart must be used within CartProvider");
     });
   });
 
+  /**
+   * @test-suite  initialCart 初始化
+   * @target      CartProvider — initial state from initialCart prop
+   * @strategy    unit; no server calls
+   * @cases
+   *   - [PASS] initialCart 为 null 时 count 为 0、cart 为 null
+   *   - [PASS] initialCart 有值时 count 来自 totalQuantity
+   */
   describe("initialCart 初始化", () => {
     it("initialCart 为 null 时 count 为 0、cart 为 null", () => {
       const { result } = renderHook(() => useCart(), { wrapper: makeWrapper(null) });
@@ -53,6 +74,14 @@ describe("CartContext", () => {
     });
   });
 
+  /**
+   * @test-suite  applyCart
+   * @target      applyCart action — synchronous cart state update
+   * @strategy    unit; no server calls
+   * @cases
+   *   - [PASS] 传入 cart 时同步更新 count 和 cart
+   *   - [PASS] 传入 null 时 count 归零、cart 为 null
+   */
   describe("applyCart", () => {
     it("传入 cart 时同步更新 count 和 cart", () => {
       const { result } = renderHook(() => useCart(), { wrapper: makeWrapper() });
@@ -73,6 +102,17 @@ describe("CartContext", () => {
     });
   });
 
+  /**
+   * @test-suite  refreshCart
+   * @target      refreshCart action — async cart refresh via getCartAction
+   * @strategy    unit; mocks getCartAction via vi.mock
+   * @cases
+   *   - [PASS] 成功时通过 getCartAction 更新 count 和 cart
+   *   - [PASS] getCartAction 返回 null 时 count 归零
+   *   - [PASS] 失败时保留上一次已知 count 和 cart
+   *   - [PASS] refreshCart 调用完成后 → isRefreshing 恢复为 false
+   *   - [PASS] refreshCart 并发调用时 → 只触发一次 getCartAction
+   */
   describe("refreshCart", () => {
     it("成功时通过 getCartAction 更新 count 和 cart", async () => {
       mockGetCartAction.mockResolvedValue(makeCart(4));
@@ -110,7 +150,7 @@ describe("CartContext", () => {
       expect(result.current.cart?.totalQuantity).toBe(2);
     });
 
-    it("完成后 isRefreshing 恢复为 false", async () => {
+    it("refreshCart 调用完成后 → isRefreshing 恢复为 false", async () => {
       mockGetCartAction.mockResolvedValue(makeCart(1));
       const { result } = renderHook(() => useCart(), { wrapper: makeWrapper() });
 
@@ -121,7 +161,7 @@ describe("CartContext", () => {
       expect(result.current.isRefreshing).toBe(false);
     });
 
-    it("并发调用只触发一次 getCartAction", async () => {
+    it("refreshCart 并发调用时 → 只触发一次 getCartAction", async () => {
       let resolve!: (v: Cart | null) => void;
       mockGetCartAction.mockReturnValue(new Promise((r) => (resolve = r)));
       const { result } = renderHook(() => useCart(), { wrapper: makeWrapper() });
@@ -137,6 +177,15 @@ describe("CartContext", () => {
     });
   });
 
+  /**
+   * @test-suite  isOpen / openCart / closeCart
+   * @target      cart drawer open/close state
+   * @strategy    unit; no server calls
+   * @cases
+   *   - [PASS] 初始状态 isOpen 为 false
+   *   - [PASS] openCart 后 isOpen 为 true
+   *   - [PASS] closeCart 后 isOpen 为 false
+   */
   describe("isOpen / openCart / closeCart", () => {
     it("初始状态 isOpen 为 false", () => {
       const { result } = renderHook(() => useCart(), { wrapper: makeWrapper() });

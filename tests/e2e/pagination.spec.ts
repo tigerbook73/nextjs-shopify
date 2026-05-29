@@ -1,6 +1,24 @@
+/**
+ * @test-file   Pagination
+ * @description E2E tests for cursor-based pagination on Products, Search, and Collection pages
+ * @ai-generated
+ * @reviewed-by
+ */
 import { expect, test } from "@playwright/test";
 import { waitForHydration } from "./utils";
 
+/**
+ * @test-suite  Pagination
+ * @target      cursor-based pagination — prev/next navigation, URL param retention
+ * @strategy    e2e; real browser, skips conditionally when data is insufficient
+ * @cases
+ *   - [PASS] All Products — 第一页不显示「Prev page」按钮
+ *   - [PASS] All Products — 下一页：URL 含 after=，商品列表更新
+ *   - [PASS] All Products — 上一页：内容回到第一页，不再有「Prev page」按钮
+ *   - [PASS] Search — 翻页时保留搜索词（URL 同时含 q= 和 after=）
+ *   - [PASS] Collection — 翻页时保留排序参数（URL 同时含 after= 和 sort=）
+ *   - [PASS] Collection — 商品数量 ≤ 18 时不显示分页按钮
+ */
 test.describe("Pagination", () => {
   // ─── All Products ───────────────────────────────────────────────────────────
 

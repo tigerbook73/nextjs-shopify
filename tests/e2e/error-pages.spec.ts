@@ -1,5 +1,19 @@
+/**
+ * @test-file   ErrorPages
+ * @description E2E tests for custom 404 page and error boundary recovery UI
+ * @ai-generated
+ * @reviewed-by
+ */
 import { expect, test } from "@playwright/test";
 
+/**
+ * @test-suite  Error Pages
+ * @target      not-found page and error boundary — custom UI and recovery entry
+ * @strategy    e2e; real browser, navigates to dedicated test routes
+ * @cases
+ *   - [PASS] 未知路由展示自定义 404 页面
+ *   - [PASS] 错误边界测试页正确触发错误边界并展示恢复入口
+ */
 test.describe("Error Pages", () => {
   test("未知路由展示自定义 404 页面", async ({ page }) => {
     await page.goto("/test-pages/page-missing");

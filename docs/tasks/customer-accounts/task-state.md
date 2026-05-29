@@ -7,11 +7,11 @@
 
 ## Document Index
 
-- (no documents yet; entries added here as requirements and design documents are created)
+- `requirements.md` — 功能需求、验收标准
 
 ## Current Phase
 
-requirements (in_progress)
+design (pending)
 
 ## Current Step
 
@@ -19,9 +19,9 @@ requirements (in_progress)
 
 ## Requirements Phase
 
-- status: in_progress
+- status: done
 - notes:
-  - task just created, requirements pending
+  - requirements.md 确认，含 FR-1～FR-7、8 条 E2E 自动验收、2 条手动验收
 
 ## Design Phase
 

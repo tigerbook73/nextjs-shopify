@@ -1,3 +1,9 @@
+/**
+ * @test-file   ToastNotifications
+ * @description E2E tests for success/error toast appearance and auto-dismiss behavior
+ * @ai-generated
+ * @reviewed-by
+ */
 import { expect, test, type Page } from "@playwright/test";
 import { waitForHydration } from "./utils";
 
@@ -15,6 +21,16 @@ async function gotoAvailableProduct(page: Page) {
   throw new Error("No available product found in first 10 results");
 }
 
+/**
+ * @test-suite  Toast Notifications
+ * @target      Toast (sonner) — trigger conditions, content, auto-dismiss timing
+ * @strategy    e2e; real browser, tests add-to-cart and auth form submissions
+ * @cases
+ *   - [PASS] 商品详情页点击 Add to Cart 后页面出现 success Toast
+ *   - [PASS] 登录页填写错误密码提交后出现 error Toast
+ *   - [PASS] 注册页填写已注册邮箱提交后出现 error Toast
+ *   - [PASS] Toast 约 4 秒后自动消失
+ */
 test.describe("Toast Notifications", () => {
   test("商品详情页点击 Add to Cart 后页面出现 success Toast", async ({ page }) => {
     await gotoAvailableProduct(page);

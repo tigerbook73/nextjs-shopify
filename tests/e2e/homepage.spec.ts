@@ -1,11 +1,28 @@
+/**
+ * @test-file   Homepage
+ * @description E2E tests for homepage content, navigation links, and layout attributes
+ * @ai-generated
+ * @reviewed-by
+ */
 import { expect, test } from "@playwright/test";
 
+/**
+ * @test-suite  Homepage
+ * @target      homepage layout — hero section, nav links, font, lang attribute
+ * @strategy    e2e; real browser, navigates to / before each test
+ * @cases
+ *   - [PASS] 访问首页时 → 不含调试内容且显示 Hero 标题
+ *   - [PASS] 点击 Shop All Products 跳转至 /products
+ *   - [PASS] 点击 Browse Collections 跳转至 /collections
+ *   - [PASS] 访问首页时 → 含至少一个 CollectionCard 和一个 ProductCard
+ *   - [PASS] 访问首页时 → 根布局 lang 属性为 en 且使用 Geist 字体
+ */
 test.describe("Homepage", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
   });
 
-  test("首页不含调试内容，显示 Hero 标题", async ({ page }) => {
+  test("访问首页时 → 不含调试内容且显示 Hero 标题", async ({ page }) => {
     await expect(page.getByText("Phase 0")).not.toBeVisible();
     await expect(page.getByRole("heading", { name: "Discover Our Collection" })).toBeVisible();
   });
@@ -20,7 +37,7 @@ test.describe("Homepage", () => {
     await expect(page).toHaveURL(/\/collections/);
   });
 
-  test("页面含至少一个 CollectionCard 和一个 ProductCard", async ({ page }) => {
+  test("访问首页时 → 含至少一个 CollectionCard 和一个 ProductCard", async ({ page }) => {
     // CollectionCard 指向 /collections/*
     const collectionLinks = page.locator('a[href^="/collections/"]');
     await expect(collectionLinks.first()).toBeVisible();
@@ -30,7 +47,7 @@ test.describe("Homepage", () => {
     await expect(productLinks.first()).toBeVisible();
   });
 
-  test("根布局应用正确的 lang 属性和 Geist 字体", async ({ page }) => {
+  test("访问首页时 → 根布局 lang 属性为 en 且使用 Geist 字体", async ({ page }) => {
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     const fontFamily = await page.locator("html").evaluate((el) => getComputedStyle(el).fontFamily);
     expect(fontFamily).toContain("Geist");

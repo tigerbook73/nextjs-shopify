@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-step-1: OAuth Utilities & Customer Account API Client
+—
 
 ## Requirements Phase
 
@@ -34,8 +34,8 @@ step-1: OAuth Utilities & Customer Account API Client
 
 - status: in_progress
 - steps:
-  - step-1: OAuth Utilities & Customer Account API Client | step-type: intermediate | status: in_progress
-  - step-2: OAuth Routes (Login / Callback / Logout) | step-type: intermediate | status: pending
+  - step-1: OAuth Utilities & Customer Account API Client | step-type: intermediate | status: done
+  - step-2: OAuth Routes (Login / Callback / Logout) | step-type: intermediate | status: done
   - step-3: Middleware + Account Pages Migration | step-type: final | status: pending
   - step-4: Self-Service Features (Profile / Addresses / Order Detail / Header) | step-type: final | status: pending
   - step-5: Classic API Cleanup | step-type: final | status: pending

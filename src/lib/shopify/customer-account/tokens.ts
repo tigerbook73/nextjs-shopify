@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { CLIENT_ID, SHOP_ID } from "./config";
 
 export const COOKIE_NAMES = {
   ACCESS_TOKEN: "ca_access_token",
@@ -6,6 +7,7 @@ export const COOKIE_NAMES = {
   TOKEN_EXPIRY: "ca_token_expiry",
   PKCE_VERIFIER: "ca_pkce_verifier",
   OAUTH_STATE: "ca_oauth_state",
+  RETURN_TO: "ca_return_to",
 } as const;
 
 const BASE_COOKIE_OPTIONS = {
@@ -61,16 +63,13 @@ export async function exchangeRefreshToken(refreshToken: string): Promise<{
   refresh_token: string;
   expires_in: number;
 } | null> {
-  const clientId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID!;
-  const shopId = process.env.SHOPIFY_SHOP_ID!;
-
-  const res = await fetch(`https://shopify.com/authentication/${shopId}/oauth/token`, {
+  const res = await fetch(`https://shopify.com/authentication/${SHOP_ID}/oauth/token`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       grant_type: "refresh_token",
       refresh_token: refreshToken,
-      client_id: clientId,
+      client_id: CLIENT_ID,
     }),
   });
 

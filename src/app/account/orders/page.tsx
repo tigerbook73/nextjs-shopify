@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { customerAccountFetch } from "@/lib/shopify/customer-account/client";
 import { GET_ORDERS_QUERY } from "@/lib/shopify/customer-account/queries";
@@ -6,7 +7,7 @@ import { formatPrice } from "@/lib/utils/format-price";
 import type { CustomerOrder } from "@/types/customer-account";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "历史订单" };
+export const metadata = { title: "Orders" };
 
 export default async function OrdersPage() {
   const accessToken = await getAccessToken();
@@ -26,22 +27,33 @@ export default async function OrdersPage() {
 
   return (
     <main>
-      <h1 className="mb-6 text-2xl font-bold">历史订单</h1>
+      <h1 className="mb-6 text-2xl font-bold">Orders</h1>
       {orders.length === 0 ? (
-        <p className="text-sm text-gray-500">暂无订单记录。</p>
+        <p className="text-sm text-gray-500">No orders yet.</p>
       ) : (
         <ul className="space-y-4">
           {orders.map((order) => (
             <li key={order.id} className="rounded-lg border p-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="font-medium">订单 {order.name}</p>
+                  <Link
+                    href={`/account/orders/${Buffer.from(order.id).toString("base64url")}`}
+                    className="font-medium hover:underline"
+                  >
+                    Order {order.name}
+                  </Link>
                   <p className="mt-1 text-sm text-gray-500">
-                    {new Date(order.processedAt).toLocaleDateString("zh-CN")}
+                    {new Date(order.processedAt).toLocaleDateString("en-US", { dateStyle: "medium" })}
                   </p>
                   <p className="mt-1 text-sm text-gray-500">
                     {order.financialStatus} · {order.fulfillmentStatus}
                   </p>
+                  <Link
+                    href={`/account/orders/${Buffer.from(order.id).toString("base64url")}`}
+                    className="mt-1 inline-block text-xs text-gray-400 hover:underline"
+                  >
+                    View details →
+                  </Link>
                 </div>
                 <p className="font-medium">{formatPrice(order.totalPrice.amount, order.totalPrice.currencyCode)}</p>
               </div>

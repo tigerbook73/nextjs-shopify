@@ -5,7 +5,7 @@ import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
 import type { CustomerProfile } from "@/types/customer-account";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "我的账户" };
+export const metadata = { title: "My account" };
 
 export default async function AccountPage() {
   const accessToken = await getAccessToken();
@@ -37,12 +37,12 @@ export default async function AccountPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold">{customer.displayName}</h1>
-          <p className="text-sm text-gray-500">{orderCountLabel} 笔历史订单</p>
+          <p className="text-sm text-gray-500">{orderCountLabel} orders</p>
         </div>
       </div>
       <div className="space-y-2 text-sm">
         <p>
-          <span className="text-gray-500">邮箱：</span>
+          <span className="text-gray-500">Email: </span>
           {customer.emailAddress?.emailAddress}
         </p>
       </div>

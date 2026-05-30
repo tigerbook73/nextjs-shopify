@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-step-3: Middleware + Account Pages Migration
+step-4: Self-Service Features (Profile / Addresses / Order Detail / Header)
 
 ## Requirements Phase
 
@@ -36,8 +36,8 @@ step-3: Middleware + Account Pages Migration
 - steps:
   - step-1: OAuth Utilities & Customer Account API Client | step-type: intermediate | status: done
   - step-2: OAuth Routes (Login / Callback / Logout) | step-type: intermediate | status: done
-  - step-3: Middleware + Account Pages Migration | step-type: final | status: in_progress
-  - step-4: Self-Service Features (Profile / Addresses / Order Detail / Header) | step-type: final | status: pending
+  - step-3: Middleware + Account Pages Migration | step-type: final | status: done
+  - step-4: Self-Service Features (Profile / Addresses / Order Detail / Header) | step-type: final | status: in_progress
   - step-5: Classic API Cleanup | step-type: final | status: pending
 
 ## Task Acceptance

@@ -59,3 +59,18 @@ export const ADDRESS_DELETE_MUTATION = /* GraphQL */ `
     }
   }
 `;
+
+export const ADDRESS_SET_DEFAULT_MUTATION = /* GraphQL */ `
+  mutation CustomerAddressSetDefault($addressId: ID!) {
+    customerAddressUpdate(addressId: $addressId, address: {}, defaultAddress: true) {
+      customerAddress {
+        id
+      }
+      userErrors {
+        field
+        message
+        code
+      }
+    }
+  }
+`;

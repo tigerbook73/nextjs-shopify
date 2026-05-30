@@ -29,7 +29,11 @@ export async function proxy(request: NextRequest) {
   if (refreshToken) {
     const tokens = await exchangeRefreshToken(refreshToken);
     if (tokens) {
-      const response = NextResponse.next();
+      // Redirect to the same URL so the browser sends a fresh request with the
+      // new cookies. NextResponse.next() would forward the old request cookies
+      // to the page handler, causing customerAccountFetch to fail with an
+      // expired token even though the refresh succeeded.
+      const response = NextResponse.redirect(request.url);
       const expiryMs = Date.now() + tokens.expires_in * 1000;
 
       response.cookies.set(COOKIE_NAMES.ACCESS_TOKEN, tokens.access_token, {

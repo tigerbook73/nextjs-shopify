@@ -108,13 +108,13 @@ describe("middleware", () => {
 
   /**
    * @test-suite  Token refresh
-   * @target      transparent token refresh when access token is expired but refresh token is valid
+   * @target      token refresh redirects to same URL so the page receives fresh cookies
    * @strategy    unit — exchangeRefreshToken mocked to return new tokens
    * @cases
-   *   - [PASS] passes through and sets new cookies when refresh token exchange succeeds
+   *   - [PASS] redirects to same URL and sets new cookies when refresh token exchange succeeds
    */
   describe("Token refresh", () => {
-    it("passes through and sets new cookies when refresh token exchange succeeds", async () => {
+    it("redirects to same URL and sets new cookies when refresh token exchange succeeds", async () => {
       mockExchange.mockResolvedValue({
         access_token: "new-access-token",
         refresh_token: "new-refresh-token",
@@ -129,7 +129,8 @@ describe("middleware", () => {
         }),
       );
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(307);
+      expect(new URL(res.headers.get("location")!).pathname).toBe("/account");
       expect(mockExchange).toHaveBeenCalledWith("valid-refresh-token");
 
       const setCookies = res.headers.getSetCookie();

@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H nextjs-shopify.local --experimental-https --experimental-https-key ./.certs/nextjs-shopify.local-key.pem --experimental-https-cert ./.certs/nextjs-shopify.local.pem",
+    "dev:http": "next dev -H nextjs-shopify.local",
     "build": "next build",
     "start": "next start",
     "format": "prettier --write .",

@@ -12,6 +12,7 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     trace: "on-first-retry",
+    ignoreHTTPSErrors: true,
   },
   webServer: {
     command: `pnpm build && pnpm start --hostname 127.0.0.1 --port ${PORT}`,

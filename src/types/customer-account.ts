@@ -42,7 +42,6 @@ export interface CustomerOrderLineItem {
   quantity: number;
   image: { url: string; altText: string | null } | null;
   price: { amount: string; currencyCode: string };
-  originalTotalPrice: { amount: string; currencyCode: string };
 }
 
 export interface CustomerOrderFulfillmentTracking {
@@ -69,9 +68,9 @@ export interface CustomerOrder {
 export interface CustomerOrderDetail extends CustomerOrder {
   shippingAddress: CustomerAddress | null;
   fulfillments: { nodes: CustomerOrderFulfillment[] };
-  subtotalPrice: { amount: string; currencyCode: string };
+  subtotalPrice: { amount: string; currencyCode: string } | null;
   totalShippingPrice: { amount: string; currencyCode: string };
-  totalTax: { amount: string; currencyCode: string };
+  totalTax: { amount: string; currencyCode: string } | null;
 }
 
 export interface AddressInput {
@@ -80,10 +79,10 @@ export interface AddressInput {
   address1?: string;
   address2?: string;
   city?: string;
-  province?: string;
+  zoneCode?: string;
   zip?: string;
-  country?: string;
-  phone?: string;
+  territoryCode?: string;
+  phoneNumber?: string;
 }
 
 export type CustomerActionResult = { success: true } | { success: false; error: string };

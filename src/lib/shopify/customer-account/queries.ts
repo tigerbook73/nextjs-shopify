@@ -47,10 +47,6 @@ export const GET_ORDERS_QUERY = /* GraphQL */ `
                 amount
                 currencyCode
               }
-              originalTotalPrice {
-                amount
-                currencyCode
-              }
             }
           }
         }
@@ -77,11 +73,11 @@ export const GET_ORDER_DETAIL_QUERY = /* GraphQL */ `
         amount
         currencyCode
       }
-      subtotalPrice {
+      subtotalPrice: subtotal {
         amount
         currencyCode
       }
-      totalShippingPrice {
+      totalShippingPrice: totalShipping {
         amount
         currencyCode
       }
@@ -98,7 +94,7 @@ export const GET_ORDER_DETAIL_QUERY = /* GraphQL */ `
         province
         zip
         country
-        phone
+        phone: phoneNumber
       }
       lineItems(first: 50) {
         nodes {
@@ -110,10 +106,6 @@ export const GET_ORDER_DETAIL_QUERY = /* GraphQL */ `
             altText
           }
           price {
-            amount
-            currencyCode
-          }
-          originalTotalPrice {
             amount
             currencyCode
           }
@@ -148,11 +140,11 @@ export const GET_ADDRESSES_QUERY = /* GraphQL */ `
           address2
           city
           province
-          provinceCode
+          provinceCode: zoneCode
           zip
           country
-          countryCode
-          phone
+          countryCode: territoryCode
+          phone: phoneNumber
         }
       }
     }

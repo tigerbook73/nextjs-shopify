@@ -1,7 +1,16 @@
-schema: "./schema.graphql"
-documents:
-  - "src/**/*.ts"
-  - "!src/lib/shopify/customer-account/**"
-extensions:
-  languageService:
-    cacheSchemaFileForLookup: true
+projects:
+  storefront:
+    schema: "./src/types/generated/storefront/storefront-2026-04.schema.json"
+    documents:
+      - "src/lib/shopify/queries/**/*.ts"
+      - "src/lib/shopify/mutations/**/*.ts"
+    extensions:
+      languageService:
+        cacheSchemaFileForLookup: true
+  customer-account:
+    schema: "./src/types/generated/customer-account/customer-2026-04.schema.json"
+    documents:
+      - "src/lib/shopify/customer-account/**/*.ts"
+    extensions:
+      languageService:
+        cacheSchemaFileForLookup: true

@@ -1,18 +1,28 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getCustomerOrders } from "@/lib/shopify/client";
+import { customerAccountFetch } from "@/lib/shopify/customer-account/client";
+import { GET_ORDERS_QUERY } from "@/lib/shopify/customer-account/queries";
+import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
 import { formatPrice } from "@/lib/utils/format-price";
+import type { CustomerOrder } from "@/types/customer-account";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "历史订单" };
 
 export default async function OrdersPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("customerAccessToken")?.value;
+  const accessToken = await getAccessToken();
+  if (!accessToken) redirect("/api/auth/login");
 
-  if (!token) redirect("/account/login");
-
-  const orders = await getCustomerOrders(token);
+  let orders: CustomerOrder[] = [];
+  try {
+    const data = await customerAccountFetch<{ customer: { orders: { nodes: CustomerOrder[] } } }>(
+      accessToken,
+      GET_ORDERS_QUERY,
+      { first: 10 },
+    );
+    orders = data.customer?.orders.nodes ?? [];
+  } catch {
+    redirect("/api/auth/login");
+  }
 
   return (
     <main>
@@ -25,7 +35,7 @@ export default async function OrdersPage() {
             <li key={order.id} className="rounded-lg border p-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="font-medium">订单 #{order.orderNumber}</p>
+                  <p className="font-medium">订单 {order.name}</p>
                   <p className="mt-1 text-sm text-gray-500">
                     {new Date(order.processedAt).toLocaleDateString("zh-CN")}
                   </p>
@@ -33,9 +43,7 @@ export default async function OrdersPage() {
                     {order.financialStatus} · {order.fulfillmentStatus}
                   </p>
                 </div>
-                <p className="font-medium">
-                  {formatPrice(order.currentTotalPrice.amount, order.currentTotalPrice.currencyCode)}
-                </p>
+                <p className="font-medium">{formatPrice(order.totalPrice.amount, order.totalPrice.currencyCode)}</p>
               </div>
               {order.lineItems.nodes.length > 0 && (
                 <ul className="mt-3 space-y-1 border-t pt-3">
@@ -44,9 +52,7 @@ export default async function OrdersPage() {
                       <span>
                         {item.title} × {item.quantity}
                       </span>
-                      {item.variant && (
-                        <span>{formatPrice(item.variant.price.amount, item.variant.price.currencyCode)}</span>
-                      )}
+                      <span>{formatPrice(item.price.amount, item.price.currencyCode)}</span>
                     </li>
                   ))}
                 </ul>

@@ -8,7 +8,14 @@ export const GET_CUSTOMER_QUERY = /* GraphQL */ `
       emailAddress {
         emailAddress
       }
-      numberOfOrders
+      orders(first: 100) {
+        nodes {
+          id
+        }
+        pageInfo {
+          hasNextPage
+        }
+      }
     }
   }
 `;

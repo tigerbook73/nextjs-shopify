@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { CLIENT_ID, REDIRECT_URI, SHOP_ID } from "@/lib/shopify/customer-account/config";
+import { APP_URL, CLIENT_ID, REDIRECT_URI, SHOP_ID } from "@/lib/shopify/customer-account/config";
 import { COOKIE_NAMES, setTokenCookies } from "@/lib/shopify/customer-account/tokens";
 import type { CustomerAccountToken } from "@/types/customer-account";
 
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("[auth/callback] OAuth error:", error, searchParams.get("error_description"));
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(`${APP_URL}/`);
   }
 
   if (!code || !state) {
@@ -63,5 +63,5 @@ export async function GET(request: NextRequest) {
 
   await setTokenCookies(tokens);
 
-  return NextResponse.redirect(new URL(returnTo, request.url));
+  return NextResponse.redirect(`${APP_URL}${returnTo}`);
 }

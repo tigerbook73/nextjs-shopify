@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
   authUrl.searchParams.set("client_id", CLIENT_ID);
   authUrl.searchParams.set("response_type", "code");
   authUrl.searchParams.set("redirect_uri", REDIRECT_URI);
-  authUrl.searchParams.set("scope", "openid email");
+  authUrl.searchParams.set("scope", "openid email customer-account-api:full");
   authUrl.searchParams.set("state", state);
   authUrl.searchParams.set("code_challenge", codeChallenge);
   authUrl.searchParams.set("code_challenge_method", "S256");

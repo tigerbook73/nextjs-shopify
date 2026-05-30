@@ -15,7 +15,10 @@ export interface CustomerProfile {
   lastName: string | null;
   displayName: string;
   emailAddress: CustomerEmailAddress | null;
-  numberOfOrders: number;
+  orders?: {
+    nodes: { id: string }[];
+    pageInfo: { hasNextPage: boolean };
+  };
 }
 
 export interface CustomerAddress {

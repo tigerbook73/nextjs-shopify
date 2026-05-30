@@ -1,27 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
+import { APP_URL } from "@/lib/shopify/customer-account/config";
+import { COOKIE_NAMES, exchangeRefreshToken } from "@/lib/shopify/customer-account/tokens";
 
-const AUTH_PAGES = ["/account/login", "/account/register"];
+const AUTH_COOKIE_OPTIONS = {
+  httpOnly: true,
+  sameSite: "lax" as const,
+  path: "/",
+};
 
-export function proxy(request: NextRequest): NextResponse {
-  const token = request.cookies.get("customerAccessToken")?.value;
+const AUTH_ONLY_PAGES = ["/account/login", "/account/register"];
+
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isAuthPage = AUTH_PAGES.includes(pathname);
+  const accessToken = request.cookies.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
+  const tokenExpiry = request.cookies.get(COOKIE_NAMES.TOKEN_EXPIRY)?.value;
+  const refreshToken = request.cookies.get(COOKIE_NAMES.REFRESH_TOKEN)?.value;
 
-  if (!isAuthPage && !token) {
-    return NextResponse.redirect(new URL("/account/login", request.url));
+  const isExpired = !tokenExpiry || Date.now() >= parseInt(tokenExpiry, 10);
+
+  if (accessToken && !isExpired) {
+    if (AUTH_ONLY_PAGES.includes(pathname)) {
+      return NextResponse.redirect(new URL(`${APP_URL}/account`));
+    }
+    return NextResponse.next();
   }
 
-  if (isAuthPage && token) {
-    if (request.nextUrl.searchParams.get("expired") === "1") {
-      const response = NextResponse.redirect(new URL("/account/login", request.url));
-      response.cookies.delete("customerAccessToken");
+  if (refreshToken) {
+    const tokens = await exchangeRefreshToken(refreshToken);
+    if (tokens) {
+      const response = NextResponse.next();
+      const expiryMs = Date.now() + tokens.expires_in * 1000;
+
+      response.cookies.set(COOKIE_NAMES.ACCESS_TOKEN, tokens.access_token, {
+        ...AUTH_COOKIE_OPTIONS,
+        maxAge: tokens.expires_in,
+      });
+      response.cookies.set(COOKIE_NAMES.REFRESH_TOKEN, tokens.refresh_token, {
+        ...AUTH_COOKIE_OPTIONS,
+        maxAge: 60 * 60 * 24 * 30,
+      });
+      response.cookies.set(COOKIE_NAMES.TOKEN_EXPIRY, String(expiryMs), {
+        ...AUTH_COOKIE_OPTIONS,
+        maxAge: 60 * 60 * 24 * 30,
+      });
+
       return response;
     }
-    return NextResponse.redirect(new URL("/account", request.url));
   }
 
-  return NextResponse.next();
+  const loginUrl = new URL(`${APP_URL}/api/auth/login`);
+  loginUrl.searchParams.set("return_to", pathname);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {

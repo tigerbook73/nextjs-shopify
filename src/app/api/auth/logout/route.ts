@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { CLIENT_ID, SHOP_ID } from "@/lib/shopify/customer-account/config";
+import { NextResponse } from "next/server";
+import { APP_URL, CLIENT_ID, SHOP_ID } from "@/lib/shopify/customer-account/config";
 import { clearTokenCookies, getAccessToken } from "@/lib/shopify/customer-account/tokens";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   const accessToken = await getAccessToken();
 
   if (accessToken) {
@@ -20,5 +20,5 @@ export async function POST(request: NextRequest) {
 
   await clearTokenCookies();
 
-  return NextResponse.redirect(new URL("/", request.url));
+  return NextResponse.redirect(`${APP_URL}/`);
 }

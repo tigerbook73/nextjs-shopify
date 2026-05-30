@@ -11,6 +11,17 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
           <Link href="/account/orders" className="hover:underline">
             历史订单
           </Link>
+          <Link href="/account/profile" className="hover:underline">
+            个人资料
+          </Link>
+          <Link href="/account/addresses" className="hover:underline">
+            收货地址
+          </Link>
+          <form action="/api/auth/logout" method="POST" className="mt-auto pt-4 md:pt-0">
+            <button type="submit" className="text-gray-500 hover:underline">
+              退出登录
+            </button>
+          </form>
         </nav>
         <div className="flex-1">{children}</div>
       </div>

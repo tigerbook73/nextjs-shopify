@@ -1,0 +1,166 @@
+"""
+Minimal schema for Shopify Customer Account API (OAuth 2.0).
+Customer is identified by Bearer token — no customerAccessToken argument.
+"""
+
+type Query {
+  customer: Customer
+  order(id: ID!): Order
+  node(id: ID!): Node
+}
+
+type Mutation {
+  customerUpdate(input: CustomerUpdateInput!): CustomerUpdatePayload
+  customerAddressCreate(address: CustomerAddressInput!, defaultAddress: Boolean): CustomerAddressCreatePayload
+  customerAddressUpdate(addressId: ID!, address: CustomerAddressInput!, defaultAddress: Boolean): CustomerAddressUpdatePayload
+  customerAddressDelete(addressId: ID!): CustomerAddressDeletePayload
+}
+
+interface Node {
+  id: ID!
+}
+
+type Customer {
+  id: ID!
+  firstName: String
+  lastName: String
+  displayName: String!
+  emailAddress: CustomerEmailAddress
+  numberOfOrders: Int!
+  defaultAddress: CustomerAddress
+  addresses(first: Int, after: String, last: Int, before: String): CustomerAddressConnection!
+  orders(first: Int, after: String, last: Int, before: String): OrderConnection!
+}
+
+type CustomerEmailAddress {
+  emailAddress: String!
+}
+
+type CustomerAddress {
+  id: ID!
+  firstName: String
+  lastName: String
+  address1: String
+  address2: String
+  city: String
+  province: String
+  provinceCode: String
+  zip: String
+  country: String
+  countryCode: String
+  phone: String
+}
+
+type CustomerAddressConnection {
+  nodes: [CustomerAddress!]!
+  pageInfo: PageInfo!
+}
+
+type Order implements Node {
+  id: ID!
+  name: String!
+  processedAt: String!
+  financialStatus: String
+  fulfillmentStatus: String!
+  totalPrice: MoneyV2!
+  subtotalPrice: MoneyV2!
+  totalShippingPrice: MoneyV2!
+  totalTax: MoneyV2!
+  shippingAddress: CustomerAddress
+  lineItems(first: Int, after: String, last: Int, before: String): LineItemConnection!
+  fulfillments(first: Int): FulfillmentConnection!
+}
+
+type OrderConnection {
+  nodes: [Order!]!
+  pageInfo: PageInfo!
+}
+
+type LineItem {
+  title: String!
+  variantTitle: String
+  quantity: Int!
+  image: Image
+  price: MoneyV2!
+  originalTotalPrice: MoneyV2!
+}
+
+type LineItemConnection {
+  nodes: [LineItem!]!
+}
+
+type Fulfillment {
+  status: String!
+  updatedAt: String!
+  trackingInformation: [TrackingInformation!]!
+}
+
+type FulfillmentConnection {
+  nodes: [Fulfillment!]!
+}
+
+type TrackingInformation {
+  url: String
+  number: String
+}
+
+type MoneyV2 {
+  amount: String!
+  currencyCode: String!
+}
+
+type Image {
+  url: String!
+  altText: String
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type UserError {
+  field: [String!]
+  message: String!
+  code: String
+}
+
+input CustomerUpdateInput {
+  firstName: String
+  lastName: String
+  email: String
+}
+
+input CustomerAddressInput {
+  firstName: String
+  lastName: String
+  address1: String
+  address2: String
+  city: String
+  province: String
+  zip: String
+  country: String
+  phone: String
+}
+
+type CustomerUpdatePayload {
+  customer: Customer
+  userErrors: [UserError!]!
+}
+
+type CustomerAddressCreatePayload {
+  customerAddress: CustomerAddress
+  userErrors: [UserError!]!
+}
+
+type CustomerAddressUpdatePayload {
+  customerAddress: CustomerAddress
+  userErrors: [UserError!]!
+}
+
+type CustomerAddressDeletePayload {
+  deletedAddressId: ID
+  userErrors: [UserError!]!
+}

@@ -1,5 +1,7 @@
 schema: "./schema.graphql"
-documents: "./src/**/*.ts"
+documents:
+  - "src/**/*.ts"
+  - "!src/lib/shopify/customer-account/**"
 extensions:
   languageService:
     cacheSchemaFileForLookup: true

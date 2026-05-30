@@ -1,0 +1,2 @@
+schema: "../../../../../schema-customer-account.graphql"
+documents: "./**/*.ts"

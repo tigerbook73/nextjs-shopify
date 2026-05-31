@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # nextjs-shopify 项目规范（Claude Code）
 
 > 本文件为项目级补充规则，与全局 `~/.claude/CLAUDE.md` 叠加生效。

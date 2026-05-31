@@ -1,88 +1,99 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# AGENTS.md
 
-# This is NOT the Next.js you know
+本文件为 AI agent 提供本仓库的开发指南。
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+## 常用命令
 
-<!-- END:nextjs-agent-rules -->
+```bash
+pnpm dev          # HTTPS 开发服务器（需要 .certs/，见下方说明）
+pnpm dev:http     # HTTP 开发服务器（无需证书）
+pnpm build        # 生产构建
+pnpm lint         # ESLint + tsc --noEmit
+pnpm test:unit    # Vitest 单元测试（jsdom 环境）
+pnpm test:e2e     # Playwright E2E 测试（自动构建并启动服务器）
+pnpm codegen      # GraphQL 类型生成（需要 SHOPIFY_CUSTOMER_ACCOUNT_API_KEY）
+pnpm env:check    # 检查必填环境变量是否齐全
+```
 
-# nextjs-shopify 项目规范（Codex / ChatGPT）
+运行单个测试文件：`pnpm vitest run src/path/to/file.test.ts`
 
-> 本文件适用于 OpenAI Codex 及 ChatGPT 辅助开发场景。
-> 所有规范以 `docs/conventions/` 为权威来源，本文件只说明使用协议，不重复规范内容。
+### 开发环境配置
 
----
+复制 `.env.example` 为 `.env.local` 并填写以下变量：
 
-## 开始前必读
+| 变量                                 | 用途                                              |
+| ------------------------------------ | ------------------------------------------------- |
+| `SHOPIFY_STORE_DOMAIN`               | 店铺域名，格式 `*.myshopify.com`（不含 https://） |
+| `SHOPIFY_STOREFRONT_ACCESS_TOKEN`    | Storefront API 公开访问令牌                       |
+| `SHOPIFY_CUSTOMER_ACCOUNT_API_KEY`   | 仅用于 codegen                                    |
+| `SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID` | OAuth client ID（Headless channel）               |
+| `SHOPIFY_SHOP_ID`                    | Shopify 店铺数字 ID                               |
+| `NEXT_PUBLIC_APP_URL`                | 应用 URL，例如 `https://nextjs-shopify.local`     |
 
-在开始任何实现任务前，先阅读以下规范文件中的相关部分：
+HTTPS 开发模式需要在 `.certs/` 目录放置自签名证书。`pnpm dev:http` 无需证书，但 Customer Account OAuth 必须在 HTTPS 下才能正常工作。
 
-- **架构约束**：`docs/conventions/architecture.md`（技术选型、禁止事项、分层规则）
-- **编码规范**：`docs/conventions/coding.md`（TypeScript、命名、注释）
-- **目录结构**：`docs/conventions/directory.md`（文件放在哪里）
-- **GraphQL 规范**：`docs/conventions/graphql.md`（查询、变更、Fragment 格式）
-- **测试策略**：`docs/conventions/testing.md`（什么要测、什么不测）
+## 架构概览
 
-架构决策背景见 `docs/adr/`，理解「为什么」才能在边界情况做出正确判断。
+**Next.js 16 App Router**，代码全部位于 `src/` 下：
 
----
+```
+src/
+  app/           # 路由（默认为 RSC）
+  components/    # UI 组件（cart/ collection/ layout/ product/ search/ ui/）
+  context/       # 客户端状态（CartContext）
+  lib/
+    actions/     # Server Actions（cart.ts, address.ts, profile.ts）
+    shopify/
+      client.ts                # Storefront API 请求层
+      queries/ mutations/      # GraphQL 字符串
+      types.ts                 # 手写的 Storefront API 类型
+      customer-account/        # Customer Account API（OAuth、令牌、查询）
+  types/
+    generated/   # 由 pnpm codegen 自动生成——禁止手动编辑
+```
 
-## 规范冲突处理
+### 两套 Shopify API
 
-若实现方案与 `docs/conventions/` 中的规范冲突，必须先说明冲突点，
-等用户决定「调整实现」还是「更新规范」，不得擅自继续。
+**Storefront API**（`src/lib/shopify/client.ts`）：公开数据——商品、集合、购物车。`shopifyFetch()` 通过 Next.js `fetch` 的 cache tags 实现按需重验证。默认使用 `force-cache`，变更操作和搜索使用 `no-store`。
 
----
+**Customer Account API**（`src/lib/shopify/customer-account/`）：已认证的客户数据——订单、地址、个人资料。采用 PKCE OAuth 2.0。令牌存储在 httpOnly cookie 中（`ca_access_token`、`ca_refresh_token`、`ca_token_expiry`）。`src/proxy.ts` 中的中间件保护 `/account/**` 路由——令牌过期时通过重定向刷新（而非 `NextResponse.next()`，因为后者会把过期的旧 cookie 转发给页面处理器，导致认证失败）。
 
-## 功能文档体系
+### 购物车状态
 
-进行中的功能：`docs/features/<feature-id>/`
-已完成的功能：`docs/features/-<feature-id>/`（目录名前加 `-`）
+购物车在 layout 层由服务端初始化（`src/app/layout.tsx` 读取 `cartId` cookie 并获取购物车数据），以 `initialCart` 传入 `CartProvider`。客户端变更调用 `src/lib/actions/cart.ts` 中的 Server Actions，Action 返回更新后的购物车；组件调用 `CartContext` 上的 `applyCart(updatedCart)` 同步状态，无需整页刷新。
 
-每个功能目录包含：
+### 认证流程
 
-| 文件              | 内容                                                     |
-| ----------------- | -------------------------------------------------------- |
-| `REQUIREMENTS.md` | 产品目标、用例、业务规则、验收标准                       |
-| `DESIGN.md`       | 技术设计、数据模型、API 契约、实现阶段、测试计划         |
-| `PROGRESS.md`     | 当前阶段、上次确认提交、已完成事项、已知偏差、下一步入口 |
+`GET /api/auth/login` → 生成 PKCE 挑战码 → 跳转 Shopify OAuth → `GET /api/auth/callback` → 写入 cookie → 重定向到 `return_to`。登出由 `GET /api/auth/logout` 清除令牌 cookie。
 
-### 继续开发协议
+## 测试规范
 
-当用户说「继续 `<feature-id>` 的开发」时：
+### E2E 测试要求
 
-1. 打开 `docs/features/<feature-id>/PROGRESS.md`
-2. 打开 `DESIGN.md`
-3. 打开 `REQUIREMENTS.md`
-4. 如果三个文件有任何一个缺失，停止并报告缺失文件
+对 `src/app/` 下的路由页面进行以下变更时，须补充或更新对应的 E2E 测试用例：
 
-从文档恢复状态，不要扫描整个代码库。只在文档与代码存在矛盾时才检查代码。
+- 新增或删除影响用户操作路径的关键组件（如表单、导航入口、购物车交互）
+- 修改页面结构（Layout / 页面级组件的层级或渲染逻辑）
+- 新增完整的用户流程（如认证、结账、地址管理）
 
-### 文档一致性检查（继续开发前执行）
+若已有 E2E 测试覆盖该功能，更新现有用例即可，无需强制新增。
 
-- 检查 `git status`
-- 检查 `PROGRESS.md` 中「上次确认提交」之后的新提交
-- 若 `REQUIREMENTS.md`、`DESIGN.md`、`PROGRESS.md` 在上次进度点后有改动：
-  - 简单的机械性不一致（如进度描述过时）：自动刷新文档再继续
-  - 影响需求、设计范围、阶段顺序的不一致：停止并向用户说明，等待决策
+**豁免情形**（需在 PR/commit 中注明原因）：仅样式微调、纯文案修改、或测试依赖真实第三方 OAuth 等无法在 CI 中稳定重现的场景。
 
-### 阶段提交前更新文档
+### 提交前自检
 
-每个实现阶段完成后提交前，更新 `PROGRESS.md` 中的进度、下一步、已知偏差。
-不要为无关改动更新功能文档。只在设计真正改变时才更新 `DESIGN.md`。
+每次准备执行 `git commit` 前，检查本次变更是否触发上述 E2E 补充条件。若触发但未补充或更新测试，须主动提示用户，并说明补充的建议方向或豁免理由，不得静默跳过。
 
----
+## 提交规范
 
-## 当前开发阶段
+格式：`type(scope): description`（Conventional Commits，英文描述）
 
-**Phase 0（基础搭建）已完成 → Phase 1（商品浏览）即将开始**
+示例：`feat(cart): lift cartCount into CartContext`、`fix(auth): redirect after token refresh`
 
-完整阶段规划见 `BLUEPRINT.md`。
+## GraphQL 代码生成
 
----
+生成的类型文件位于 `src/types/generated/`——禁止手动编辑。修改任何 `.graphqlrc.yml` 或新增 GraphQL 操作后，运行 `pnpm codegen`。运行前需在 `.env.local` 中设置 `SHOPIFY_CUSTOMER_ACCOUNT_API_KEY`。
 
-## 提交信息规范
+## Next.js 版本说明
 
-格式：`<phase>/<scope>: <中文描述>`
-
-示例：`phase1/products: 添加商品列表 RSC 数据获取`
+本项目使用 **Next.js 16**，其 API 和行为可能与训练数据中的版本存在破坏性差异。编写任何 Next.js 相关代码前，请先查阅 `node_modules/next/dist/docs/` 中的对应文档，不得依赖旧版本的行为假设。

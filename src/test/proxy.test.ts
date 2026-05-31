@@ -134,8 +134,10 @@ describe("middleware", () => {
       expect(mockExchange).toHaveBeenCalledWith("valid-refresh-token");
 
       const setCookies = res.headers.getSetCookie();
-      expect(setCookies.some((c) => c.startsWith(`${COOKIE_NAMES.ACCESS_TOKEN}=new-access-token`))).toBe(true);
-      expect(setCookies.some((c) => c.startsWith(`${COOKIE_NAMES.REFRESH_TOKEN}=new-refresh-token`))).toBe(true);
+      expect(setCookies.some((c: string) => c.startsWith(`${COOKIE_NAMES.ACCESS_TOKEN}=new-access-token`))).toBe(true);
+      expect(setCookies.some((c: string) => c.startsWith(`${COOKIE_NAMES.REFRESH_TOKEN}=new-refresh-token`))).toBe(
+        true,
+      );
     });
   });
 });

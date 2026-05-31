@@ -105,7 +105,8 @@ test.describe("Header Auth State", () => {
 
   test("无 token 时 Header 不显示 Account 和 Orders 导航链接", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("link", { name: "Account" })).not.toBeVisible();
-    await expect(page.getByRole("link", { name: "Orders" })).not.toBeVisible();
+    const header = page.locator("header");
+    await expect(header.getByRole("link", { name: "Account", exact: true })).not.toBeVisible();
+    await expect(header.getByRole("link", { name: "Orders", exact: true })).not.toBeVisible();
   });
 });

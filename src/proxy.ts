@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { APP_URL } from "@/lib/shopify/customer-account/config";
 import { COOKIE_NAMES, exchangeRefreshToken } from "@/lib/shopify/customer-account/tokens";
 
 const AUTH_COOKIE_OPTIONS = {
@@ -7,8 +6,6 @@ const AUTH_COOKIE_OPTIONS = {
   sameSite: "lax" as const,
   path: "/",
 };
-
-const AUTH_ONLY_PAGES = ["/account/login", "/account/register"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -20,9 +17,6 @@ export async function proxy(request: NextRequest) {
   const isExpired = !tokenExpiry || Date.now() >= parseInt(tokenExpiry, 10);
 
   if (accessToken && !isExpired) {
-    if (AUTH_ONLY_PAGES.includes(pathname)) {
-      return NextResponse.redirect(new URL(`${APP_URL}/account`));
-    }
     return NextResponse.next();
   }
 
@@ -53,7 +47,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  const loginUrl = new URL(`${APP_URL}/api/auth/login`);
+  const loginUrl = new URL("/api/auth/login", request.url);
   loginUrl.searchParams.set("return_to", pathname);
   return NextResponse.redirect(loginUrl);
 }

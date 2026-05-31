@@ -36,7 +36,7 @@
 
 ## 工作文档体系
 
-`docs/features/` 用于为 AI 提供任务上下文。
+`docs/tasks/` 用于为 AI 提供任务上下文。
 
 进行中的功能：`docs/features/<feature-id>/`，完成后改为 `docs/features/-<feature-id>/`。
 

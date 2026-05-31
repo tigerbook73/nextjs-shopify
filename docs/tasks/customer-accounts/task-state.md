@@ -3,7 +3,7 @@
 ## Metadata
 
 - type: feature
-- status: in_progress
+- status: done
 
 ## Document Index
 
@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-step-4: Self-Service Features (Profile / Addresses / Order Detail / Header)
+step-5: Classic API Cleanup (done)
 
 ## Requirements Phase
 
@@ -32,13 +32,13 @@ step-4: Self-Service Features (Profile / Addresses / Order Detail / Header)
 
 ## Implementation Phase
 
-- status: in_progress
+- status: done
 - steps:
   - step-1: OAuth Utilities & Customer Account API Client | step-type: intermediate | status: done
   - step-2: OAuth Routes (Login / Callback / Logout) | step-type: intermediate | status: done
   - step-3: Middleware + Account Pages Migration | step-type: final | status: done
-  - step-4: Self-Service Features (Profile / Addresses / Order Detail / Header) | step-type: final | status: in_progress
-  - step-5: Classic API Cleanup | step-type: final | status: pending
+  - step-4: Self-Service Features (Profile / Addresses / Order Detail / Header) | step-type: final | status: done
+  - step-5: Classic API Cleanup | step-type: final | status: done
 
 ## Task Acceptance
 

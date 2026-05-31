@@ -1,15 +1,4 @@
-import type {
-  ProductConnection,
-  ProductDetail,
-  Collection,
-  CollectionDetail,
-  Shop,
-  SearchResult,
-  Cart,
-  Customer,
-  CustomerAccessToken,
-  Order,
-} from "./types";
+import type { ProductConnection, ProductDetail, Collection, CollectionDetail, Shop, SearchResult, Cart } from "./types";
 import { GET_PRODUCTS_QUERY, GET_PRODUCT_BY_HANDLE_QUERY } from "./queries/product";
 import {
   GET_COLLECTIONS_QUERY,
@@ -19,7 +8,6 @@ import {
 import { GET_SHOP_QUERY } from "./queries/shop";
 import { SEARCH_QUERY } from "./queries/search";
 import { GET_CART_QUERY } from "./queries/cart";
-import { GET_CUSTOMER_QUERY, GET_CUSTOMER_ORDERS_QUERY } from "./queries/customer";
 import { TAGS } from "./cache-tags";
 import {
   CART_CREATE_MUTATION,
@@ -27,11 +15,6 @@ import {
   CART_LINES_UPDATE_MUTATION,
   CART_LINES_REMOVE_MUTATION,
 } from "./mutations/cart";
-import {
-  CUSTOMER_CREATE_MUTATION,
-  CUSTOMER_ACCESS_TOKEN_CREATE_MUTATION,
-  CUSTOMER_ACCESS_TOKEN_DELETE_MUTATION,
-} from "./mutations/customer";
 
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN!;
 const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!;
@@ -198,74 +181,6 @@ export async function removeCartLines(cartId: string, lineIds: string[]): Promis
   });
   throwOnUserErrors(data.cartLinesRemove.userErrors);
   return data.cartLinesRemove.cart;
-}
-
-interface CustomerUserError {
-  field: string[] | null;
-  message: string;
-  code: string;
-}
-
-export async function createCustomer(
-  email: string,
-  password: string,
-  firstName?: string,
-  lastName?: string,
-): Promise<Customer> {
-  const data = await shopifyFetch<{
-    customerCreate: { customer: Customer | null; customerUserErrors: CustomerUserError[] };
-  }>({
-    query: CUSTOMER_CREATE_MUTATION,
-    variables: { input: { email, password, firstName, lastName } },
-    cache: "no-store",
-  });
-  if (data.customerCreate.customerUserErrors.length > 0) {
-    throw new Error(data.customerCreate.customerUserErrors[0].message);
-  }
-  return data.customerCreate.customer!;
-}
-
-export async function createCustomerAccessToken(email: string, password: string): Promise<CustomerAccessToken> {
-  const data = await shopifyFetch<{
-    customerAccessTokenCreate: {
-      customerAccessToken: CustomerAccessToken | null;
-      customerUserErrors: CustomerUserError[];
-    };
-  }>({
-    query: CUSTOMER_ACCESS_TOKEN_CREATE_MUTATION,
-    variables: { input: { email, password } },
-    cache: "no-store",
-  });
-  if (data.customerAccessTokenCreate.customerUserErrors.length > 0) {
-    throw new Error(data.customerAccessTokenCreate.customerUserErrors[0].message);
-  }
-  return data.customerAccessTokenCreate.customerAccessToken!;
-}
-
-export async function deleteCustomerAccessToken(token: string): Promise<void> {
-  await shopifyFetch<unknown>({
-    query: CUSTOMER_ACCESS_TOKEN_DELETE_MUTATION,
-    variables: { customerAccessToken: token },
-    cache: "no-store",
-  });
-}
-
-export async function getCustomer(accessToken: string): Promise<Customer | null> {
-  const data = await shopifyFetch<{ customer: Customer | null }>({
-    query: GET_CUSTOMER_QUERY,
-    variables: { token: accessToken },
-    cache: "no-store",
-  });
-  return data.customer;
-}
-
-export async function getCustomerOrders(accessToken: string, first = 10): Promise<Order[]> {
-  const data = await shopifyFetch<{ customer: { orders: { nodes: Order[] } } | null }>({
-    query: GET_CUSTOMER_ORDERS_QUERY,
-    variables: { token: accessToken, first },
-    cache: "no-store",
-  });
-  return data.customer?.orders.nodes ?? [];
 }
 
 export async function shopifyFetch<T>({

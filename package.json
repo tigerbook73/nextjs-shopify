@@ -13,7 +13,6 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "codegen": "graphql-codegen",
-    "schema:fetch": "node scripts/fetch-schema.mjs",
     "env:check": "node scripts/check-env.mjs",
     "shopify:login": "shopify auth login",
     "shopify:logout": "shopify auth logout",

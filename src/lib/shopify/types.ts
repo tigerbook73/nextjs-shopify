@@ -128,38 +128,3 @@ export interface SearchResult {
   nodes: SearchResultItem[];
   pageInfo: PageInfo;
 }
-
-export interface CustomerAccessToken {
-  accessToken: string;
-  expiresAt: string;
-}
-
-export interface OrderLineItem {
-  title: string;
-  quantity: number;
-  variant: {
-    image: ProductImage | null;
-    price: MoneyV2;
-  } | null;
-}
-
-export interface Order {
-  id: string;
-  orderNumber: number;
-  processedAt: string;
-  financialStatus: string;
-  fulfillmentStatus: string;
-  currentTotalPrice: MoneyV2;
-  lineItems: { nodes: OrderLineItem[] };
-}
-
-export interface Customer {
-  id: string;
-  email: string;
-  firstName: string | null;
-  lastName: string | null;
-  displayName: string;
-  orders: { nodes: Order[] };
-}
-
-export type CustomerActionResult = { success: true } | { success: false; error: string };

@@ -1,8 +1,10 @@
-import { APP_URL, SHOPIFY_STORE_DOMAIN } from "./config";
+import { APP_URL, CUSTOMER_ACCOUNT_GRAPHQL_ENDPOINT, SHOPIFY_STORE_DOMAIN } from "./config";
 
 let endpointPromise: Promise<string> | null = null;
 
 async function getCustomerAccountEndpoint(): Promise<string> {
+  if (CUSTOMER_ACCOUNT_GRAPHQL_ENDPOINT) return CUSTOMER_ACCOUNT_GRAPHQL_ENDPOINT;
+
   endpointPromise ??= fetch(`https://${SHOPIFY_STORE_DOMAIN}/.well-known/customer-account-api`, {
     cache: "force-cache",
   })

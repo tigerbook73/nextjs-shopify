@@ -1,14 +1,7 @@
 import { cookies } from "next/headers";
-import { CLIENT_ID, SHOP_ID } from "./config";
-
-export const COOKIE_NAMES = {
-  ACCESS_TOKEN: "ca_access_token",
-  REFRESH_TOKEN: "ca_refresh_token",
-  TOKEN_EXPIRY: "ca_token_expiry",
-  PKCE_VERIFIER: "ca_pkce_verifier",
-  OAUTH_STATE: "ca_oauth_state",
-  RETURN_TO: "ca_return_to",
-} as const;
+import { CLIENT_ID, CUSTOMER_ACCOUNT_AUTH_BASE_URL, SHOP_ID } from "./config";
+import { COOKIE_NAMES } from "./cookie-names";
+export { COOKIE_NAMES };
 
 const BASE_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -63,7 +56,7 @@ export async function exchangeRefreshToken(refreshToken: string): Promise<{
   refresh_token: string;
   expires_in: number;
 } | null> {
-  const res = await fetch(`https://shopify.com/authentication/${SHOP_ID}/oauth/token`, {
+  const res = await fetch(`${CUSTOMER_ACCOUNT_AUTH_BASE_URL}/${SHOP_ID}/oauth/token`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({

@@ -1,6 +1,11 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { CLIENT_ID, REDIRECT_URI, SHOP_ID } from "@/lib/shopify/customer-account/config";
+import {
+  CLIENT_ID,
+  CUSTOMER_ACCOUNT_AUTH_BASE_URL,
+  REDIRECT_URI,
+  SHOP_ID,
+} from "@/lib/shopify/customer-account/config";
 import { generateCodeChallenge, generateCodeVerifier, generateState } from "@/lib/shopify/customer-account/pkce";
 import { COOKIE_NAMES } from "@/lib/shopify/customer-account/tokens";
 
@@ -29,7 +34,7 @@ export async function GET(request: NextRequest) {
   cookieStore.set(COOKIE_NAMES.OAUTH_STATE, state, TEMP_COOKIE_OPTIONS);
   cookieStore.set(COOKIE_NAMES.RETURN_TO, getSafeReturnTo(returnTo), TEMP_COOKIE_OPTIONS);
 
-  const authUrl = new URL(`https://shopify.com/authentication/${SHOP_ID}/oauth/authorize`);
+  const authUrl = new URL(`${CUSTOMER_ACCOUNT_AUTH_BASE_URL}/${SHOP_ID}/oauth/authorize`);
   authUrl.searchParams.set("client_id", CLIENT_ID);
   authUrl.searchParams.set("response_type", "code");
   authUrl.searchParams.set("redirect_uri", REDIRECT_URI);

@@ -1,6 +1,12 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { APP_URL, CLIENT_ID, REDIRECT_URI, SHOP_ID } from "@/lib/shopify/customer-account/config";
+import {
+  APP_URL,
+  CLIENT_ID,
+  CUSTOMER_ACCOUNT_AUTH_BASE_URL,
+  REDIRECT_URI,
+  SHOP_ID,
+} from "@/lib/shopify/customer-account/config";
 import { COOKIE_NAMES, setTokenCookies } from "@/lib/shopify/customer-account/tokens";
 import type { CustomerAccountToken } from "@/types/customer-account";
 
@@ -38,7 +44,7 @@ export async function GET(request: NextRequest) {
     return new NextResponse("Missing code verifier", { status: 400 });
   }
 
-  const tokenRes = await fetch(`https://shopify.com/authentication/${SHOP_ID}/oauth/token`, {
+  const tokenRes = await fetch(`${CUSTOMER_ACCOUNT_AUTH_BASE_URL}/${SHOP_ID}/oauth/token`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({

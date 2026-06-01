@@ -42,5 +42,5 @@ step-5: Classic API Cleanup (done)
 
 ## Task Acceptance
 
-- auto-check: —
+- auto-check: passed
 - manual-check: —

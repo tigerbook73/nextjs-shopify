@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { APP_URL, CLIENT_ID, SHOP_ID } from "@/lib/shopify/customer-account/config";
+import { APP_URL, CLIENT_ID, CUSTOMER_ACCOUNT_AUTH_BASE_URL, SHOP_ID } from "@/lib/shopify/customer-account/config";
 import { clearTokenCookies, getAccessToken } from "@/lib/shopify/customer-account/tokens";
 
 export async function POST() {
@@ -7,7 +7,7 @@ export async function POST() {
 
   if (accessToken) {
     // Fire-and-forget: revocation failure is acceptable
-    fetch(`https://shopify.com/authentication/${SHOP_ID}/oauth/revoke`, {
+    fetch(`${CUSTOMER_ACCOUNT_AUTH_BASE_URL}/${SHOP_ID}/oauth/revoke`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({

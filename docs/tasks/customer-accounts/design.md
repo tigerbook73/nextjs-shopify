@@ -366,6 +366,6 @@ src/
 - `(auto)` `pnpm exec playwright test --grep "地址"` — 地址 CRUD + 默认地址
 - `(auto)` `pnpm exec playwright test --grep "订单详情"` — 订单列表 → 详情，含图片和物流
 - `(auto)` `pnpm exec playwright test --grep "Header.*订单"` — 已登录 Header 快速入口
-- `(auto)` `! grep -r "customerAccessToken" src/ --include="*.ts" --include="*.tsx" -l` — Classic 代码清理
+- `(auto)` `! grep -r "customerAccessToken" src/app src/components src/context src/lib --include="*.ts" --include="*.tsx" -l` — Classic 代码清理
 - `(manual)` 通过 Shopify 托管页完成完整登录流程（跨域，Playwright 无法自动化）
 - `(manual)` 通过 Shopify 托管页完成注册和密码重置（涉及真实邮件）

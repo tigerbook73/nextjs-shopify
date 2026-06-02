@@ -1,22 +1,3 @@
-export const UPDATE_CUSTOMER_MUTATION = /* GraphQL */ `
-  mutation CustomerUpdate($input: CustomerUpdateInput!) {
-    customerUpdate(input: $input) {
-      customer {
-        firstName
-        lastName
-        emailAddress {
-          emailAddress
-        }
-      }
-      userErrors {
-        field
-        message
-        code
-      }
-    }
-  }
-`;
-
 export const ADDRESS_CREATE_MUTATION = /* GraphQL */ `
   mutation CustomerAddressCreate($address: CustomerAddressInput!, $defaultAddress: Boolean) {
     customerAddressCreate(address: $address, defaultAddress: $defaultAddress) {

@@ -1,25 +1,3 @@
-export const GET_CUSTOMER_QUERY = /* GraphQL */ `
-  query GetCustomer {
-    customer {
-      id
-      firstName
-      lastName
-      displayName
-      emailAddress {
-        emailAddress
-      }
-      orders(first: 100) {
-        nodes {
-          id
-        }
-        pageInfo {
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
-
 export const GET_ORDERS_QUERY = /* GraphQL */ `
   query GetOrders($first: Int!, $after: String) {
     customer {
@@ -119,32 +97,6 @@ export const GET_ORDER_DETAIL_QUERY = /* GraphQL */ `
             url
             number
           }
-        }
-      }
-    }
-  }
-`;
-
-export const GET_ADDRESSES_QUERY = /* GraphQL */ `
-  query GetAddresses($first: Int!) {
-    customer {
-      defaultAddress {
-        id
-      }
-      addresses(first: $first) {
-        nodes {
-          id
-          firstName
-          lastName
-          address1
-          address2
-          city
-          province
-          provinceCode: zoneCode
-          zip
-          country
-          countryCode: territoryCode
-          phone: phoneNumber
         }
       }
     }

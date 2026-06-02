@@ -1,20 +1,21 @@
 import type { ProductConnection, ProductDetail, Collection, CollectionDetail, Shop, SearchResult, Cart } from "./types";
-import { GET_PRODUCTS_QUERY, GET_PRODUCT_BY_HANDLE_QUERY } from "./queries/product";
 import {
+  GET_PRODUCTS_QUERY,
+  GET_PRODUCT_BY_HANDLE_QUERY,
   GET_COLLECTIONS_QUERY,
   GET_COLLECTION_BY_HANDLE_QUERY,
   GET_COLLECTION_HANDLES_QUERY,
-} from "./queries/collection";
-import { GET_SHOP_QUERY } from "./queries/shop";
-import { SEARCH_QUERY } from "./queries/search";
-import { GET_CART_QUERY } from "./queries/cart";
+  GET_SHOP_QUERY,
+  SEARCH_QUERY,
+  GET_CART_QUERY,
+} from "./queries";
 import { TAGS } from "./cache-tags";
 import {
   CART_CREATE_MUTATION,
   CART_LINES_ADD_MUTATION,
   CART_LINES_UPDATE_MUTATION,
   CART_LINES_REMOVE_MUTATION,
-} from "./mutations/cart";
+} from "./mutations";
 
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN!;
 const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!;

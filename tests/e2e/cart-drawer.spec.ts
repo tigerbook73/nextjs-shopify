@@ -2,7 +2,7 @@
  * @test-file   CartDrawer
  * @description E2E tests for cart drawer open/close, add-to-cart flow, and cart count sync
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by Shengtian Liao @ [1]
  */
 import { expect, test, type Page } from "@playwright/test";
 import { waitForHydration } from "./utils";
@@ -26,7 +26,9 @@ async function gotoAvailableProduct(page: Page) {
 }
 
 function cartButton(page: Page) {
-  return page.getByRole("button", { name: /^Open cart/ });
+  // Base UI Dialog sets aria-hidden on non-dialog elements when open,
+  // so getByRole() can't find the button. Use a CSS selector instead.
+  return page.locator('button[aria-label^="Open cart"]');
 }
 
 /**
@@ -52,7 +54,7 @@ test.describe("Cart Drawer", () => {
 
     await page.getByRole("button", { name: "Add to Cart" }).click();
 
-    await expect(page.getByRole("region", { name: "Shopping cart" })).toBeVisible({
+    await expect(page.getByRole("dialog", { name: "Your Cart" })).toBeVisible({
       timeout: 10_000,
     });
   });
@@ -62,11 +64,11 @@ test.describe("Cart Drawer", () => {
     await waitForHydration(page);
     await page.getByRole("button", { name: "Add to Cart" }).click();
 
-    const drawer = page.getByRole("region", { name: "Shopping cart" });
+    const drawer = page.getByRole("dialog", { name: "Your Cart" });
     await expect(drawer).toBeVisible({ timeout: 10_000 });
 
-    // 遮罩（fixed inset-0 z-40）被 Drawer 面板遮挡，dispatchEvent 直接触发元素事件绕过 z-index
-    await page.locator("div.fixed.inset-0.z-40").dispatchEvent("click");
+    // SheetOverlay 由 Base UI 渲染，通过 data-slot 定位并 dispatchEvent 触发关闭
+    await page.locator("[data-slot='sheet-overlay']").dispatchEvent("click");
 
     await expect(drawer).not.toBeVisible({ timeout: 5_000 });
   });
@@ -101,11 +103,11 @@ test.describe("Cart Drawer", () => {
     await waitForHydration(page);
 
     await page.getByRole("button", { name: "Add to Cart" }).click();
-    await expect(page.getByRole("region", { name: "Shopping cart" })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("dialog", { name: "Your Cart" })).toBeVisible({ timeout: 10_000 });
     await page.getByRole("button", { name: "Close cart" }).click();
 
     await page.getByRole("button", { name: "Add to Cart" }).click();
-    await expect(page.getByRole("region", { name: "Shopping cart" })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("dialog", { name: "Your Cart" })).toBeVisible({ timeout: 10_000 });
 
     await expect(cartButton(page)).toHaveAttribute("aria-label", "Open cart (2 items)", {
       timeout: 10_000,
@@ -117,7 +119,7 @@ test.describe("Cart Drawer", () => {
     await waitForHydration(page);
 
     await page.getByRole("button", { name: "Add to Cart" }).click();
-    const drawer = page.getByRole("region", { name: "Shopping cart" });
+    const drawer = page.getByRole("dialog", { name: "Your Cart" });
     await expect(drawer).toBeVisible({ timeout: 10_000 });
 
     await drawer.getByRole("button", { name: "Increase quantity" }).first().click();
@@ -138,7 +140,7 @@ test.describe("Cart Drawer", () => {
     await expect(cartButton(page)).toHaveAttribute("aria-label", "Open cart (0 items)");
 
     await page.getByRole("button", { name: "Add to Cart" }).click();
-    await expect(page.getByRole("region", { name: "Shopping cart" })).toBeVisible({
+    await expect(page.getByRole("dialog", { name: "Your Cart" })).toBeVisible({
       timeout: 10_000,
     });
 
@@ -150,7 +152,7 @@ test.describe("Cart Drawer", () => {
     await waitForHydration(page);
 
     await page.getByRole("button", { name: "Add to Cart" }).click();
-    const drawer = page.getByRole("region", { name: "Shopping cart" });
+    const drawer = page.getByRole("dialog", { name: "Your Cart" });
     await expect(drawer).toBeVisible({ timeout: 10_000 });
 
     const labelBefore = await cartButton(page).getAttribute("aria-label");
@@ -167,7 +169,7 @@ test.describe("Cart Drawer", () => {
     await waitForHydration(page);
 
     await page.getByRole("button", { name: "Add to Cart" }).click();
-    const drawer = page.getByRole("region", { name: "Shopping cart" });
+    const drawer = page.getByRole("dialog", { name: "Your Cart" });
     await expect(drawer).toBeVisible({ timeout: 10_000 });
 
     await drawer.getByRole("button", { name: "Remove" }).first().click();

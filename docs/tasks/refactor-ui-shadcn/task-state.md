@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 1
+Step 3
 
 ## Requirements Phase
 
@@ -37,19 +37,19 @@ Step 1
 ### Step 1: 安装所有缺失的 shadcn 组件
 
 - step-type: intermediate
-- status: in_progress
-- Commit: —
-- Date: —
-- auto-check: —
+- status: done
+- Commit: feat(step-1): install shadcn sheet, select, input, label, checkbox, avatar, badge, skeleton
+- Date: 2026-06-02
+- auto-check: passed
 - manual-check: —
 
 ### Step 2: Sheet — CartDrawer + MobileMenu
 
 - step-type: final
-- status: pending
+- status: done
 - Commit: —
-- Date: —
-- auto-check: —
+- Date: 2026-06-02
+- auto-check: passed
 - manual-check: —
 
 ### Step 3: Select — 变体选择器与集合筛选

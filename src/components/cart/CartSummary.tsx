@@ -27,7 +27,7 @@ export default function CartSummary({ cart }: CartSummaryProps) {
         </div>
       </div>
 
-      <Button render={<a href={checkoutUrl} />} className="mt-6 w-full">
+      <Button render={<a href={checkoutUrl} />} nativeButton={false} className="mt-6 w-full">
         Checkout
       </Button>
     </div>

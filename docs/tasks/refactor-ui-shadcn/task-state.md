@@ -3,7 +3,7 @@
 ## Metadata
 
 - type: feature
-- status: in_progress
+- status: done
 
 ## Document Index
 
@@ -12,7 +12,7 @@
 
 ## Current Phase
 
-implementation (in_progress)
+done
 
 ## Current Step
 
@@ -32,72 +32,74 @@ implementation (in_progress)
 
 ## Implementation Phase
 
-- status: pending
+- status: done
 
 ### Step 1: 安装所有缺失的 shadcn 组件
 
 - step-type: intermediate
 - status: done
-- Commit: feat(step-1): install shadcn sheet, select, input, label, checkbox, avatar, badge, skeleton
+- Commit: 6b6e550
 - Date: 2026-06-02
 - auto-check: passed
-- manual-check: —
+- manual-check: passed
 
 ### Step 2: Sheet — CartDrawer + MobileMenu
 
 - step-type: final
 - status: done
-- Commit: —
+- Commit: ee5b291
 - Date: 2026-06-02
 - auto-check: passed
-- manual-check: —
+- manual-check: passed
 
 ### Step 3: Select — 变体选择器与集合筛选
 
 - step-type: final
 - status: done
-- Commit: —
+- Commit: 3122644
 - Date: 2026-06-02
 - auto-check: passed
-- manual-check: —
+- manual-check: passed
 
 ### Step 4: Button — 统一使用 shadcn Button
 
 - step-type: final
 - status: done
-- Commit: —
+- Commit: 85f5aac
 - Date: 2026-06-02
 - auto-check: passed
-- manual-check: —
+- manual-check: passed
 
 ### Step 5: Input + Label — 表单字段
 
 - step-type: final
 - status: done
-- Commit: —
+- Commit: 542893a
 - Date: 2026-06-02
 - auto-check: passed
-- manual-check: —
+- manual-check: passed
 
 ### Step 6: Checkbox + Avatar — 客户端组件拆分
 
 - step-type: final
 - status: done
-- Commit: —
+- Commit: 327c0ea
 - Date: 2026-06-02
 - auto-check: passed
-- manual-check: —
+- manual-check: passed
 
 ### Step 7: Badge + Skeleton — 纯展示组件
 
 - step-type: final
 - status: done
-- Commit: —
+- Commit: 0bbaa85
 - Date: 2026-06-02
 - auto-check: passed
-- manual-check: —
+- manual-check: passed
+- notes:
+  - Follow-up E2E selector fix committed in 3e6675c
 
 ## Task Acceptance
 
 - auto-check: passed
-- manual-check: —
+- manual-check: passed

@@ -45,7 +45,7 @@ export default function CollectionFilters({ initialSort, initialAvailable }: Col
           value={currentSort || "default"}
           onValueChange={(value) => updateParam("sort", value === "default" ? null : value)}
         >
-          <SelectTrigger className="w-40">
+          <SelectTrigger aria-label="Sort by" className="w-40">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

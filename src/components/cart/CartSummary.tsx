@@ -18,13 +18,6 @@ export default function CartSummary({ cart }: CartSummaryProps) {
           <span>{formatPrice(cost.subtotalAmount.amount, cost.subtotalAmount.currencyCode)}</span>
         </div>
 
-        {cost.totalTaxAmount && (
-          <div className="flex justify-between text-gray-600">
-            <span>Tax</span>
-            <span>{formatPrice(cost.totalTaxAmount.amount, cost.totalTaxAmount.currencyCode)}</span>
-          </div>
-        )}
-
         <div className="border-t border-gray-200 pt-2">
           <div className="flex justify-between font-semibold text-gray-900">
             <span>Total</span>

@@ -36,10 +36,6 @@ export const CART_DETAIL_FRAGMENT = /* GraphQL */ `
         amount
         currencyCode
       }
-      totalTaxAmount {
-        amount
-        currencyCode
-      }
       totalAmount {
         amount
         currencyCode

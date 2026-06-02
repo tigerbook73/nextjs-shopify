@@ -16,7 +16,6 @@ function makeCart(totalQuantity: number): Cart {
     lines: { nodes: [] },
     cost: {
       subtotalAmount: { amount: "0.00", currencyCode: "USD" },
-      totalTaxAmount: null,
       totalAmount: { amount: "0.00", currencyCode: "USD" },
     },
   } as Cart;

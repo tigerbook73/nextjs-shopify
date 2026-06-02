@@ -2,6 +2,8 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 const SORT_OPTIONS = [
   { label: "Default", value: "" },
@@ -56,15 +58,16 @@ export default function CollectionFilters({ initialSort, initialAvailable }: Col
         </Select>
       </div>
 
-      <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-gray-700">
-        <input
-          type="checkbox"
+      <div className="flex items-center gap-2">
+        <Checkbox
+          id="available"
           checked={currentAvailable}
-          onChange={(e) => updateParam("available", e.target.checked ? "true" : null)}
-          className="h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+          onCheckedChange={(checked) => updateParam("available", checked === true ? "true" : null)}
         />
-        In Stock Only
-      </label>
+        <Label htmlFor="available" className="cursor-pointer">
+          In Stock Only
+        </Label>
+      </div>
     </div>
   );
 }

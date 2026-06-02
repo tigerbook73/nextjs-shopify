@@ -7,6 +7,7 @@ import type { CustomerAddress } from "@/lib/shopify/customer-account/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import DefaultAddressCheckbox from "@/components/account/DefaultAddressCheckbox";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Edit address" };
@@ -21,9 +22,11 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
   if (!accessToken) redirect("/api/auth/login");
 
   let address: CustomerAddress | undefined;
+  let isDefaultAddress = false;
   try {
     const data = await customerAccountFetch(accessToken, GET_ADDRESSES_QUERY, { first: 50 });
     address = data.customer?.addresses.nodes.find((a) => a.id === addressId);
+    isDefaultAddress = data.customer?.defaultAddress?.id === addressId;
   } catch {
     redirect("/api/auth/login");
   }
@@ -56,6 +59,7 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
           <Field id="country" name="country" label="Country code" defaultValue={address.countryCode ?? ""} />
         </div>
         <Field id="phone" name="phone" label="Phone (optional)" defaultValue={address.phone ?? ""} />
+        <DefaultAddressCheckbox defaultChecked={isDefaultAddress} />
         <Button type="submit">Save changes</Button>
       </form>
     </main>

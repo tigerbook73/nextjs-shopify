@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 6
+Step 7
 
 ## Requirements Phase
 
@@ -82,10 +82,10 @@ Step 6
 ### Step 6: Checkbox + Avatar — 客户端组件拆分
 
 - step-type: final
-- status: pending
+- status: done
 - Commit: —
-- Date: —
-- auto-check: —
+- Date: 2026-06-02
+- auto-check: passed
 - manual-check: —
 
 ### Step 7: Badge + Skeleton — 纯展示组件

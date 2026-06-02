@@ -2,6 +2,7 @@ import { createAddress } from "@/lib/actions/address";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import DefaultAddressCheckbox from "@/components/account/DefaultAddressCheckbox";
 
 export const metadata = { title: "Add address" };
 
@@ -34,10 +35,7 @@ function AddressForm({ action }: { action: FormAction }) {
         <Field id="country" name="country" label="Country code" />
       </div>
       <Field id="phone" name="phone" label="Phone (optional)" />
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" name="defaultAddress" value="true" />
-        Set as default address
-      </label>
+      <DefaultAddressCheckbox />
       <Button type="submit">Save address</Button>
     </form>
   );

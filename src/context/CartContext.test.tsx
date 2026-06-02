@@ -2,7 +2,7 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { CartProvider, useCart } from "./CartContext";
 import { getCartAction } from "@/lib/actions/cart";
-import type { Cart } from "@/lib/shopify/types";
+import type { Cart } from "@/lib/shopify/storefront/types";
 
 vi.mock("@/lib/actions/cart");
 

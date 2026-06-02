@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getCollections, getProducts } from "@/lib/shopify/client";
+import { getCollections, getProducts } from "@/lib/shopify/storefront/client";
 import CollectionCard from "@/components/collection/CollectionCard";
 import ProductCard from "@/components/product/ProductCard";
 

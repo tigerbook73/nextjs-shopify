@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Product } from "@/lib/shopify/types";
+import type { Product } from "@/lib/shopify/storefront/types";
 import { formatPrice } from "@/lib/utils/format-price";
 
 export default function ProductCard({ product }: { product: Product }) {

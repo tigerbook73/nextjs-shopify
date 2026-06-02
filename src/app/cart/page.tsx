@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCart } from "@/lib/shopify/client";
+import { getCart } from "@/lib/shopify/storefront/client";
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
 

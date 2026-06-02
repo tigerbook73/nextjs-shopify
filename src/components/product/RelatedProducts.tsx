@@ -1,4 +1,4 @@
-import { getCollectionByHandle } from "@/lib/shopify/client";
+import { getCollectionByHandle } from "@/lib/shopify/storefront/client";
 import ProductCard from "@/components/product/ProductCard";
 
 interface Props {

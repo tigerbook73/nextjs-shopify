@@ -2,8 +2,8 @@ projects:
   storefront:
     schema: "./src/types/generated/storefront/storefront-2026-04.schema.json"
     documents:
-      - "src/lib/shopify/queries/**/*.ts"
-      - "src/lib/shopify/mutations/**/*.ts"
+      - "src/lib/shopify/storefront/queries/**/*.ts"
+      - "src/lib/shopify/storefront/mutations/**/*.ts"
     extensions:
       languageService:
         cacheSchemaFileForLookup: true

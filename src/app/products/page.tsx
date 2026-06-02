@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProducts } from "@/lib/shopify/client";
+import { getProducts } from "@/lib/shopify/storefront/client";
 import ProductCard from "@/components/product/ProductCard";
 import PaginationBar from "@/components/layout/PaginationBar";
 

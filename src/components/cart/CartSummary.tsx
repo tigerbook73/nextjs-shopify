@@ -1,4 +1,4 @@
-import type { Cart } from "@/lib/shopify/types";
+import type { Cart } from "@/lib/shopify/storefront/types";
 import { formatPrice } from "@/lib/utils/format-price";
 
 interface CartSummaryProps {

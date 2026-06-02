@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
-import { getShop, getCart } from "@/lib/shopify/client";
-import { TAGS } from "@/lib/shopify/cache-tags";
+import { getShop, getCart } from "@/lib/shopify/storefront/client";
+import { TAGS } from "@/lib/shopify/storefront/cache-tags";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";

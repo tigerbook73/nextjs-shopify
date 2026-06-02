@@ -2,9 +2,9 @@
 
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { createCart, addCartLines, updateCartLines, removeCartLines, getCart } from "@/lib/shopify/client";
-import { TAGS } from "@/lib/shopify/cache-tags";
-import type { CartActionResult, Cart } from "@/lib/shopify/types";
+import { createCart, addCartLines, updateCartLines, removeCartLines, getCart } from "@/lib/shopify/storefront/client";
+import { TAGS } from "@/lib/shopify/storefront/cache-tags";
+import type { CartActionResult, Cart } from "@/lib/shopify/storefront/types";
 
 const CART_COOKIE = "cartId";
 const COOKIE_OPTIONS = {

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Collection } from "@/lib/shopify/types";
+import type { Collection } from "@/lib/shopify/storefront/types";
 
 export default function CollectionCard({ collection }: { collection: Collection }) {
   const { handle, title, description, image } = collection;

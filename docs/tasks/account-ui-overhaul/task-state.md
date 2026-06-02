@@ -7,7 +7,7 @@
 
 ## Document Index
 
-- (no documents yet; entries added here as requirements and design documents are created)
+- `requirements.md` — 功能需求、验收标准（FR-1 ~ FR-7，AC-1 ~ AC-7）
 
 ## Current Phase
 

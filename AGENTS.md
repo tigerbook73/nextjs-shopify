@@ -44,17 +44,31 @@ src/
   lib/
     actions/     # Server Actions（cart.ts, address.ts, profile.ts）
     shopify/
-      client.ts                # Storefront API 请求层
-      queries/ mutations/      # GraphQL 字符串
-      types.ts                 # 手写的 Storefront API 类型
-      customer-account/        # Customer Account API（OAuth、令牌、查询）
+      storefront/              # Storefront API
+        client.ts              — shopifyFetch()，缓存 + revalidate
+        types.ts               — 手写 Storefront API 类型
+        queries/               — 按资源拆分（product/ collection/ cart/ ...）
+        mutations/             — 按资源拆分（cart/）
+        cache-tags.ts
+      customer-account/        # Customer Account API（OAuth + 已认证数据）
+        client.ts              — customerAccountFetch()
+        tokens.ts              — Cookie 读写 + token 刷新
+        pkce.ts                — PKCE code_verifier / challenge
+        config.ts              — OAuth 端点 URL
+        cookie-names.ts        — ca_* Cookie 名称常量
+        types.ts               — 手写 Customer Account 类型
+        queries/               — 按资源拆分（customer/ order/ address/）
+        mutations/             — 按资源拆分（customer/ address/）
+  proxy.ts       # Next.js Middleware（保护 /account/**，续期 token）
   types/
-    generated/   # 由 pnpm codegen 自动生成——禁止手动编辑
+    generated/
+      storefront/              # 由 pnpm codegen 自动生成——禁止手动编辑
+      customer-account/        # 由 pnpm codegen 自动生成——禁止手动编辑
 ```
 
 ### 两套 Shopify API
 
-**Storefront API**（`src/lib/shopify/client.ts`）：公开数据——商品、集合、购物车。`shopifyFetch()` 通过 Next.js `fetch` 的 cache tags 实现按需重验证。默认使用 `force-cache`，变更操作和搜索使用 `no-store`。
+**Storefront API**（`src/lib/shopify/storefront/client.ts`）：公开数据——商品、集合、购物车。`shopifyFetch()` 通过 Next.js `fetch` 的 cache tags 实现按需重验证。默认使用 `force-cache`，变更操作和搜索使用 `no-store`。GraphQL 操作使用 `TypedDocumentNode`，类型推断在调用侧自动生效，无需手动标注泛型。
 
 **Customer Account API**（`src/lib/shopify/customer-account/`）：已认证的客户数据——订单、地址、个人资料。采用 PKCE OAuth 2.0。令牌存储在 httpOnly cookie 中（`ca_access_token`、`ca_refresh_token`、`ca_token_expiry`）。`src/proxy.ts` 中的中间件保护 `/account/**` 路由——令牌过期时通过重定向刷新（而非 `NextResponse.next()`，因为后者会把过期的旧 cookie 转发给页面处理器，导致认证失败）。
 
@@ -64,7 +78,9 @@ src/
 
 ### 认证流程
 
-`GET /api/auth/login` → 生成 PKCE 挑战码 → 跳转 Shopify OAuth → `GET /api/auth/callback` → 写入 cookie → 重定向到 `return_to`。登出由 `GET /api/auth/logout` 清除令牌 cookie。
+`GET /api/auth/login` → 生成 PKCE 挑战码 → 跳转 Shopify OAuth → `GET /api/auth/callback` → 写入 cookie → 重定向到 `return_to`。登出由 `POST /api/auth/logout` 吊销 token 并清除 cookie。
+
+**Next.js 16 Middleware 约定**：中间件文件名为 `proxy.ts`（非 `middleware.ts`），导出函数名为 `proxy`（非 `middleware`）。
 
 ## 测试规范
 

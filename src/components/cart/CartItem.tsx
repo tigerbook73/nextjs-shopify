@@ -7,6 +7,7 @@ import { updateCartQuantity, removeFromCart } from "@/lib/actions/cart";
 import { useCart } from "@/context/CartContext";
 import type { CartLine } from "@/lib/shopify/storefront/types";
 import { formatPrice } from "@/lib/utils/format-price";
+import { Button } from "@/components/ui/button";
 
 interface CartItemProps {
   line: CartLine;
@@ -72,32 +73,30 @@ export default function CartItem({ line }: CartItemProps) {
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               onClick={() => handleQuantityChange(optimisticQuantity - 1)}
               disabled={isPending}
-              className="flex h-7 w-7 items-center justify-center rounded border border-gray-300 text-sm hover:bg-gray-50 disabled:opacity-50"
               aria-label="Decrease quantity"
             >
               -
-            </button>
+            </Button>
             <span className="w-6 text-center text-sm">{optimisticQuantity}</span>
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               onClick={() => handleQuantityChange(optimisticQuantity + 1)}
               disabled={isPending}
-              className="flex h-7 w-7 items-center justify-center rounded border border-gray-300 text-sm hover:bg-gray-50 disabled:opacity-50"
               aria-label="Increase quantity"
             >
               +
-            </button>
+            </Button>
           </div>
 
-          <button
-            onClick={() => handleQuantityChange(0)}
-            disabled={isPending}
-            className="text-sm text-gray-500 hover:text-red-500 disabled:opacity-50"
-          >
+          <Button variant="ghost" onClick={() => handleQuantityChange(0)} disabled={isPending}>
             Remove
-          </button>
+          </Button>
         </div>
       </div>
     </div>

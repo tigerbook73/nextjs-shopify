@@ -1,4 +1,5 @@
 import { createAddress } from "@/lib/actions/address";
+import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Add address" };
 
@@ -35,12 +36,7 @@ function AddressForm({ action }: { action: FormAction }) {
         <input type="checkbox" name="defaultAddress" value="true" />
         Set as default address
       </label>
-      <button
-        type="submit"
-        className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
-      >
-        Save address
-      </button>
+      <Button type="submit">Save address</Button>
     </form>
   );
 }

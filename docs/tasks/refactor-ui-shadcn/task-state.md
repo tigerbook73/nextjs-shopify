@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 4
+Step 5
 
 ## Requirements Phase
 
@@ -64,10 +64,10 @@ Step 4
 ### Step 4: Button — 统一使用 shadcn Button
 
 - step-type: final
-- status: pending
+- status: done
 - Commit: —
-- Date: —
-- auto-check: —
+- Date: 2026-06-02
+- auto-check: passed
 - manual-check: —
 
 ### Step 5: Input + Label — 表单字段

@@ -4,6 +4,7 @@ import { GET_ADDRESSES_QUERY } from "@/lib/shopify/customer-account/queries";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
 import { updateAddress } from "@/lib/actions/address";
 import type { CustomerAddress } from "@/lib/shopify/customer-account/types";
+import { Button } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Edit address" };
@@ -53,12 +54,7 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
           <Field id="country" name="country" label="Country code" defaultValue={address.countryCode ?? ""} />
         </div>
         <Field id="phone" name="phone" label="Phone (optional)" defaultValue={address.phone ?? ""} />
-        <button
-          type="submit"
-          className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
-        >
-          Save changes
-        </button>
+        <Button type="submit">Save changes</Button>
       </form>
     </main>
   );

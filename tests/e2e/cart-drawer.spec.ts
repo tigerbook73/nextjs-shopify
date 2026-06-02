@@ -1,3 +1,9 @@
+/**
+ * @test-file   CartDrawer
+ * @description E2E tests for cart drawer open/close, add-to-cart flow, and cart count sync
+ * @ai-generated
+ * @reviewed-by
+ */
 import { expect, test, type Page } from "@playwright/test";
 import { waitForHydration } from "./utils";
 
@@ -23,6 +29,21 @@ function cartButton(page: Page) {
   return page.getByRole("button", { name: /^Open cart/ });
 }
 
+/**
+ * @test-suite  Cart Drawer
+ * @target      CartDrawer component — open/close triggers, cart count updates, /cart page
+ * @strategy    e2e; real browser, navigates to first available product before cart tests
+ * @cases
+ *   - [PASS] 商品详情页点击 Add to Cart 后 Drawer 面板出现且可见
+ *   - [PASS] Drawer 打开后点击遮罩，Drawer 消失
+ *   - [PASS] 直接访问 /cart 页面正常渲染不报错
+ *   - [PASS] 无购物车 cookie 时 header 显示 0 items，首次加购后计数更新
+ *   - [PASS] 连续两次 Add to Cart 后 header 计数精确匹配 totalQuantity
+ *   - [PASS] Drawer 中减少商品数量后 header 计数随之更新
+ *   - [PASS] Add to Cart 后 header 购物车 accessible label 计数更新
+ *   - [PASS] Drawer 中增加商品数量后 header 计数随之更新
+ *   - [PASS] Drawer 中移除商品后 header 计数减少
+ */
 test.describe("Cart Drawer", () => {
   test("商品详情页点击 Add to Cart 后 Drawer 面板出现且可见", async ({ page }) => {
     await gotoAvailableProduct(page);

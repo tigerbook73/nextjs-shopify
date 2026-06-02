@@ -13,7 +13,7 @@ export default async function AccountPage() {
 
   let customer: CustomerProfile;
   try {
-    const data = await customerAccountFetch<{ customer: CustomerProfile | null }>(accessToken, GET_CUSTOMER_QUERY);
+    const data = await customerAccountFetch(accessToken, GET_CUSTOMER_QUERY);
     if (!data.customer) redirect("/api/auth/login");
     customer = data.customer;
   } catch {

@@ -1,3 +1,6 @@
+import { print } from "graphql";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import type { DocumentNode } from "graphql";
 import type { ProductConnection, ProductDetail, Collection, CollectionDetail, Shop, SearchResult, Cart } from "./types";
 import {
   GET_PRODUCTS_QUERY,
@@ -22,11 +25,17 @@ const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TO
 
 const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/2024-10/graphql.json`;
 
+const printCache = new WeakMap<DocumentNode, string>();
+function printCached(doc: DocumentNode): string {
+  if (!printCache.has(doc)) printCache.set(doc, print(doc));
+  return printCache.get(doc)!;
+}
+
 export async function getProducts(pageSize = 20, after?: string, before?: string): Promise<ProductConnection> {
   const variables = before
     ? { last: pageSize, before, first: null, after: null }
     : { first: pageSize, after: after ?? null, last: null, before: null };
-  const data = await shopifyFetch<{ products: ProductConnection }>({
+  const data = await shopifyFetch({
     query: GET_PRODUCTS_QUERY,
     variables,
     tags: [TAGS.products],
@@ -35,16 +44,16 @@ export async function getProducts(pageSize = 20, after?: string, before?: string
 }
 
 export async function getProductByHandle(handle: string): Promise<ProductDetail | null> {
-  const data = await shopifyFetch<{ product: ProductDetail | null }>({
+  const data = await shopifyFetch({
     query: GET_PRODUCT_BY_HANDLE_QUERY,
     variables: { handle },
     tags: [TAGS.products, TAGS.product(handle)],
   });
-  return data.product;
+  return data.product ?? null;
 }
 
 export async function getProductHandles(): Promise<{ handle: string }[]> {
-  const data = await shopifyFetch<{ products: { nodes: { handle: string }[] } }>({
+  const data = await shopifyFetch({
     query: GET_PRODUCTS_QUERY,
     variables: { first: 250, last: null, after: null, before: null },
     tags: [TAGS.products],
@@ -53,7 +62,7 @@ export async function getProductHandles(): Promise<{ handle: string }[]> {
 }
 
 export async function getCollections(first = 20): Promise<Collection[]> {
-  const data = await shopifyFetch<{ collections: { nodes: Collection[] } }>({
+  const data = await shopifyFetch({
     query: GET_COLLECTIONS_QUERY,
     variables: { first },
     tags: [TAGS.collections],
@@ -73,22 +82,25 @@ export async function getCollectionByHandle(
   const pagination = before
     ? { last: pageSize, before, first: null, after: null }
     : { first: pageSize, after: after ?? null, last: null, before: null };
-  const data = await shopifyFetch<{ collection: CollectionDetail | null }>({
+  const data = await shopifyFetch({
     query: GET_COLLECTION_BY_HANDLE_QUERY,
     variables: {
       handle,
       ...pagination,
-      sortKey: sortKey ?? null,
+      // sortKey and filters are untyped at the call site; cast needed at this boundary
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      sortKey: (sortKey ?? null) as any,
       reverse: reverse ?? null,
-      filters: filters ?? null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      filters: (filters ?? null) as any,
     },
     tags: [TAGS.collections, TAGS.collection(handle)],
   });
-  return data.collection;
+  return data.collection ?? null;
 }
 
 export async function getCollectionHandles(): Promise<{ handle: string }[]> {
-  const data = await shopifyFetch<{ collections: { nodes: { handle: string }[] } }>({
+  const data = await shopifyFetch({
     query: GET_COLLECTION_HANDLES_QUERY,
     variables: { first: 250 },
     tags: [TAGS.collections],
@@ -105,23 +117,23 @@ export async function searchProducts(
   const pagination = before
     ? { last: pageSize, before, first: null, after: null }
     : { first: pageSize, after: after ?? null, last: null, before: null };
-  const data = await shopifyFetch<{ search: SearchResult }>({
+  const data = await shopifyFetch({
     query: SEARCH_QUERY,
     variables: { query, ...pagination },
     cache: "no-store",
   });
-  return data.search;
+  return data.search as SearchResult;
 }
 
 export async function getShop(): Promise<Shop> {
-  const data = await shopifyFetch<{ shop: Shop }>({
+  const data = await shopifyFetch({
     query: GET_SHOP_QUERY,
   });
   return data.shop;
 }
 
 interface UserError {
-  field: string[] | null;
+  field?: string[] | null;
   message: string;
 }
 
@@ -132,76 +144,76 @@ function throwOnUserErrors(userErrors: UserError[]): void {
 }
 
 export async function getCart(cartId: string, tags?: string[]): Promise<Cart | null> {
-  const data = await shopifyFetch<{ cart: Cart | null }>({
+  const data = await shopifyFetch({
     query: GET_CART_QUERY,
     variables: { cartId },
     cache: tags ? "force-cache" : "no-store",
     tags,
   });
-  return data.cart;
+  return data.cart ?? null;
 }
 
 export async function createCart(): Promise<Cart> {
-  const data = await shopifyFetch<{ cartCreate: { cart: Cart; userErrors: UserError[] } }>({
+  const data = await shopifyFetch({
     query: CART_CREATE_MUTATION,
     variables: { input: {} },
     cache: "no-store",
   });
-  throwOnUserErrors(data.cartCreate.userErrors);
-  return data.cartCreate.cart;
+  throwOnUserErrors(data.cartCreate?.userErrors ?? []);
+  return data.cartCreate!.cart!;
 }
 
 export async function addCartLines(
   cartId: string,
   lines: { merchandiseId: string; quantity: number }[],
 ): Promise<Cart> {
-  const data = await shopifyFetch<{ cartLinesAdd: { cart: Cart; userErrors: UserError[] } }>({
+  const data = await shopifyFetch({
     query: CART_LINES_ADD_MUTATION,
     variables: { cartId, lines },
     cache: "no-store",
   });
-  throwOnUserErrors(data.cartLinesAdd.userErrors);
-  return data.cartLinesAdd.cart;
+  throwOnUserErrors(data.cartLinesAdd?.userErrors ?? []);
+  return data.cartLinesAdd!.cart!;
 }
 
 export async function updateCartLines(cartId: string, lines: { id: string; quantity: number }[]): Promise<Cart> {
-  const data = await shopifyFetch<{ cartLinesUpdate: { cart: Cart; userErrors: UserError[] } }>({
+  const data = await shopifyFetch({
     query: CART_LINES_UPDATE_MUTATION,
     variables: { cartId, lines },
     cache: "no-store",
   });
-  throwOnUserErrors(data.cartLinesUpdate.userErrors);
-  return data.cartLinesUpdate.cart;
+  throwOnUserErrors(data.cartLinesUpdate?.userErrors ?? []);
+  return data.cartLinesUpdate!.cart!;
 }
 
 export async function removeCartLines(cartId: string, lineIds: string[]): Promise<Cart> {
-  const data = await shopifyFetch<{ cartLinesRemove: { cart: Cart; userErrors: UserError[] } }>({
+  const data = await shopifyFetch({
     query: CART_LINES_REMOVE_MUTATION,
     variables: { cartId, lineIds },
     cache: "no-store",
   });
-  throwOnUserErrors(data.cartLinesRemove.userErrors);
-  return data.cartLinesRemove.cart;
+  throwOnUserErrors(data.cartLinesRemove?.userErrors ?? []);
+  return data.cartLinesRemove!.cart!;
 }
 
-export async function shopifyFetch<T>({
+export async function shopifyFetch<TData, TVariables>({
   query,
   variables,
   cache = "force-cache",
   tags,
 }: {
-  query: string;
-  variables?: Record<string, unknown>;
+  query: TypedDocumentNode<TData, TVariables>;
+  variables?: TVariables;
   cache?: RequestCache;
   tags?: string[];
-}): Promise<T> {
+}): Promise<TData> {
   const res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_ACCESS_TOKEN,
     },
-    body: JSON.stringify({ query, variables }),
+    body: JSON.stringify({ query: printCached(query), variables }),
     cache,
     next: tags ? { tags } : undefined,
   });
@@ -216,5 +228,5 @@ export async function shopifyFetch<T>({
     throw new Error(json.errors[0].message);
   }
 
-  return json.data as T;
+  return json.data as TData;
 }

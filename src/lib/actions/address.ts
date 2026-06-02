@@ -11,6 +11,12 @@ import {
 } from "@/lib/shopify/customer-account/mutations";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
 import type { AddressInput, CustomerActionResult } from "@/lib/shopify/customer-account/types";
+import type {
+  CustomerAddressCreateMutation,
+  CustomerAddressUpdateMutation,
+  CustomerAddressDeleteMutation,
+  CustomerAddressSetDefaultMutation,
+} from "@/types/generated/customer-account/customer.generated";
 
 function extractAddressInput(formData: FormData): AddressInput {
   return {
@@ -26,12 +32,8 @@ function extractAddressInput(formData: FormData): AddressInput {
   };
 }
 
-type MutationWithUserErrors = { userErrors: { message: string }[] };
-
-function firstError(data: Record<string, MutationWithUserErrors>): string | null {
-  const key = Object.keys(data)[0];
-  const errors = data[key]?.userErrors;
-  return errors?.length ? errors[0].message : null;
+function firstUserError(userErrors?: { message: string }[] | null): string | null {
+  return userErrors?.length ? userErrors[0].message : null;
 }
 
 export async function createAddress(formData: FormData): Promise<CustomerActionResult> {
@@ -41,14 +43,14 @@ export async function createAddress(formData: FormData): Promise<CustomerActionR
   const address = extractAddressInput(formData);
   const defaultAddress = formData.get("defaultAddress") === "true";
 
-  let data: { customerAddressCreate: MutationWithUserErrors };
+  let data: CustomerAddressCreateMutation;
   try {
     data = await customerAccountFetch(token, ADDRESS_CREATE_MUTATION, { address, defaultAddress });
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to create address" };
   }
 
-  const err = firstError(data as Record<string, MutationWithUserErrors>);
+  const err = firstUserError(data.customerAddressCreate?.userErrors);
   if (err) return { success: false, error: err };
 
   revalidatePath("/account/addresses");
@@ -62,14 +64,14 @@ export async function updateAddress(addressId: string, formData: FormData): Prom
   const address = extractAddressInput(formData);
   const defaultAddress = formData.get("defaultAddress") === "true";
 
-  let data: { customerAddressUpdate: MutationWithUserErrors };
+  let data: CustomerAddressUpdateMutation;
   try {
     data = await customerAccountFetch(token, ADDRESS_UPDATE_MUTATION, { addressId, address, defaultAddress });
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to update address" };
   }
 
-  const err = firstError(data as Record<string, MutationWithUserErrors>);
+  const err = firstUserError(data.customerAddressUpdate?.userErrors);
   if (err) return { success: false, error: err };
 
   revalidatePath("/account/addresses");
@@ -80,14 +82,14 @@ export async function deleteAddress(addressId: string): Promise<CustomerActionRe
   const token = await getAccessToken();
   if (!token) return { success: false, error: "Not logged in" };
 
-  let data: { customerAddressDelete: MutationWithUserErrors };
+  let data: CustomerAddressDeleteMutation;
   try {
     data = await customerAccountFetch(token, ADDRESS_DELETE_MUTATION, { addressId });
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Failed to delete address" };
   }
 
-  const err = firstError(data as Record<string, MutationWithUserErrors>);
+  const err = firstUserError(data.customerAddressDelete?.userErrors);
   if (err) return { success: false, error: err };
 
   revalidatePath("/account/addresses");
@@ -98,14 +100,14 @@ export async function setDefaultAddress(addressId: string): Promise<CustomerActi
   const token = await getAccessToken();
   if (!token) return { success: false, error: "Not logged in" };
 
-  let data: { customerAddressUpdate: MutationWithUserErrors };
+  let data: CustomerAddressSetDefaultMutation;
   try {
     data = await customerAccountFetch(token, ADDRESS_SET_DEFAULT_MUTATION, { addressId });
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : "Operation failed" };
   }
 
-  const err = firstError(data as Record<string, MutationWithUserErrors>);
+  const err = firstUserError(data.customerAddressUpdate?.userErrors);
   if (err) return { success: false, error: err };
 
   revalidatePath("/account/addresses");

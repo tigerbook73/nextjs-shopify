@@ -6,6 +6,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { UPDATE_CUSTOMER_MUTATION } from "@/lib/shopify/customer-account/mutations";
 
 vi.mock("@/lib/shopify/customer-account/config", () => ({
   SHOP_ID: "test-shop-id",
@@ -80,7 +81,7 @@ describe("updateProfile", () => {
 
     it("calls mutation with correct variables when form data is valid", async () => {
       await updateProfile(makeFormData({ firstName: "Ada", lastName: "Lovelace", email: "ada@example.com" }));
-      expect(mockFetch).toHaveBeenCalledWith("valid-token", expect.stringContaining("CustomerUpdate"), {
+      expect(mockFetch).toHaveBeenCalledWith("valid-token", UPDATE_CUSTOMER_MUTATION, {
         input: { firstName: "Ada", lastName: "Lovelace", email: "ada@example.com" },
       });
     });

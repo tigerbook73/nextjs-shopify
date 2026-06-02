@@ -18,9 +18,7 @@ export default async function AddressesPage() {
   let addresses: CustomerAddress[] = [];
   let defaultAddressId: string | null = null;
   try {
-    const data = await customerAccountFetch<{
-      customer: { defaultAddress: { id: string } | null; addresses: { nodes: CustomerAddress[] } };
-    }>(accessToken, GET_ADDRESSES_QUERY, { first: 50 });
+    const data = await customerAccountFetch(accessToken, GET_ADDRESSES_QUERY, { first: 50 });
     addresses = data.customer?.addresses.nodes ?? [];
     defaultAddressId = data.customer?.defaultAddress?.id ?? null;
   } catch {

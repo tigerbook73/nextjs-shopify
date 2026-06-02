@@ -6,6 +6,12 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import {
+  ADDRESS_CREATE_MUTATION,
+  ADDRESS_UPDATE_MUTATION,
+  ADDRESS_DELETE_MUTATION,
+  ADDRESS_SET_DEFAULT_MUTATION,
+} from "@/lib/shopify/customer-account/mutations";
 
 vi.mock("@/lib/shopify/customer-account/config", () => ({
   SHOP_ID: "test-shop-id",
@@ -76,11 +82,7 @@ describe("createAddress", () => {
     mockGetToken.mockResolvedValue("token");
     mockFetch.mockResolvedValue({ customerAddressCreate: { userErrors: [] } });
     await createAddress(makeFormData(sampleAddress));
-    expect(mockFetch).toHaveBeenCalledWith(
-      "token",
-      expect.stringContaining("CustomerAddressCreate"),
-      expect.any(Object),
-    );
+    expect(mockFetch).toHaveBeenCalledWith("token", ADDRESS_CREATE_MUTATION, expect.any(Object));
     expect(mockRevalidate).toHaveBeenCalledWith("/account/addresses");
     expect(mockRedirect).toHaveBeenCalledWith("/account/addresses");
   });
@@ -124,7 +126,7 @@ describe("updateAddress", () => {
     await updateAddress("addr-1", makeFormData(sampleAddress));
     expect(mockFetch).toHaveBeenCalledWith(
       "token",
-      expect.stringContaining("CustomerAddressUpdate"),
+      ADDRESS_UPDATE_MUTATION,
       expect.objectContaining({ addressId: "addr-1" }),
     );
     expect(mockRedirect).toHaveBeenCalledWith("/account/addresses");
@@ -161,9 +163,7 @@ describe("deleteAddress", () => {
     mockFetch.mockResolvedValue({ customerAddressDelete: { userErrors: [] } });
     await deleteAddress("addr-1");
 
-    expect(mockFetch).toHaveBeenCalledWith("token", expect.stringContaining("CustomerAddressDelete"), {
-      addressId: "addr-1",
-    });
+    expect(mockFetch).toHaveBeenCalledWith("token", ADDRESS_DELETE_MUTATION, { addressId: "addr-1" });
     expect(mockRedirect).toHaveBeenCalledWith("/account/addresses");
   });
 
@@ -197,9 +197,7 @@ describe("setDefaultAddress", () => {
     mockGetToken.mockResolvedValue("token");
     mockFetch.mockResolvedValue({ customerAddressUpdate: { userErrors: [] } });
     await setDefaultAddress("addr-1");
-    expect(mockFetch).toHaveBeenCalledWith("token", expect.stringContaining("CustomerAddressSetDefault"), {
-      addressId: "addr-1",
-    });
+    expect(mockFetch).toHaveBeenCalledWith("token", ADDRESS_SET_DEFAULT_MUTATION, { addressId: "addr-1" });
     expect(mockRedirect).toHaveBeenCalledWith("/account/addresses");
   });
 

@@ -15,11 +15,7 @@ export default async function OrdersPage() {
 
   let orders: CustomerOrder[] = [];
   try {
-    const data = await customerAccountFetch<{ customer: { orders: { nodes: CustomerOrder[] } } }>(
-      accessToken,
-      GET_ORDERS_QUERY,
-      { first: 10 },
-    );
+    const data = await customerAccountFetch(accessToken, GET_ORDERS_QUERY, { first: 10 });
     orders = data.customer?.orders.nodes ?? [];
   } catch {
     redirect("/api/auth/login");

@@ -1,4 +1,11 @@
-export const GET_CUSTOMER_QUERY = /* GraphQL */ `
+import { parse } from "graphql";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import type {
+  GetCustomerQuery,
+  GetCustomerQueryVariables,
+} from "@/types/generated/customer-account/customer.generated";
+
+export const GET_CUSTOMER_QUERY: TypedDocumentNode<GetCustomerQuery, GetCustomerQueryVariables> = parse(/* GraphQL */ `
   query GetCustomer {
     customer {
       id
@@ -18,4 +25,4 @@ export const GET_CUSTOMER_QUERY = /* GraphQL */ `
       }
     }
   }
-`;
+`);

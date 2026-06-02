@@ -1,3 +1,6 @@
+import { print } from "graphql";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import type { DocumentNode } from "graphql";
 import { APP_URL, CUSTOMER_ACCOUNT_GRAPHQL_ENDPOINT, SHOPIFY_STORE_DOMAIN } from "./config";
 
 let endpointPromise: Promise<string> | null = null;
@@ -28,11 +31,17 @@ async function getCustomerAccountEndpoint(): Promise<string> {
   return endpointPromise;
 }
 
-export async function customerAccountFetch<T>(
+const printCache = new WeakMap<DocumentNode, string>();
+function printCached(doc: DocumentNode): string {
+  if (!printCache.has(doc)) printCache.set(doc, print(doc));
+  return printCache.get(doc)!;
+}
+
+export async function customerAccountFetch<TData, TVariables>(
   accessToken: string,
-  query: string,
-  variables?: Record<string, unknown>,
-): Promise<T> {
+  query: TypedDocumentNode<TData, TVariables>,
+  variables?: TVariables,
+): Promise<TData> {
   const endpoint = await getCustomerAccountEndpoint();
   const res = await fetch(endpoint, {
     method: "POST",
@@ -42,7 +51,7 @@ export async function customerAccountFetch<T>(
       Origin: APP_URL,
       "User-Agent": "nextjs-shopify-customer-account",
     },
-    body: JSON.stringify({ query, variables }),
+    body: JSON.stringify({ query: printCached(query), variables }),
     cache: "no-store",
   });
 
@@ -53,9 +62,9 @@ export async function customerAccountFetch<T>(
   }
 
   const body = await res.text();
-  let json: { data?: T; errors?: { message: string }[] };
+  let json: { data?: TData; errors?: { message: string }[] };
   try {
-    json = JSON.parse(body) as { data?: T; errors?: { message: string }[] };
+    json = JSON.parse(body) as { data?: TData; errors?: { message: string }[] };
   } catch {
     console.error("[CA API] Non-JSON response", {
       endpoint,
@@ -73,5 +82,5 @@ export async function customerAccountFetch<T>(
     throw new Error("Customer Account API returned no data");
   }
 
-  return json.data as T;
+  return json.data;
 }

@@ -1,3 +1,7 @@
+import { parse } from "graphql";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import type { GetCartQuery, GetCartQueryVariables } from "@/types/generated/storefront/storefront.generated";
+
 export const CART_DETAIL_FRAGMENT = /* GraphQL */ `
   fragment CartDetail on Cart {
     id
@@ -44,11 +48,11 @@ export const CART_DETAIL_FRAGMENT = /* GraphQL */ `
   }
 `;
 
-export const GET_CART_QUERY = /* GraphQL */ `
+export const GET_CART_QUERY: TypedDocumentNode<GetCartQuery, GetCartQueryVariables> = parse(/* GraphQL */ `
   query GetCart($cartId: ID!) {
     cart(id: $cartId) {
       ...CartDetail
     }
   }
   ${CART_DETAIL_FRAGMENT}
-`;
+`);

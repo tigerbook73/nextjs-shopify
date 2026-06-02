@@ -19,9 +19,7 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
 
   let address: CustomerAddress | undefined;
   try {
-    const data = await customerAccountFetch<{
-      customer: { addresses: { nodes: CustomerAddress[] } };
-    }>(accessToken, GET_ADDRESSES_QUERY, { first: 50 });
+    const data = await customerAccountFetch(accessToken, GET_ADDRESSES_QUERY, { first: 50 });
     address = data.customer?.addresses.nodes.find((a) => a.id === addressId);
   } catch {
     redirect("/api/auth/login");

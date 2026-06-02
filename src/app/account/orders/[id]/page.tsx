@@ -18,11 +18,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
   let order: CustomerOrderDetail;
   try {
-    const data = await customerAccountFetch<{ order: CustomerOrderDetail | null }>(
-      accessToken,
-      GET_ORDER_DETAIL_QUERY,
-      { orderId },
-    );
+    const data = await customerAccountFetch(accessToken, GET_ORDER_DETAIL_QUERY, { orderId });
     if (!data.order) notFound();
     order = data.order;
   } catch {

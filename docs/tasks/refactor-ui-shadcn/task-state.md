@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 5
+Step 6
 
 ## Requirements Phase
 
@@ -73,10 +73,10 @@ Step 5
 ### Step 5: Input + Label — 表单字段
 
 - step-type: final
-- status: pending
+- status: done
 - Commit: —
-- Date: —
-- auto-check: —
+- Date: 2026-06-02
+- auto-check: passed
 - manual-check: —
 
 ### Step 6: Checkbox + Avatar — 客户端组件拆分

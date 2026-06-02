@@ -5,6 +5,8 @@ import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
 import { updateAddress } from "@/lib/actions/address";
 import type { CustomerAddress } from "@/lib/shopify/customer-account/types";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Edit address" };
@@ -63,16 +65,10 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
 function Field({ id, name, label, defaultValue }: { id: string; name: string; label: string; defaultValue?: string }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor={id}>
+      <Label htmlFor={id} className="mb-1">
         {label}
-      </label>
-      <input
-        id={id}
-        name={name}
-        type="text"
-        defaultValue={defaultValue}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
-      />
+      </Label>
+      <Input id={id} name={name} type="text" defaultValue={defaultValue} />
     </div>
   );
 }

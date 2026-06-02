@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 7
+—
 
 ## Requirements Phase
 
@@ -91,10 +91,10 @@ Step 7
 ### Step 7: Badge + Skeleton — 纯展示组件
 
 - step-type: final
-- status: pending
+- status: done
 - Commit: —
-- Date: —
-- auto-check: —
+- Date: 2026-06-02
+- auto-check: passed
 - manual-check: —
 
 ## Task Acceptance

@@ -7,7 +7,7 @@
     "dev:http": "next dev -H nextjs-shopify.local",
     "build": "next build",
     "start": "next start",
-    "format": "prettier --write .",
+    "format": "prettier --log-level warn --write .",
     "lint": "eslint && tsc --noEmit",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",

@@ -41,3 +41,6 @@ schema.graphql
 # AI skills
 .ai-skills
 .claude
+
+# 本地 HTTPS 证书（mkcert 生成，不提交）
+.certs/

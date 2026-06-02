@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { updateCartQuantity, removeFromCart } from "@/lib/actions/cart";
 import { useCart } from "@/context/CartContext";
-import type { CartLine } from "@/lib/shopify/types";
+import type { CartLine } from "@/lib/shopify/storefront/types";
 import { formatPrice } from "@/lib/utils/format-price";
 
 interface CartItemProps {

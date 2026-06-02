@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getProductHandles, getCollectionHandles } from "@/lib/shopify/client";
+import { getProductHandles, getCollectionHandles } from "@/lib/shopify/storefront/client";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 

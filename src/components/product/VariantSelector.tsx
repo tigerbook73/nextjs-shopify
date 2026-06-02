@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ProductVariant } from "@/lib/shopify/types";
+import type { ProductVariant } from "@/lib/shopify/storefront/types";
 import { formatPrice } from "@/lib/utils/format-price";
 
 interface Option {

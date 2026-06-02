@@ -8,7 +8,7 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { CartProvider, useCart } from "./CartContext";
 import { getCartAction } from "@/lib/actions/cart";
-import type { Cart } from "@/lib/shopify/types";
+import type { Cart } from "@/lib/shopify/storefront/types";
 
 vi.mock("@/lib/actions/cart");
 
@@ -22,10 +22,9 @@ function makeCart(totalQuantity: number): Cart {
     lines: { nodes: [] },
     cost: {
       subtotalAmount: { amount: "0.00", currencyCode: "USD" },
-      totalTaxAmount: null,
       totalAmount: { amount: "0.00", currencyCode: "USD" },
     },
-  };
+  } as Cart;
 }
 
 function makeWrapper(initialCart?: Cart | null) {

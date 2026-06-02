@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCollections } from "@/lib/shopify/client";
+import { getCollections } from "@/lib/shopify/storefront/client";
 import CollectionCard from "@/components/collection/CollectionCard";
 
 export const metadata: Metadata = {

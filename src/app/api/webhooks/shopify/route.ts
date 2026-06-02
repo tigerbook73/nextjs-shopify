@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { TAGS } from "@/lib/shopify/cache-tags";
+import { TAGS } from "@/lib/shopify/storefront/cache-tags";
 
 const WEBHOOK_SECRET = process.env.SHOPIFY_WEBHOOK_SECRET ?? "";
 

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getProductByHandle, getProducts } from "@/lib/shopify/client";
+import { getProductByHandle, getProducts } from "@/lib/shopify/storefront/client";
 import ProductForm from "@/components/product/ProductForm";
 import ProductGallery from "@/components/product/ProductGallery";
 import RelatedProducts from "@/components/product/RelatedProducts";

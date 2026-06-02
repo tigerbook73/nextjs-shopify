@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useRef, useState } from "react";
 import { getCartAction } from "@/lib/actions/cart";
-import type { Cart } from "@/lib/shopify/types";
+import type { Cart } from "@/lib/shopify/storefront/types";
 
 interface CartContextValue {
   isOpen: boolean;

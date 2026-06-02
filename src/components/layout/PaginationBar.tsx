@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { PageInfo } from "@/lib/shopify/types";
+import type { PageInfo } from "@/lib/shopify/storefront/types";
 
 interface PaginationBarProps {
   pageInfo: PageInfo;

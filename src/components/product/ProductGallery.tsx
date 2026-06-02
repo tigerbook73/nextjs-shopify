@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import type { ProductImage } from "@/lib/shopify/types";
+import type { ProductImage } from "@/lib/shopify/storefront/types";
 
 export default function ProductGallery({ images }: { images: ProductImage[] }) {
   const [selectedIndex, setSelectedIndex] = useState(0);

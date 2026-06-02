@@ -1,4 +1,4 @@
-import { searchProducts } from "@/lib/shopify/client";
+import { searchProducts } from "@/lib/shopify/storefront/client";
 import ProductCard from "@/components/product/ProductCard";
 import PaginationBar from "@/components/layout/PaginationBar";
 

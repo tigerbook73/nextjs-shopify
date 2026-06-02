@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCollectionByHandle, getCollectionHandles } from "@/lib/shopify/client";
+import { getCollectionByHandle, getCollectionHandles } from "@/lib/shopify/storefront/client";
 import ProductCard from "@/components/product/ProductCard";
 import CollectionFilters from "@/components/collection/CollectionFilters";
 import PaginationBar from "@/components/layout/PaginationBar";

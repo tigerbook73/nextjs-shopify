@@ -99,5 +99,5 @@ implementation (in_progress)
 
 ## Task Acceptance
 
-- auto-check: —
+- auto-check: passed
 - manual-check: —

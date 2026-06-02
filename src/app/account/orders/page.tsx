@@ -64,7 +64,7 @@ export default async function OrdersPage() {
                       <span>
                         {item.title} × {item.quantity}
                       </span>
-                      <span>{formatPrice(item.price.amount, item.price.currencyCode)}</span>
+                      <span>{item.price ? formatPrice(item.price.amount, item.price.currencyCode) : "—"}</span>
                     </li>
                   ))}
                 </ul>

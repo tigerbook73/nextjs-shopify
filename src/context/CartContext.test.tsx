@@ -19,7 +19,7 @@ function makeCart(totalQuantity: number): Cart {
       totalTaxAmount: null,
       totalAmount: { amount: "0.00", currencyCode: "USD" },
     },
-  };
+  } as Cart;
 }
 
 function makeWrapper(initialCart?: Cart | null) {

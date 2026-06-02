@@ -45,12 +45,18 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = /* GraphQL */ `
       id
       title
       handle
+      availableForSale
       description
       descriptionHtml
       priceRange {
         minVariantPrice {
           amount
           currencyCode
+        }
+      }
+      compareAtPriceRange {
+        minVariantPrice {
+          amount
         }
       }
       featuredImage {

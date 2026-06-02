@@ -1,130 +1,36 @@
-export interface MoneyV2 {
-  amount: string;
-  currencyCode: string;
-}
+import type * as StorefrontTypes from "@/types/generated/storefront/storefront.types";
+import type {
+  GetShopQuery,
+  GetProductsQuery,
+  GetProductByHandleQuery,
+  GetCollectionsQuery,
+  GetCollectionByHandleQuery,
+  GetCartQuery,
+  SearchQuery,
+  ProductCardFragment,
+} from "@/types/generated/storefront/storefront.generated";
 
-export interface ProductImage {
-  url: string;
-  altText: string | null;
-}
+export type MoneyV2 = Pick<StorefrontTypes.MoneyV2, "amount" | "currencyCode">;
+export type SelectedOption = Pick<StorefrontTypes.SelectedOption, "name" | "value">;
+export type PageInfo = Pick<StorefrontTypes.PageInfo, "hasNextPage" | "hasPreviousPage" | "startCursor" | "endCursor">;
 
-interface SEO {
-  title: string | null;
-  description: string | null;
-}
+export type Shop = GetShopQuery["shop"];
 
-export interface Shop {
-  name: string;
-  description: string | null;
-}
+export type Product = ProductCardFragment;
+export type ProductImage = NonNullable<ProductCardFragment["featuredImage"]>;
+export type ProductVariant = NonNullable<GetProductByHandleQuery["product"]>["variants"]["nodes"][number];
+export type ProductDetail = NonNullable<GetProductByHandleQuery["product"]>;
+export type ProductConnection = GetProductsQuery["products"];
 
-export interface Product {
-  id: string;
-  title: string;
-  handle: string;
-  availableForSale: boolean;
-  priceRange: {
-    minVariantPrice: MoneyV2;
-  };
-  compareAtPriceRange: {
-    minVariantPrice: MoneyV2;
-  };
-  featuredImage: ProductImage | null;
-}
+export type Collection = GetCollectionsQuery["collections"]["nodes"][number];
+export type CollectionDetail = NonNullable<GetCollectionByHandleQuery["collection"]>;
 
-export interface SelectedOption {
-  name: string;
-  value: string;
-}
+export type Cart = NonNullable<GetCartQuery["cart"]>;
+export type CartLine = Cart["lines"]["nodes"][number];
+export type CartLineMerchandise = CartLine["merchandise"];
+export type CartCost = Cart["cost"];
 
-export interface ProductVariant {
-  id: string;
-  title: string;
-  availableForSale: boolean;
-  selectedOptions: SelectedOption[];
-  price: MoneyV2;
-  compareAtPrice: MoneyV2 | null;
-}
-
-export interface ProductDetail extends Product {
-  description: string;
-  descriptionHtml: string;
-  seo: SEO;
-  images: { nodes: ProductImage[] };
-  variants: { nodes: ProductVariant[] };
-  options: {
-    name: string;
-    optionValues: { name: string }[];
-  }[];
-  collections: { nodes: { handle: string }[] };
-}
-
-export interface Collection {
-  id: string;
-  title: string;
-  handle: string;
-  description: string;
-  image: ProductImage | null;
-  seo: SEO;
-}
-
-export interface PageInfo {
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  startCursor: string | null;
-  endCursor: string | null;
-}
-
-export interface ProductConnection {
-  nodes: Product[];
-  pageInfo: PageInfo;
-}
-
-export interface CollectionDetail extends Collection {
-  products: {
-    nodes: Product[];
-    pageInfo: PageInfo;
-  };
-}
-
-export interface CartLineMerchandise {
-  id: string;
-  title: string;
-  selectedOptions: SelectedOption[];
-  price: MoneyV2;
-  product: {
-    title: string;
-    handle: string;
-    featuredImage: ProductImage | null;
-  };
-}
-
-export interface CartLine {
-  id: string;
-  quantity: number;
-  merchandise: CartLineMerchandise;
-}
-
-export interface CartCost {
-  subtotalAmount: MoneyV2;
-  totalTaxAmount: MoneyV2 | null;
-  totalAmount: MoneyV2;
-}
-
-export interface Cart {
-  id: string;
-  checkoutUrl: string;
-  totalQuantity: number;
-  lines: { nodes: CartLine[] };
-  cost: CartCost;
-}
+export type SearchResultItem = Extract<SearchQuery["search"]["nodes"][number], { __typename: "Product" }>;
+export type SearchResult = Omit<SearchQuery["search"], "nodes"> & { nodes: SearchResultItem[] };
 
 export type CartActionResult = { success: true; cart?: Cart | null } | { success: false; error: string };
-
-export type SearchResultItem = Product & { __typename: "Product" };
-
-export interface SearchResult {
-  totalCount: number;
-  nodes: SearchResultItem[];
-  pageInfo: PageInfo;
-}

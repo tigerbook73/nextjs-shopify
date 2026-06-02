@@ -62,7 +62,9 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                 <p className="text-gray-500">Qty: {item.quantity}</p>
               </div>
               <p className="text-sm font-medium">
-                {formatPrice(String(parseFloat(item.price.amount) * item.quantity), item.price.currencyCode)}
+                {item.price
+                  ? formatPrice(String(parseFloat(item.price.amount) * item.quantity), item.price.currencyCode)
+                  : "—"}
               </p>
             </li>
           ))}

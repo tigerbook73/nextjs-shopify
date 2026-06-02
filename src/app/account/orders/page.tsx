@@ -4,7 +4,7 @@ import { customerAccountFetch } from "@/lib/shopify/customer-account/client";
 import { GET_ORDERS_QUERY } from "@/lib/shopify/customer-account/queries";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
 import { formatPrice } from "@/lib/utils/format-price";
-import type { CustomerOrder } from "@/types/customer-account";
+import type { CustomerOrder } from "@/lib/shopify/customer-account/types";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Orders" };

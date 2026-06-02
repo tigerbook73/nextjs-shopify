@@ -10,7 +10,7 @@ import {
   ADDRESS_UPDATE_MUTATION,
 } from "@/lib/shopify/customer-account/mutations";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
-import type { AddressInput, CustomerActionResult } from "@/types/customer-account";
+import type { AddressInput, CustomerActionResult } from "@/lib/shopify/customer-account/types";
 
 function extractAddressInput(formData: FormData): AddressInput {
   return {

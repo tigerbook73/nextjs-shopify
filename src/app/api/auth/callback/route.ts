@@ -8,7 +8,7 @@ import {
   SHOP_ID,
 } from "@/lib/shopify/customer-account/config";
 import { COOKIE_NAMES, setTokenCookies } from "@/lib/shopify/customer-account/tokens";
-import type { CustomerAccountToken } from "@/types/customer-account";
+import type { CustomerAccountToken } from "@/lib/shopify/customer-account/types";
 
 function getSafeReturnTo(value: string): string {
   if (!value.startsWith("/") || value.startsWith("//")) return "/account";

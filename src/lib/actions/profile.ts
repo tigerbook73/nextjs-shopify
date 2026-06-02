@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { customerAccountFetch } from "@/lib/shopify/customer-account/client";
 import { UPDATE_CUSTOMER_MUTATION } from "@/lib/shopify/customer-account/mutations";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
-import type { CustomerActionResult } from "@/types/customer-account";
+import type { CustomerActionResult } from "@/lib/shopify/customer-account/types";
 
 export async function updateProfile(formData: FormData): Promise<CustomerActionResult> {
   const token = await getAccessToken();

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { customerAccountFetch } from "@/lib/shopify/customer-account/client";
 import { GET_CUSTOMER_QUERY } from "@/lib/shopify/customer-account/queries";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
-import type { CustomerProfile } from "@/types/customer-account";
+import type { CustomerProfile } from "@/lib/shopify/customer-account/types";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "My account" };

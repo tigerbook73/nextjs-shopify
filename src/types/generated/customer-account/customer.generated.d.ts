@@ -3,16 +3,6 @@
 /* eslint-disable */
 import type * as CustomerTypes from './customer.types.js';
 
-export type CustomerUpdateMutationVariables = CustomerTypes.Exact<{
-  input: CustomerTypes.CustomerUpdateInput;
-}>;
-
-
-export type CustomerUpdateMutation = { customerUpdate?: CustomerTypes.Maybe<{ customer?: CustomerTypes.Maybe<(
-      Pick<CustomerTypes.Customer, 'firstName' | 'lastName'>
-      & { emailAddress?: CustomerTypes.Maybe<Pick<CustomerTypes.CustomerEmailAddress, 'emailAddress'>> }
-    )>, userErrors: Array<Pick<CustomerTypes.UserErrorsCustomerUserErrors, 'field' | 'message' | 'code'>> }> };
-
 export type CustomerAddressCreateMutationVariables = CustomerTypes.Exact<{
   address: CustomerTypes.CustomerAddressInput;
   defaultAddress?: CustomerTypes.InputMaybe<CustomerTypes.Scalars['Boolean']['input']>;
@@ -46,6 +36,26 @@ export type CustomerAddressSetDefaultMutationVariables = CustomerTypes.Exact<{
 
 
 export type CustomerAddressSetDefaultMutation = { customerAddressUpdate?: CustomerTypes.Maybe<{ customerAddress?: CustomerTypes.Maybe<Pick<CustomerTypes.CustomerAddress, 'id'>>, userErrors: Array<Pick<CustomerTypes.UserErrorsCustomerAddressUserErrors, 'field' | 'message' | 'code'>> }> };
+
+export type CustomerUpdateMutationVariables = CustomerTypes.Exact<{
+  input: CustomerTypes.CustomerUpdateInput;
+}>;
+
+
+export type CustomerUpdateMutation = { customerUpdate?: CustomerTypes.Maybe<{ customer?: CustomerTypes.Maybe<(
+      Pick<CustomerTypes.Customer, 'firstName' | 'lastName'>
+      & { emailAddress?: CustomerTypes.Maybe<Pick<CustomerTypes.CustomerEmailAddress, 'emailAddress'>> }
+    )>, userErrors: Array<Pick<CustomerTypes.UserErrorsCustomerUserErrors, 'field' | 'message' | 'code'>> }> };
+
+export type GetAddressesQueryVariables = CustomerTypes.Exact<{
+  first: CustomerTypes.Scalars['Int']['input'];
+}>;
+
+
+export type GetAddressesQuery = { customer: { defaultAddress?: CustomerTypes.Maybe<Pick<CustomerTypes.CustomerAddress, 'id'>>, addresses: { nodes: Array<(
+        Pick<CustomerTypes.CustomerAddress, 'id' | 'firstName' | 'lastName' | 'address1' | 'address2' | 'city' | 'province' | 'zip' | 'country'>
+        & { provinceCode: CustomerTypes.CustomerAddress['zoneCode'], countryCode: CustomerTypes.CustomerAddress['territoryCode'], phone: CustomerTypes.CustomerAddress['phoneNumber'] }
+      )> } } };
 
 export type GetCustomerQueryVariables = CustomerTypes.Exact<{ [key: string]: never; }>;
 
@@ -88,29 +98,19 @@ export type GetOrderDetailQuery = { order?: CustomerTypes.Maybe<(
       )> } }
   )> };
 
-export type GetAddressesQueryVariables = CustomerTypes.Exact<{
-  first: CustomerTypes.Scalars['Int']['input'];
-}>;
-
-
-export type GetAddressesQuery = { customer: { defaultAddress?: CustomerTypes.Maybe<Pick<CustomerTypes.CustomerAddress, 'id'>>, addresses: { nodes: Array<(
-        Pick<CustomerTypes.CustomerAddress, 'id' | 'firstName' | 'lastName' | 'address1' | 'address2' | 'city' | 'province' | 'zip' | 'country'>
-        & { provinceCode: CustomerTypes.CustomerAddress['zoneCode'], countryCode: CustomerTypes.CustomerAddress['territoryCode'], phone: CustomerTypes.CustomerAddress['phoneNumber'] }
-      )> } } };
-
 interface GeneratedQueryTypes {
+  "\n    query GetAddresses($first: Int!) {\n      customer {\n        defaultAddress {\n          id\n        }\n        addresses(first: $first) {\n          nodes {\n            id\n            firstName\n            lastName\n            address1\n            address2\n            city\n            province\n            provinceCode: zoneCode\n            zip\n            country\n            countryCode: territoryCode\n            phone: phoneNumber\n          }\n        }\n      }\n    }\n  ": {return: GetAddressesQuery, variables: GetAddressesQueryVariables},
   "\n  query GetCustomer {\n    customer {\n      id\n      firstName\n      lastName\n      displayName\n      emailAddress {\n        emailAddress\n      }\n      orders(first: 100) {\n        nodes {\n          id\n        }\n        pageInfo {\n          hasNextPage\n        }\n      }\n    }\n  }\n": {return: GetCustomerQuery, variables: GetCustomerQueryVariables},
   "\n  query GetOrders($first: Int!, $after: String) {\n    customer {\n      orders(first: $first, after: $after) {\n        nodes {\n          id\n          name\n          processedAt\n          financialStatus\n          fulfillmentStatus\n          totalPrice {\n            amount\n            currencyCode\n          }\n          lineItems(first: 5) {\n            nodes {\n              title\n              variantTitle\n              quantity\n              image {\n                url\n                altText\n              }\n              price {\n                amount\n                currencyCode\n              }\n            }\n          }\n        }\n        pageInfo {\n          hasNextPage\n          hasPreviousPage\n          startCursor\n          endCursor\n        }\n      }\n    }\n  }\n": {return: GetOrdersQuery, variables: GetOrdersQueryVariables},
-  "\n  query GetOrderDetail($orderId: ID!) {\n    order(id: $orderId) {\n      id\n      name\n      processedAt\n      financialStatus\n      fulfillmentStatus\n      totalPrice {\n        amount\n        currencyCode\n      }\n      subtotalPrice: subtotal {\n        amount\n        currencyCode\n      }\n      totalShippingPrice: totalShipping {\n        amount\n        currencyCode\n      }\n      totalTax {\n        amount\n        currencyCode\n      }\n      shippingAddress {\n        firstName\n        lastName\n        address1\n        address2\n        city\n        province\n        zip\n        country\n        phone: phoneNumber\n      }\n      lineItems(first: 50) {\n        nodes {\n          title\n          variantTitle\n          quantity\n          image {\n            url\n            altText\n          }\n          price {\n            amount\n            currencyCode\n          }\n        }\n      }\n      fulfillments(first: 5) {\n        nodes {\n          status\n          updatedAt\n          trackingInformation {\n            url\n            number\n          }\n        }\n      }\n    }\n  }\n": {return: GetOrderDetailQuery, variables: GetOrderDetailQueryVariables},
-  "\n  query GetAddresses($first: Int!) {\n    customer {\n      defaultAddress {\n        id\n      }\n      addresses(first: $first) {\n        nodes {\n          id\n          firstName\n          lastName\n          address1\n          address2\n          city\n          province\n          provinceCode: zoneCode\n          zip\n          country\n          countryCode: territoryCode\n          phone: phoneNumber\n        }\n      }\n    }\n  }\n": {return: GetAddressesQuery, variables: GetAddressesQueryVariables},
+  "\n    query GetOrderDetail($orderId: ID!) {\n      order(id: $orderId) {\n        id\n        name\n        processedAt\n        financialStatus\n        fulfillmentStatus\n        totalPrice {\n          amount\n          currencyCode\n        }\n        subtotalPrice: subtotal {\n          amount\n          currencyCode\n        }\n        totalShippingPrice: totalShipping {\n          amount\n          currencyCode\n        }\n        totalTax {\n          amount\n          currencyCode\n        }\n        shippingAddress {\n          firstName\n          lastName\n          address1\n          address2\n          city\n          province\n          zip\n          country\n          phone: phoneNumber\n        }\n        lineItems(first: 50) {\n          nodes {\n            title\n            variantTitle\n            quantity\n            image {\n              url\n              altText\n            }\n            price {\n              amount\n              currencyCode\n            }\n          }\n        }\n        fulfillments(first: 5) {\n          nodes {\n            status\n            updatedAt\n            trackingInformation {\n              url\n              number\n            }\n          }\n        }\n      }\n    }\n  ": {return: GetOrderDetailQuery, variables: GetOrderDetailQueryVariables},
 }
 
 interface GeneratedMutationTypes {
-  "\n  mutation CustomerUpdate($input: CustomerUpdateInput!) {\n    customerUpdate(input: $input) {\n      customer {\n        firstName\n        lastName\n        emailAddress {\n          emailAddress\n        }\n      }\n      userErrors {\n        field\n        message\n        code\n      }\n    }\n  }\n": {return: CustomerUpdateMutation, variables: CustomerUpdateMutationVariables},
   "\n  mutation CustomerAddressCreate($address: CustomerAddressInput!, $defaultAddress: Boolean) {\n    customerAddressCreate(address: $address, defaultAddress: $defaultAddress) {\n      customerAddress {\n        id\n      }\n      userErrors {\n        field\n        message\n        code\n      }\n    }\n  }\n": {return: CustomerAddressCreateMutation, variables: CustomerAddressCreateMutationVariables},
   "\n  mutation CustomerAddressUpdate($addressId: ID!, $address: CustomerAddressInput!, $defaultAddress: Boolean) {\n    customerAddressUpdate(addressId: $addressId, address: $address, defaultAddress: $defaultAddress) {\n      customerAddress {\n        id\n      }\n      userErrors {\n        field\n        message\n        code\n      }\n    }\n  }\n": {return: CustomerAddressUpdateMutation, variables: CustomerAddressUpdateMutationVariables},
   "\n  mutation CustomerAddressDelete($addressId: ID!) {\n    customerAddressDelete(addressId: $addressId) {\n      deletedAddressId\n      userErrors {\n        field\n        message\n        code\n      }\n    }\n  }\n": {return: CustomerAddressDeleteMutation, variables: CustomerAddressDeleteMutationVariables},
   "\n  mutation CustomerAddressSetDefault($addressId: ID!) {\n    customerAddressUpdate(addressId: $addressId, address: {}, defaultAddress: true) {\n      customerAddress {\n        id\n      }\n      userErrors {\n        field\n        message\n        code\n      }\n    }\n  }\n": {return: CustomerAddressSetDefaultMutation, variables: CustomerAddressSetDefaultMutationVariables},
+  "\n    mutation CustomerUpdate($input: CustomerUpdateInput!) {\n      customerUpdate(input: $input) {\n        customer {\n          firstName\n          lastName\n          emailAddress {\n            emailAddress\n          }\n        }\n        userErrors {\n          field\n          message\n          code\n        }\n      }\n    }\n  ": {return: CustomerUpdateMutation, variables: CustomerUpdateMutationVariables},
 }
 declare module '@shopify/customer-api-client' {
   type InputMaybe<T> = CustomerTypes.InputMaybe<T>;

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,9 +19,9 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
             Addresses
           </Link>
           <form action="/api/auth/logout" method="POST" className="mt-auto pt-4 md:pt-0">
-            <button type="submit" className="text-gray-500 hover:underline">
+            <Button type="submit" variant="ghost" className="px-0 text-gray-500">
               Sign out
-            </button>
+            </Button>
           </form>
         </nav>
         <div className="flex-1">{children}</div>

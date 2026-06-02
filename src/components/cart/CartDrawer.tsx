@@ -1,38 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
 import { X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export default function CartDrawer() {
-  const { isOpen, closeCart, cart, refreshCart } = useCart();
-
-  useEffect(() => {
-    if (!isOpen) return;
-    refreshCart();
-  }, [isOpen, refreshCart]);
+  const { isOpen, closeCart, cart } = useCart();
 
   const hasItems = cart && cart.lines.nodes.length > 0;
 
   return (
-    <>
-      {isOpen && <div className="fixed inset-0 z-40 bg-black/30" onClick={closeCart} aria-hidden="true" />}
-
-      <div
-        role="region"
-        aria-label="Shopping cart"
-        className={`fixed top-0 right-0 z-50 flex h-full w-80 flex-col bg-white shadow-xl transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "invisible translate-x-full"
-        }`}
-      >
-        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4">
-          <h2 className="text-lg font-semibold text-gray-900">Your Cart</h2>
-          <button onClick={closeCart} className="text-gray-400 hover:text-gray-600" aria-label="Close cart">
+    <Sheet
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) closeCart();
+      }}
+    >
+      <SheetContent side="right" showCloseButton={false} className="flex w-80 flex-col gap-0 p-0 sm:max-w-80">
+        <SheetHeader className="flex-row items-center justify-between border-b border-gray-200 px-4 py-4">
+          <SheetTitle>Your Cart</SheetTitle>
+          <SheetClose aria-label="Close cart" className="text-gray-400 hover:text-gray-600">
             <X className="h-5 w-5" />
-          </button>
-        </div>
+          </SheetClose>
+        </SheetHeader>
 
         <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
           {!hasItems ? (
@@ -53,7 +45,7 @@ export default function CartDrawer() {
             <CartSummary cart={cart} />
           </div>
         )}
-      </div>
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }

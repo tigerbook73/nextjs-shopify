@@ -4,6 +4,10 @@ import { GET_ADDRESSES_QUERY } from "@/lib/shopify/customer-account/queries";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
 import { updateAddress } from "@/lib/actions/address";
 import type { CustomerAddress } from "@/lib/shopify/customer-account/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import DefaultAddressCheckbox from "@/components/account/DefaultAddressCheckbox";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Edit address" };
@@ -18,9 +22,11 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
   if (!accessToken) redirect("/api/auth/login");
 
   let address: CustomerAddress | undefined;
+  let isDefaultAddress = false;
   try {
     const data = await customerAccountFetch(accessToken, GET_ADDRESSES_QUERY, { first: 50 });
     address = data.customer?.addresses.nodes.find((a) => a.id === addressId);
+    isDefaultAddress = data.customer?.defaultAddress?.id === addressId;
   } catch {
     redirect("/api/auth/login");
   }
@@ -53,12 +59,8 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
           <Field id="country" name="country" label="Country code" defaultValue={address.countryCode ?? ""} />
         </div>
         <Field id="phone" name="phone" label="Phone (optional)" defaultValue={address.phone ?? ""} />
-        <button
-          type="submit"
-          className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
-        >
-          Save changes
-        </button>
+        <DefaultAddressCheckbox defaultChecked={isDefaultAddress} />
+        <Button type="submit">Save changes</Button>
       </form>
     </main>
   );
@@ -67,16 +69,10 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
 function Field({ id, name, label, defaultValue }: { id: string; name: string; label: string; defaultValue?: string }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor={id}>
+      <Label htmlFor={id} className="mb-1">
         {label}
-      </label>
-      <input
-        id={id}
-        name={name}
-        type="text"
-        defaultValue={defaultValue}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
-      />
+      </Label>
+      <Input id={id} name={name} type="text" defaultValue={defaultValue} />
     </div>
   );
 }

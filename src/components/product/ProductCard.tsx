@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify/storefront/types";
 import { formatPrice } from "@/lib/utils/format-price";
+import { Badge } from "@/components/ui/badge";
 
 export default function ProductCard({ product }: { product: Product }) {
   const { handle, title, featuredImage, priceRange, compareAtPriceRange, availableForSale } = product;
@@ -27,14 +28,14 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
 
         {isSoldOut && (
-          <span className="absolute top-2 left-2 rounded bg-gray-500 px-2 py-0.5 text-xs font-semibold text-white">
+          <Badge variant="secondary" className="absolute top-2 left-2">
             Sold Out
-          </span>
+          </Badge>
         )}
         {!isSoldOut && isOnSale && (
-          <span className="absolute top-2 left-2 rounded bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
+          <Badge variant="destructive" className="absolute top-2 left-2">
             Sale
-          </span>
+          </Badge>
         )}
       </div>
       <div className="mt-3 space-y-1">

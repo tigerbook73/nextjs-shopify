@@ -16,7 +16,8 @@
     "shopify:login": "shopify auth login",
     "shopify:logout": "shopify auth logout",
     "shopify:version": "shopify version",
-    "prepare": "husky"
+    "prepare": "husky",
+    "verify": "graphql-codegen && pnpm env:check && pnpm format && pnpm lint && pnpm test:unit && pnpm test:e2e"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

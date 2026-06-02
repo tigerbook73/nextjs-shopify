@@ -1,4 +1,8 @@
 import { createAddress } from "@/lib/actions/address";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import DefaultAddressCheckbox from "@/components/account/DefaultAddressCheckbox";
 
 export const metadata = { title: "Add address" };
 
@@ -31,16 +35,8 @@ function AddressForm({ action }: { action: FormAction }) {
         <Field id="country" name="country" label="Country code" />
       </div>
       <Field id="phone" name="phone" label="Phone (optional)" />
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" name="defaultAddress" value="true" />
-        Set as default address
-      </label>
-      <button
-        type="submit"
-        className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
-      >
-        Save address
-      </button>
+      <DefaultAddressCheckbox />
+      <Button type="submit">Save address</Button>
     </form>
   );
 }
@@ -48,16 +44,10 @@ function AddressForm({ action }: { action: FormAction }) {
 function Field({ id, name, label, defaultValue }: { id: string; name: string; label: string; defaultValue?: string }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor={id}>
+      <Label htmlFor={id} className="mb-1">
         {label}
-      </label>
-      <input
-        id={id}
-        name={name}
-        type="text"
-        defaultValue={defaultValue}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
-      />
+      </Label>
+      <Input id={id} name={name} type="text" defaultValue={defaultValue} />
     </div>
   );
 }

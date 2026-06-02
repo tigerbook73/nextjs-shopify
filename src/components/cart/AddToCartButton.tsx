@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 import { addToCart } from "@/lib/actions/cart";
 import { useCart } from "@/context/CartContext";
+import { Button } from "@/components/ui/button";
 
 interface AddToCartButtonProps {
   variantId: string;
@@ -16,17 +17,14 @@ export default function AddToCartButton({ variantId, availableForSale }: AddToCa
 
   if (!availableForSale) {
     return (
-      <button
-        disabled
-        className="w-full cursor-not-allowed rounded-md bg-gray-200 px-6 py-3 text-sm font-medium text-gray-500"
-      >
+      <Button variant="secondary" disabled className="w-full">
         Out of Stock
-      </button>
+      </Button>
     );
   }
 
   return (
-    <button
+    <Button
       onClick={() => {
         startTransition(async () => {
           const result = await addToCart(variantId);
@@ -44,9 +42,9 @@ export default function AddToCartButton({ variantId, availableForSale }: AddToCa
         });
       }}
       disabled={isPending}
-      className="w-full rounded-md bg-gray-900 px-6 py-3 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+      className="w-full"
     >
       {isPending ? "Adding..." : "Add to Cart"}
-    </button>
+    </Button>
   );
 }

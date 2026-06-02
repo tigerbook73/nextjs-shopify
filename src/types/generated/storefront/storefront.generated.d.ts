@@ -28,7 +28,7 @@ export type CartCreateMutation = { cartCreate?: StorefrontTypes.Maybe<{ cart?: S
               & { featuredImage?: StorefrontTypes.Maybe<Pick<StorefrontTypes.Image, 'url' | 'altText'>> }
             ) }
           ) }
-        )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalTaxAmount?: StorefrontTypes.Maybe<Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
+        )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
     )>, userErrors: Array<Pick<StorefrontTypes.CartUserError, 'field' | 'message'>> }> };
 
 export type CartLinesAddMutationVariables = StorefrontTypes.Exact<{
@@ -57,7 +57,7 @@ export type CartLinesAddMutation = { cartLinesAdd?: StorefrontTypes.Maybe<{ cart
               & { featuredImage?: StorefrontTypes.Maybe<Pick<StorefrontTypes.Image, 'url' | 'altText'>> }
             ) }
           ) }
-        )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalTaxAmount?: StorefrontTypes.Maybe<Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
+        )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
     )>, userErrors: Array<Pick<StorefrontTypes.CartUserError, 'field' | 'message'>> }> };
 
 export type CartLinesUpdateMutationVariables = StorefrontTypes.Exact<{
@@ -86,7 +86,7 @@ export type CartLinesUpdateMutation = { cartLinesUpdate?: StorefrontTypes.Maybe<
               & { featuredImage?: StorefrontTypes.Maybe<Pick<StorefrontTypes.Image, 'url' | 'altText'>> }
             ) }
           ) }
-        )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalTaxAmount?: StorefrontTypes.Maybe<Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
+        )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
     )>, userErrors: Array<Pick<StorefrontTypes.CartUserError, 'field' | 'message'>> }> };
 
 export type CartLinesRemoveMutationVariables = StorefrontTypes.Exact<{
@@ -115,7 +115,7 @@ export type CartLinesRemoveMutation = { cartLinesRemove?: StorefrontTypes.Maybe<
               & { featuredImage?: StorefrontTypes.Maybe<Pick<StorefrontTypes.Image, 'url' | 'altText'>> }
             ) }
           ) }
-        )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalTaxAmount?: StorefrontTypes.Maybe<Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
+        )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
     )>, userErrors: Array<Pick<StorefrontTypes.CartUserError, 'field' | 'message'>> }> };
 
 export type CartDetailFragment = (
@@ -138,7 +138,7 @@ export type CartDetailFragment = (
           & { featuredImage?: StorefrontTypes.Maybe<Pick<StorefrontTypes.Image, 'url' | 'altText'>> }
         ) }
       ) }
-    )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalTaxAmount?: StorefrontTypes.Maybe<Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
+    )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
 );
 
 export type GetCartQueryVariables = StorefrontTypes.Exact<{
@@ -166,7 +166,7 @@ export type GetCartQuery = { cart?: StorefrontTypes.Maybe<(
             & { featuredImage?: StorefrontTypes.Maybe<Pick<StorefrontTypes.Image, 'url' | 'altText'>> }
           ) }
         ) }
-      )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalTaxAmount?: StorefrontTypes.Maybe<Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
+      )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
   )> };
 
 export type GetCollectionsQueryVariables = StorefrontTypes.Exact<{
@@ -265,20 +265,20 @@ export type GetShopQuery = { shop: Pick<StorefrontTypes.Shop, 'name' | 'descript
 
 interface GeneratedQueryTypes {
   "\n  query GetCart($cartId: ID!) {\n    cart(id: $cartId) {\n      ...CartDetail\n    }\n  }\n  \n": {return: GetCartQuery, variables: GetCartQueryVariables},
-  "\n  query GetCollections($first: Int!) {\n    collections(first: $first) {\n      nodes {\n        id\n        title\n        handle\n        description\n        image {\n          url\n          altText\n        }\n        seo {\n          title\n          description\n        }\n      }\n    }\n  }\n": {return: GetCollectionsQuery, variables: GetCollectionsQueryVariables},
+  "\n    query GetCollections($first: Int!) {\n      collections(first: $first) {\n        nodes {\n          id\n          title\n          handle\n          description\n          image {\n            url\n            altText\n          }\n          seo {\n            title\n            description\n          }\n        }\n      }\n    }\n  ": {return: GetCollectionsQuery, variables: GetCollectionsQueryVariables},
   "\n  query GetCollectionByHandle(\n    $handle: String!\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $sortKey: ProductCollectionSortKeys\n    $reverse: Boolean\n    $filters: [ProductFilter!]\n  ) {\n    collection(handle: $handle) {\n      id\n      title\n      handle\n      description\n      image {\n        url\n        altText\n      }\n      seo {\n        title\n        description\n      }\n      products(\n        first: $first\n        last: $last\n        after: $after\n        before: $before\n        sortKey: $sortKey\n        reverse: $reverse\n        filters: $filters\n      ) {\n        nodes {\n          ...ProductCard\n        }\n        pageInfo {\n          hasNextPage\n          hasPreviousPage\n          startCursor\n          endCursor\n        }\n      }\n    }\n  }\n  \n": {return: GetCollectionByHandleQuery, variables: GetCollectionByHandleQueryVariables},
   "\n  query GetCollectionHandles($first: Int!) {\n    collections(first: $first) {\n      nodes {\n        handle\n      }\n    }\n  }\n": {return: GetCollectionHandlesQuery, variables: GetCollectionHandlesQueryVariables},
   "\n  query GetProducts($first: Int, $last: Int, $after: String, $before: String) {\n    products(first: $first, last: $last, after: $after, before: $before) {\n      nodes {\n        ...ProductCard\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n  \n": {return: GetProductsQuery, variables: GetProductsQueryVariables},
-  "\n  query GetProductByHandle($handle: String!) {\n    product(handle: $handle) {\n      id\n      title\n      handle\n      availableForSale\n      description\n      descriptionHtml\n      priceRange {\n        minVariantPrice {\n          amount\n          currencyCode\n        }\n      }\n      compareAtPriceRange {\n        minVariantPrice {\n          amount\n        }\n      }\n      featuredImage {\n        url\n        altText\n      }\n      images(first: 5) {\n        nodes {\n          url\n          altText\n        }\n      }\n      variants(first: 100) {\n        nodes {\n          id\n          title\n          availableForSale\n          selectedOptions {\n            name\n            value\n          }\n          price {\n            amount\n            currencyCode\n          }\n          compareAtPrice {\n            amount\n            currencyCode\n          }\n        }\n      }\n      seo {\n        title\n        description\n      }\n      options {\n        name\n        optionValues {\n          name\n        }\n      }\n      collections(first: 1) {\n        nodes {\n          handle\n        }\n      }\n    }\n  }\n": {return: GetProductByHandleQuery, variables: GetProductByHandleQueryVariables},
+  "\n    query GetProductByHandle($handle: String!) {\n      product(handle: $handle) {\n        id\n        title\n        handle\n        availableForSale\n        description\n        descriptionHtml\n        priceRange {\n          minVariantPrice {\n            amount\n            currencyCode\n          }\n        }\n        compareAtPriceRange {\n          minVariantPrice {\n            amount\n          }\n        }\n        featuredImage {\n          url\n          altText\n        }\n        images(first: 5) {\n          nodes {\n            url\n            altText\n          }\n        }\n        variants(first: 100) {\n          nodes {\n            id\n            title\n            availableForSale\n            selectedOptions {\n              name\n              value\n            }\n            price {\n              amount\n              currencyCode\n            }\n            compareAtPrice {\n              amount\n              currencyCode\n            }\n          }\n        }\n        seo {\n          title\n          description\n        }\n        options {\n          name\n          optionValues {\n            name\n          }\n        }\n        collections(first: 1) {\n          nodes {\n            handle\n          }\n        }\n      }\n    }\n  ": {return: GetProductByHandleQuery, variables: GetProductByHandleQueryVariables},
   "\n  query Search($query: String!, $first: Int, $last: Int, $after: String, $before: String) {\n    search(query: $query, first: $first, last: $last, after: $after, before: $before, types: [PRODUCT]) {\n      totalCount\n      nodes {\n        __typename\n        ... on Product {\n          ...ProductCard\n        }\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n  \n": {return: SearchQuery, variables: SearchQueryVariables},
   "\n  query GetShop {\n    shop {\n      name\n      description\n    }\n  }\n": {return: GetShopQuery, variables: GetShopQueryVariables},
 }
 
 interface GeneratedMutationTypes {
-  "\n  mutation CartCreate($input: CartInput!) {\n    cartCreate(input: $input) {\n      cart {\n        ...CartDetail\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n  \n": {return: CartCreateMutation, variables: CartCreateMutationVariables},
-  "\n  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {\n    cartLinesAdd(cartId: $cartId, lines: $lines) {\n      cart {\n        ...CartDetail\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n  \n": {return: CartLinesAddMutation, variables: CartLinesAddMutationVariables},
-  "\n  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {\n    cartLinesUpdate(cartId: $cartId, lines: $lines) {\n      cart {\n        ...CartDetail\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n  \n": {return: CartLinesUpdateMutation, variables: CartLinesUpdateMutationVariables},
-  "\n  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {\n    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {\n      cart {\n        ...CartDetail\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n  \n": {return: CartLinesRemoveMutation, variables: CartLinesRemoveMutationVariables},
+  "\n    mutation CartCreate($input: CartInput!) {\n      cartCreate(input: $input) {\n        cart {\n          ...CartDetail\n        }\n        userErrors {\n          field\n          message\n        }\n      }\n    }\n    \n  ": {return: CartCreateMutation, variables: CartCreateMutationVariables},
+  "\n    mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {\n      cartLinesAdd(cartId: $cartId, lines: $lines) {\n        cart {\n          ...CartDetail\n        }\n        userErrors {\n          field\n          message\n        }\n      }\n    }\n    \n  ": {return: CartLinesAddMutation, variables: CartLinesAddMutationVariables},
+  "\n    mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {\n      cartLinesUpdate(cartId: $cartId, lines: $lines) {\n        cart {\n          ...CartDetail\n        }\n        userErrors {\n          field\n          message\n        }\n      }\n    }\n    \n  ": {return: CartLinesUpdateMutation, variables: CartLinesUpdateMutationVariables},
+  "\n    mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {\n      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {\n        cart {\n          ...CartDetail\n        }\n        userErrors {\n          field\n          message\n        }\n      }\n    }\n    \n  ": {return: CartLinesRemoveMutation, variables: CartLinesRemoveMutationVariables},
 }
 declare module '@shopify/storefront-api-client' {
   type InputMaybe<T> = StorefrontTypes.InputMaybe<T>;

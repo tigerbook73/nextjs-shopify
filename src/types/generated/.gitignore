@@ -1,0 +1,2 @@
+# GraphQL introspection schema — download artifact, regenerate with `pnpm codegen`
+*.schema.json

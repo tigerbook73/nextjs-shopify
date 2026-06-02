@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const SORT_OPTIONS = [
   { label: "Default", value: "" },
@@ -37,21 +38,22 @@ export default function CollectionFilters({ initialSort, initialAvailable }: Col
   return (
     <div className="mb-6 flex flex-wrap items-center gap-4">
       <div className="flex items-center gap-2">
-        <label htmlFor="sort-select" className="text-sm font-medium text-gray-700">
-          Sort by
-        </label>
-        <select
-          id="sort-select"
-          value={currentSort}
-          onChange={(e) => updateParam("sort", e.target.value || null)}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 focus:ring-2 focus:ring-gray-900 focus:outline-none"
+        <span className="text-sm font-medium text-gray-700">Sort by</span>
+        <Select
+          value={currentSort || "default"}
+          onValueChange={(value) => updateParam("sort", value === "default" ? null : value)}
         >
-          {SORT_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="w-40">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value || "default"} value={opt.value || "default"}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-gray-700">

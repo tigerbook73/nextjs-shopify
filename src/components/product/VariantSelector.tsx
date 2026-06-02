@@ -3,6 +3,8 @@
 import { useState } from "react";
 import type { ProductVariant } from "@/lib/shopify/storefront/types";
 import { formatPrice } from "@/lib/utils/format-price";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Option {
   name: string;
@@ -21,26 +23,27 @@ export default function VariantSelector({ options, variants }: VariantSelectorPr
 
   const matchedVariant = variants.find((v) => v.selectedOptions.every((o) => selected[o.name] === o.value));
 
-  const handleChange = (optionName: string, value: string) => {
-    setSelected((prev) => ({ ...prev, [optionName]: value }));
-  };
-
   return (
     <div className="space-y-4">
       {options.map((option) => (
         <div key={option.name}>
-          <label className="block text-sm font-medium text-gray-700">{option.name}</label>
-          <select
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-gray-900 focus:outline-none"
+          <Label className="mb-1">{option.name}</Label>
+          <Select
             value={selected[option.name]}
-            onChange={(e) => handleChange(option.name, e.target.value)}
+            // value is always string here; Base UI types it as string | null but SelectItem values are always non-null
+            onValueChange={(value) => setSelected((prev) => ({ ...prev, [option.name]: value! }))}
           >
-            {option.optionValues.map(({ name }) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {option.optionValues.map(({ name }) => (
+                <SelectItem key={name} value={name}>
+                  {name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       ))}
 

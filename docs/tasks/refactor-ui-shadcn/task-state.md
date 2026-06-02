@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 3
+Step 4
 
 ## Requirements Phase
 
@@ -55,10 +55,10 @@ Step 3
 ### Step 3: Select — 变体选择器与集合筛选
 
 - step-type: final
-- status: pending
+- status: done
 - Commit: —
-- Date: —
-- auto-check: —
+- Date: 2026-06-02
+- auto-check: passed
 - manual-check: —
 
 ### Step 4: Button — 统一使用 shadcn Button

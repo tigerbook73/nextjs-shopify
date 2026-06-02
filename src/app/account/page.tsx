@@ -3,6 +3,7 @@ import { customerAccountFetch } from "@/lib/shopify/customer-account/client";
 import { GET_CUSTOMER_QUERY } from "@/lib/shopify/customer-account/queries";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
 import type { CustomerProfile } from "@/lib/shopify/customer-account/types";
+import CustomerAvatar from "@/components/account/CustomerAvatar";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "My account" };
@@ -20,21 +21,13 @@ export default async function AccountPage() {
     redirect("/api/auth/login");
   }
 
-  const initials = customer.displayName
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
   const orderCount = customer.orders?.nodes.length ?? 0;
   const orderCountLabel = customer.orders?.pageInfo.hasNextPage ? `${orderCount}+` : String(orderCount);
 
   return (
     <main>
       <div className="mb-6 flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-900 text-xl font-bold text-white">
-          {initials}
-        </div>
+        <CustomerAvatar displayName={customer.displayName} />
         <div>
           <h1 className="text-2xl font-bold">{customer.displayName}</h1>
           <p className="text-sm text-gray-500">{orderCountLabel} orders</p>

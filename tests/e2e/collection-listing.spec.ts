@@ -2,7 +2,7 @@
  * @test-file   CollectionListing
  * @description E2E tests for collection detail page SEO title and sort URL parameter
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by Tom Zhang @ [1]
  */
 import { expect, test } from "@playwright/test";
 import { waitForHydration } from "./utils";
@@ -41,10 +41,8 @@ test.describe("Collection Listing", () => {
     // 等待 React 水合，否则 CollectionFilters 的 onChange 未挂载，router.push 不会触发
     await waitForHydration(page);
 
-    const sortSelect = page.locator("select#sort-select");
-    await expect(sortSelect).toBeVisible();
-
-    await sortSelect.selectOption("price-asc");
+    await page.getByRole("combobox", { name: "Sort by" }).click();
+    await page.getByRole("option", { name: "Price: Low to High" }).click();
 
     // Next.js App Router 客户端导航不触发 load 事件，用 toHaveURL 轮询 URL
     await expect(page).toHaveURL(/[?&]sort=price-asc/, { timeout: 15_000 });

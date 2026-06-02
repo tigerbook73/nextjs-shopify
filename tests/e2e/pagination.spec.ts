@@ -2,7 +2,7 @@
  * @test-file   Pagination
  * @description E2E tests for cursor-based pagination on Products, Search, and Collection pages
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by Tom Zhang @ [1]
  */
 import { expect, test } from "@playwright/test";
 import { waitForHydration } from "./utils";
@@ -106,7 +106,8 @@ test.describe("Pagination", () => {
     await page.waitForLoadState("networkidle");
     await waitForHydration(page);
 
-    await page.locator("select#sort-select").selectOption("price-asc");
+    await page.getByRole("combobox", { name: "Sort by" }).click();
+    await page.getByRole("option", { name: "Price: Low to High" }).click();
     await expect(page).toHaveURL(/[?&]sort=price-asc/, { timeout: 15_000 });
     await page.waitForLoadState("networkidle");
 

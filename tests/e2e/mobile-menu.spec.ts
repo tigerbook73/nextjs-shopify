@@ -2,13 +2,10 @@
  * @test-file   MobileMenu
  * @description E2E tests for mobile hamburger menu visibility and open/close behaviors
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by Shengtian Liao @ [1]
  */
 import { expect, test } from "@playwright/test";
 import { waitForHydration } from "./utils";
-
-// 移动菜单面板：fixed inset-0 z-50（CartDrawer 用 right-0 top-0，无 inset-0，不会误匹配）
-const MENU_PANEL = "div.fixed.inset-0.z-50.bg-white";
 
 /**
  * @test-suite  Mobile Menu
@@ -39,8 +36,8 @@ test.describe("Mobile Menu", () => {
 
     await page.getByRole("button", { name: "Open menu" }).click();
 
-    // 作用域限定在移动菜单面板内，避免匹配桌面端隐藏的 nav 链接
-    const panel = page.locator(MENU_PANEL);
+    // 通过 dialog 角色和标题定位菜单面板，不依赖 CSS 实现细节
+    const panel = page.getByRole("dialog", { name: "Menu" });
     await expect(panel.getByRole("link", { name: "Products" })).toBeVisible();
     await expect(panel.getByRole("link", { name: "Collections" })).toBeVisible();
   });
@@ -52,7 +49,7 @@ test.describe("Mobile Menu", () => {
 
     await page.getByRole("button", { name: "Open menu" }).click();
 
-    const panel = page.locator(MENU_PANEL);
+    const panel = page.getByRole("dialog", { name: "Menu" });
     await expect(panel.getByRole("link", { name: "Products" })).toBeVisible();
 
     await page.keyboard.press("Escape");
@@ -67,11 +64,11 @@ test.describe("Mobile Menu", () => {
 
     await page.getByRole("button", { name: "Open menu" }).click();
 
-    const panel = page.locator(MENU_PANEL);
+    const panel = page.getByRole("dialog", { name: "Menu" });
     await expect(panel.getByRole("link", { name: "Products" })).toBeVisible();
 
-    // 遮罩（fixed inset-0 z-40）被菜单面板遮挡，使用 force:true 直接触发其 onClick
-    await page.locator("div.fixed.inset-0.z-40").dispatchEvent("click");
+    // SheetOverlay 由 Base UI 渲染，通过 data-slot 定位并 dispatchEvent 触发关闭
+    await page.locator("[data-slot='sheet-overlay']").dispatchEvent("click");
 
     await expect(panel.getByRole("link", { name: "Products" })).not.toBeVisible();
   });

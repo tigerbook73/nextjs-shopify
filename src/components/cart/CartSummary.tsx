@@ -1,5 +1,6 @@
 import type { Cart } from "@/lib/shopify/storefront/types";
 import { formatPrice } from "@/lib/utils/format-price";
+import { Button } from "@/components/ui/button";
 
 interface CartSummaryProps {
   cart: Cart;
@@ -26,12 +27,9 @@ export default function CartSummary({ cart }: CartSummaryProps) {
         </div>
       </div>
 
-      <a
-        href={checkoutUrl}
-        className="mt-6 block w-full rounded-md bg-gray-900 px-6 py-3 text-center text-sm font-medium text-white hover:bg-gray-700"
-      >
+      <Button render={<a href={checkoutUrl} />} nativeButton={false} className="mt-6 w-full">
         Checkout
-      </a>
+      </Button>
     </div>
   );
 }

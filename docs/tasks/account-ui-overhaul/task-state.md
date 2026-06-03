@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 4 done
+Step 5 done — all steps complete
 
 ## Requirements Phase
 
@@ -43,7 +43,8 @@ Step 4 done
     - notes: AccountNav (桌面侧边栏 + 移动 Tab Bar)，layout 扩为 max-w-7xl，E2E 新增 Account Layout suite；修复现有测试 strict mode（ada@example.com.first()）
   - Step 4: FR-5 Account Overview + Query 扩展 — status: done
     - notes: GET_CUSTOMER_QUERY 扩展 addresses，codegen 已跑，mock server GetCustomer 同步，Overview 改为三卡片布局（section aria-label），E2E 新增 Account Overview suite
-  - Step 5: FR-7 Checkout Buyer Identity — status: pending
+  - Step 5: FR-7 Checkout Buyer Identity — status: done
+    - notes: CART_BUYER_IDENTITY_UPDATE_MUTATION 添加 + codegen，updateCartBuyerIdentity Server Action（静默失败），callback 路由 setTokenCookies 后调用，3 个单元测试覆盖 cart 存在/不存在/fetch 抛出三种情况
 
 ## Task Acceptance
 

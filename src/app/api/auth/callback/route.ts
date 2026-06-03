@@ -9,6 +9,7 @@ import {
 } from "@/lib/shopify/customer-account/config";
 import { COOKIE_NAMES, setTokenCookies } from "@/lib/shopify/customer-account/tokens";
 import type { CustomerAccountToken } from "@/lib/shopify/customer-account/types";
+import { updateCartBuyerIdentity } from "@/lib/actions/cart";
 
 function getSafeReturnTo(value: string): string {
   if (!value.startsWith("/") || value.startsWith("//")) return "/account";
@@ -68,6 +69,7 @@ export async function GET(request: NextRequest) {
   cookieStore.delete(COOKIE_NAMES.RETURN_TO);
 
   await setTokenCookies(tokens);
+  await updateCartBuyerIdentity(tokens.access_token).catch(() => {});
 
   return NextResponse.redirect(`${APP_URL}${returnTo}`);
 }

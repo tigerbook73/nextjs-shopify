@@ -2,7 +2,15 @@
 
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { createCart, addCartLines, updateCartLines, removeCartLines, getCart } from "@/lib/shopify/storefront/client";
+import {
+  createCart,
+  addCartLines,
+  updateCartLines,
+  removeCartLines,
+  getCart,
+  shopifyFetch,
+} from "@/lib/shopify/storefront/client";
+import { CART_BUYER_IDENTITY_UPDATE_MUTATION } from "@/lib/shopify/storefront/mutations/cart";
 import { TAGS } from "@/lib/shopify/storefront/cache-tags";
 import type { CartActionResult, Cart } from "@/lib/shopify/storefront/types";
 
@@ -74,4 +82,19 @@ export async function getCartAction(): Promise<Cart | null> {
   const cartId = await getExistingCartId();
   if (!cartId) return null;
   return getCart(cartId);
+}
+
+export async function updateCartBuyerIdentity(customerAccessToken: string): Promise<void> {
+  try {
+    const cookieStore = await cookies();
+    const cartId = cookieStore.get(CART_COOKIE)?.value;
+    if (!cartId) return;
+    await shopifyFetch({
+      query: CART_BUYER_IDENTITY_UPDATE_MUTATION,
+      variables: { cartId, buyerIdentity: { customerAccessToken } },
+      cache: "no-store",
+    });
+  } catch {
+    // silent failure — buyer identity link is best-effort
+  }
 }

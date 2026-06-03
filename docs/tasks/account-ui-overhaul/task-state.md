@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 3 done
+Step 4 done
 
 ## Requirements Phase
 
@@ -41,7 +41,8 @@ Step 3 done
     - notes: UserDropdown (Avatar + DropdownMenu)，Header 改用 SignInButton/UserDropdown，MobileMenu 增 isLoggedIn prop；E2E 更新 Header Auth State suite 和 MobileMenu Auth State suite
   - Step 3: FR-4 Account Layout 重构 — status: done
     - notes: AccountNav (桌面侧边栏 + 移动 Tab Bar)，layout 扩为 max-w-7xl，E2E 新增 Account Layout suite；修复现有测试 strict mode（ada@example.com.first()）
-  - Step 4: FR-5 Account Overview + Query 扩展 — status: pending
+  - Step 4: FR-5 Account Overview + Query 扩展 — status: done
+    - notes: GET_CUSTOMER_QUERY 扩展 addresses，codegen 已跑，mock server GetCustomer 同步，Overview 改为三卡片布局（section aria-label），E2E 新增 Account Overview suite
   - Step 5: FR-7 Checkout Buyer Identity — status: pending
 
 ## Task Acceptance

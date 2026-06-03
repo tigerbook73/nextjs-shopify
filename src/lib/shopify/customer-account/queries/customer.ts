@@ -23,6 +23,14 @@ export const GET_CUSTOMER_QUERY: TypedDocumentNode<GetCustomerQuery, GetCustomer
           hasNextPage
         }
       }
+      addresses(first: 100) {
+        nodes {
+          id
+        }
+        pageInfo {
+          hasNextPage
+        }
+      }
     }
   }
 `);

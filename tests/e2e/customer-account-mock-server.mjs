@@ -116,7 +116,15 @@ function toAddress(input, id) {
 function graphqlResponse(operationName, variables = {}) {
   switch (operationName) {
     case "GetCustomer":
-      return { customer: state.customer };
+      return {
+        customer: {
+          ...state.customer,
+          addresses: {
+            nodes: state.addresses.map((a) => ({ id: a.id })),
+            pageInfo: { hasNextPage: false },
+          },
+        },
+      };
 
     case "GetOrders":
       return { customer: { orders: { nodes: [state.order], pageInfo: { hasNextPage: false } } } };

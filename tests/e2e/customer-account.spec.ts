@@ -2,7 +2,7 @@
  * @test-file   CustomerAccount
  * @description E2E coverage for auth redirect flow, OAuth initiation, and header auth state
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [2]
+ * @reviewed-by Shengtian Liao @ [3]
  */
 
 import { expect, test } from "@playwright/test";
@@ -322,6 +322,73 @@ test.describe("Customer Account Task Acceptance", () => {
 
     await expect(page).toHaveURL(/\/account\/orders$/);
     await expect(page.getByRole("heading", { name: "Orders" })).toBeVisible();
+  });
+});
+
+/**
+ * @test-suite  Account Overview
+ * @target      AccountPage — three-card layout, order/address counts, navigation
+ * @strategy    E2E; injects mock token, verifies card visibility and navigation
+ * @cases
+ *   - [PASS] 三张卡片（Orders / Addresses / Profile）均可见
+ *   - [PASS] Orders 卡片显示数字 "1"（mock 数据有 1 笔订单）
+ *   - [PASS] Addresses 卡片显示数字 "2"（mock 数据有 2 个地址）
+ *   - [PASS] 点击 Orders 卡片跳转至 /account/orders
+ *   - [PASS] 点击 Addresses 卡片跳转至 /account/addresses
+ *   - [PASS] 点击 Profile 卡片跳转至 /account/profile
+ */
+test.describe("Account Overview", () => {
+  test.beforeEach(async ({ request }) => {
+    await request.post(`${CUSTOMER_ACCOUNT_MOCK_URL}/reset`);
+  });
+
+  test("三张卡片（Orders / Addresses / Profile）均可见", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+
+    const overview = page.getByRole("region", { name: "Account overview" });
+    await expect(overview.getByText("Orders")).toBeVisible();
+    await expect(overview.getByText("Addresses")).toBeVisible();
+    await expect(overview.getByText("Profile")).toBeVisible();
+  });
+
+  test("Orders 卡片显示数字 1，Addresses 卡片显示数字 2", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+
+    const overview = page.getByRole("region", { name: "Account overview" });
+    await expect(overview.getByRole("link", { name: /Orders/ }).getByText("1")).toBeVisible();
+    await expect(overview.getByRole("link", { name: /Addresses/ }).getByText("2")).toBeVisible();
+  });
+
+  test("点击 Orders 卡片跳转至 /account/orders", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+    await page
+      .getByRole("region", { name: "Account overview" })
+      .getByRole("link", { name: /Orders/ })
+      .click();
+    await expect(page).toHaveURL(/\/account\/orders$/);
+  });
+
+  test("点击 Addresses 卡片跳转至 /account/addresses", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+    await page
+      .getByRole("region", { name: "Account overview" })
+      .getByRole("link", { name: /Addresses/ })
+      .click();
+    await expect(page).toHaveURL(/\/account\/addresses$/);
+  });
+
+  test("点击 Profile 卡片跳转至 /account/profile", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+    await page
+      .getByRole("region", { name: "Account overview" })
+      .getByRole("link", { name: /Profile/ })
+      .click();
+    await expect(page).toHaveURL(/\/account\/profile$/);
   });
 });
 

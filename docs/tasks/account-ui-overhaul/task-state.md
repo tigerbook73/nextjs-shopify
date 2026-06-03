@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 2 done
+Step 3 done
 
 ## Requirements Phase
 
@@ -39,7 +39,8 @@ Step 2 done
     - notes: footer.spec.ts 对齐至 3 区块（去除 Newsletter），product-badges.spec.ts 修复 strict mode violation
   - Step 2: FR-2 Header + FR-3 MobileMenu — status: done
     - notes: UserDropdown (Avatar + DropdownMenu)，Header 改用 SignInButton/UserDropdown，MobileMenu 增 isLoggedIn prop；E2E 更新 Header Auth State suite 和 MobileMenu Auth State suite
-  - Step 3: FR-4 Account Layout 重构 — status: pending
+  - Step 3: FR-4 Account Layout 重构 — status: done
+    - notes: AccountNav (桌面侧边栏 + 移动 Tab Bar)，layout 扩为 max-w-7xl，E2E 新增 Account Layout suite；修复现有测试 strict mode（ada@example.com.first()）
   - Step 4: FR-5 Account Overview + Query 扩展 — status: pending
   - Step 5: FR-7 Checkout Buyer Identity — status: pending
 

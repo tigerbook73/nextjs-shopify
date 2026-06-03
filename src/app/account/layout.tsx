@@ -1,29 +1,28 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
+import { customerAccountFetch } from "@/lib/shopify/customer-account/client";
+import { GET_CUSTOMER_QUERY } from "@/lib/shopify/customer-account/queries/customer";
+import AccountNav from "@/components/account/AccountNav";
 
-export default function AccountLayout({ children }: { children: React.ReactNode }) {
+export default async function AccountLayout({ children }: { children: React.ReactNode }) {
+  const accessToken = await getAccessToken();
+
+  let displayName = "Account";
+  let email = "";
+
+  if (accessToken) {
+    try {
+      const data = await customerAccountFetch(accessToken, GET_CUSTOMER_QUERY);
+      displayName = data.customer?.displayName ?? "Account";
+      email = data.customer?.emailAddress?.emailAddress ?? "";
+    } catch {
+      // fallback values used
+    }
+  }
+
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-8 md:flex-row">
-        <nav className="flex gap-4 border-b pb-4 text-sm font-medium md:w-48 md:flex-col md:gap-2 md:border-r md:border-b-0 md:pr-8 md:pb-0">
-          <Link href="/account" className="hover:underline">
-            Overview
-          </Link>
-          <Link href="/account/orders" className="hover:underline">
-            Orders
-          </Link>
-          <Link href="/account/profile" className="hover:underline">
-            Profile
-          </Link>
-          <Link href="/account/addresses" className="hover:underline">
-            Addresses
-          </Link>
-          <form action="/api/auth/logout" method="POST" className="mt-auto pt-4 md:pt-0">
-            <Button type="submit" variant="ghost" className="px-0 text-gray-500">
-              Sign out
-            </Button>
-          </form>
-        </nav>
+        <AccountNav displayName={displayName} email={email} />
         <div className="flex-1">{children}</div>
       </div>
     </div>

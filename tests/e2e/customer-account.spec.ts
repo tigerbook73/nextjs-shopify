@@ -2,7 +2,7 @@
  * @test-file   CustomerAccount
  * @description E2E coverage for auth redirect flow, OAuth initiation, and header auth state
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [1]
+ * @reviewed-by Shengtian Liao @ [2]
  */
 
 import { expect, test } from "@playwright/test";
@@ -246,7 +246,7 @@ test.describe("Customer Account Task Acceptance", () => {
     await page.goto("/account");
 
     await expect(page.getByRole("heading", { name: "Ada Lovelace" })).toBeVisible();
-    await expect(page.getByText("ada@example.com")).toBeVisible();
+    await expect(page.getByText("ada@example.com").first()).toBeVisible();
     await expect(page.getByRole("link", { name: "Sign in" })).not.toBeVisible();
 
     const refreshedAccessToken = (await tokenCookies(context)).find(
@@ -322,5 +322,59 @@ test.describe("Customer Account Task Acceptance", () => {
 
     await expect(page).toHaveURL(/\/account\/orders$/);
     await expect(page.getByRole("heading", { name: "Orders" })).toBeVisible();
+  });
+});
+
+/**
+ * @test-suite  Account Layout
+ * @target      AccountNav component — sidebar user info, active state, mobile tab bar
+ * @strategy    E2E; injects mock token, tests desktop and mobile viewports
+ * @cases
+ *   - [PASS] 桌面端侧边栏显示用户名和邮箱
+ *   - [PASS] 访问 /account 时 Overview 为 active
+ *   - [PASS] 访问 /account/orders 时 Orders 为 active，Overview 不为 active
+ *   - [PASS] 移动端 Tab Bar 可见，点击 Orders Tab 跳转至 /account/orders
+ */
+test.describe("Account Layout", () => {
+  test("桌面端侧边栏显示用户名和邮箱", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/account");
+
+    const nav = page.getByRole("navigation", { name: "Account navigation" });
+    await expect(nav.getByText("Ada Lovelace")).toBeVisible();
+    await expect(nav.getByText("ada@example.com")).toBeVisible();
+  });
+
+  test("访问 /account 时 Overview 导航项为 active", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/account");
+
+    const nav = page.getByRole("navigation", { name: "Account navigation" });
+    await expect(nav.getByRole("link", { name: "Overview" }).first()).toHaveAttribute("aria-current", "page");
+    await expect(nav.getByRole("link", { name: "Orders" }).first()).not.toHaveAttribute("aria-current", "page");
+  });
+
+  test("访问 /account/orders 时 Orders 为 active，Overview 不为 active", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/account/orders");
+
+    const nav = page.getByRole("navigation", { name: "Account navigation" });
+    await expect(nav.getByRole("link", { name: "Orders" }).first()).toHaveAttribute("aria-current", "page");
+    await expect(nav.getByRole("link", { name: "Overview" }).first()).not.toHaveAttribute("aria-current", "page");
+  });
+
+  test("移动端 Tab Bar 可见，点击 Orders Tab 跳转至 /account/orders", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/account");
+
+    const tabBar = page.getByRole("navigation", { name: "Account navigation" });
+    await expect(tabBar).toBeVisible();
+
+    await tabBar.getByRole("link", { name: "Orders" }).click();
+    await expect(page).toHaveURL(/\/account\/orders$/);
   });
 });

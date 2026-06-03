@@ -1,12 +1,26 @@
 import Link from "next/link";
 import CartIconButton from "@/components/layout/CartIconButton";
 import MobileMenu from "@/components/layout/MobileMenu";
+import SignInButton from "@/components/layout/SignInButton";
+import UserDropdown from "@/components/layout/UserDropdown";
 import SearchBox from "@/components/search/SearchBox";
 import { getAccessToken } from "@/lib/shopify/customer-account/tokens";
+import { customerAccountFetch } from "@/lib/shopify/customer-account/client";
+import { GET_CUSTOMER_QUERY } from "@/lib/shopify/customer-account/queries/customer";
 
 export default async function Header() {
   const accessToken = await getAccessToken();
   const isLoggedIn = !!accessToken;
+
+  let displayName = "";
+  if (accessToken) {
+    try {
+      const data = await customerAccountFetch(accessToken, GET_CUSTOMER_QUERY);
+      displayName = data.customer?.displayName ?? "";
+    } catch {
+      // fallback: Avatar shows "?"
+    }
+  }
 
   return (
     <header className="border-b border-gray-200 bg-white">
@@ -27,27 +41,10 @@ export default async function Header() {
         <div className="flex items-center gap-4">
           <SearchBox />
           <CartIconButton />
-          {isLoggedIn ? (
-            <>
-              <Link
-                href="/account/orders"
-                className="hidden text-sm font-medium text-gray-600 hover:text-gray-900 sm:block"
-              >
-                Orders
-              </Link>
-              <Link href="/account" className="hidden text-sm font-medium text-gray-600 hover:text-gray-900 sm:block">
-                Account
-              </Link>
-            </>
-          ) : (
-            <Link
-              href="/api/auth/login"
-              className="hidden text-sm font-medium text-gray-600 hover:text-gray-900 sm:block"
-            >
-              Sign in
-            </Link>
-          )}
-          <MobileMenu />
+          <div className="hidden sm:block">
+            {isLoggedIn ? <UserDropdown displayName={displayName} /> : <SignInButton />}
+          </div>
+          <MobileMenu isLoggedIn={isLoggedIn} />
         </div>
       </div>
     </header>

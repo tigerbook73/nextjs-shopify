@@ -2,11 +2,12 @@
  * @test-file   CustomerAccount
  * @description E2E coverage for auth redirect flow, OAuth initiation, and header auth state
  * @ai-generated
- * @reviewed-by xxx [1]
+ * @reviewed-by Shengtian Liao @ [1]
  */
 
 import { expect, test } from "@playwright/test";
 import { COOKIE_NAMES } from "../../src/lib/shopify/customer-account/cookie-names";
+import { waitForHydration } from "./utils";
 
 const CUSTOMER_ACCOUNT_MOCK_URL = `http://127.0.0.1:${process.env.CUSTOMER_ACCOUNT_MOCK_PORT ?? 4001}`;
 
@@ -142,15 +143,19 @@ test.describe("OAuth Flow Initiation", () => {
  * @target      Header component — auth-conditional nav link rendering
  * @strategy    E2E; fresh browser context has no token cookies → unauthenticated state
  * @cases
- *   - [PASS] shows "Sign in" link pointing to /api/auth/login when no token cookie present
+ *   - [PASS] shows "Sign in" link with return_to=/ when no token cookie present
  *   - [PASS] does not show Account or Orders nav links when no token cookie present
+ *   - [PASS] shows Avatar button and hides Sign in when token cookie present
+ *   - [PASS] clicking Avatar opens dropdown with Overview / Orders / Profile / Addresses / Sign out
+ *   - [PASS] pressing Escape closes the dropdown
  */
 test.describe("Header Auth State", () => {
-  test("无 token 时 Header 显示 Sign in 链接且 href=/api/auth/login", async ({ page }) => {
+  test("无 token 时 Header 显示 Sign in 链接且 href 含 return_to=/", async ({ page }) => {
     await page.goto("/");
+    await waitForHydration(page);
     const signIn = page.getByRole("link", { name: "Sign in" });
     await expect(signIn).toBeVisible();
-    await expect(signIn).toHaveAttribute("href", "/api/auth/login");
+    await expect(signIn).toHaveAttribute("href", "/api/auth/login?return_to=/");
   });
 
   test("无 token 时 Header 不显示 Account 和 Orders 导航链接", async ({ page }) => {
@@ -158,6 +163,40 @@ test.describe("Header Auth State", () => {
     const header = page.locator("header");
     await expect(header.getByRole("link", { name: "Account", exact: true })).not.toBeVisible();
     await expect(header.getByRole("link", { name: "Orders", exact: true })).not.toBeVisible();
+  });
+
+  test("有 token 时 Header 显示 Avatar 按钮，不显示 Sign in", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/");
+    const header = page.locator("header");
+    await expect(header.getByRole("button", { name: "Account menu" })).toBeVisible();
+    await expect(header.getByRole("link", { name: "Sign in" })).not.toBeVisible();
+  });
+
+  test("点击 Avatar 展开下拉菜单，含 Overview / Orders / Profile / Addresses / Sign out", async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Account menu" }).click();
+    await expect(page.getByRole("menuitem", { name: "Overview" })).toBeVisible();
+    await expect(page.getByRole("menuitem", { name: "Orders" })).toBeVisible();
+    await expect(page.getByRole("menuitem", { name: "Profile" })).toBeVisible();
+    await expect(page.getByRole("menuitem", { name: "Addresses" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign out" })).toBeVisible();
+  });
+
+  test("下拉菜单展开后按 Escape 关闭", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Account menu" }).click();
+    await expect(page.getByRole("menuitem", { name: "Overview" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("menuitem", { name: "Overview" })).not.toBeVisible();
   });
 });
 
@@ -273,13 +312,13 @@ test.describe("Customer Account Task Acceptance", () => {
     await expect(page.getByRole("link", { name: "ZX1001" })).toBeVisible();
   });
 
-  test("Header 已登录用户可直接跳转订单列表", async ({ page, context, baseURL }) => {
+  test("Header 已登录用户通过 Avatar 下拉菜单跳转订单列表", async ({ page, context, baseURL }) => {
     await setCustomerAccountCookies(context, baseURL);
 
     await page.goto("/");
-    const ordersLink = page.locator("header").getByRole("link", { name: "Orders" });
-    await expect(ordersLink).toBeVisible();
-    await ordersLink.click();
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Account menu" }).click();
+    await page.getByRole("menuitem", { name: "Orders" }).click();
 
     await expect(page).toHaveURL(/\/account\/orders$/);
     await expect(page.getByRole("heading", { name: "Orders" })).toBeVisible();

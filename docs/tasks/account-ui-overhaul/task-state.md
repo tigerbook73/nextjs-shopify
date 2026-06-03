@@ -16,7 +16,7 @@ implementation (in_progress)
 
 ## Current Step
 
-Step 1 done
+Step 2 done
 
 ## Requirements Phase
 
@@ -37,7 +37,8 @@ Step 1 done
 - steps:
   - Step 1: shadcn 安装 + FR-1 Footer + FR-6 SignInButton — status: done
     - notes: footer.spec.ts 对齐至 3 区块（去除 Newsletter），product-badges.spec.ts 修复 strict mode violation
-  - Step 2: FR-2 Header + FR-3 MobileMenu — status: pending
+  - Step 2: FR-2 Header + FR-3 MobileMenu — status: done
+    - notes: UserDropdown (Avatar + DropdownMenu)，Header 改用 SignInButton/UserDropdown，MobileMenu 增 isLoggedIn prop；E2E 更新 Header Auth State suite 和 MobileMenu Auth State suite
   - Step 3: FR-4 Account Layout 重构 — status: pending
   - Step 4: FR-5 Account Overview + Query 扩展 — status: pending
   - Step 5: FR-7 Checkout Buyer Identity — status: pending

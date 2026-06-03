@@ -70,18 +70,18 @@
   - 📦 **Orders**：显示最近订单数量，点击 → `/account/orders`
   - 📍 **Addresses**：显示地址数量，点击 → `/account/addresses`
   - 👤 **Profile**：固定入口，点击 → `/account/profile`
-- 数据来源复用已有的 `GET_CUSTOMER_QUERY` 返回值
+- 数据来源：扩展 `GET_CUSTOMER_QUERY`，在现有 `orders` 字段旁增加 `addresses(first: 100) { nodes { id } pageInfo { hasNextPage } }`；同步更新 `customer-account-mock-server.mjs` 的 `GetCustomer` case 以返回 addresses 数量
 
 ### FR-6 Auth：Guest 登录后回到原页面（return_to）
 
 - 提取 `SignInButton` 为独立 Client Component，使用 `usePathname()` 获取当前路径
 - 构造登录链接为 `/api/auth/login?return_to={currentPathname}`
-- 登录流程（`login/route.ts` + `callback/route.ts`）已正确实现 return_to，无需修改
+- 登录流程（`login/route.ts` + `callback/route.ts`）已正确实现 return_to，**无需修改**
 - 覆盖范围：Header 中的 Sign in 入口；MobileMenu 中的 Sign in 无需带 return_to（关闭菜单后路径不变，功能可接受）
 
 ### FR-7 Auth：Checkout 关联 Buyer Identity
 
-- 在 Storefront API mutations 中添加 `cartBuyerIdentityUpdate` mutation
+- 在 Storefront API mutations 中添加 `cartBuyerIdentityUpdate` mutation，并运行 `pnpm codegen` 生成对应类型
 - 添加 Server Action `updateCartBuyerIdentity(customerAccessToken: string)`：
   - 读取 `cartId` cookie；若无 cartId 则直接返回
   - 调用 mutation，`buyerIdentity: { customerAccessToken }`
@@ -96,12 +96,12 @@
 | 组件                        | 方案                                                   |
 | --------------------------- | ------------------------------------------------------ |
 | UserDropdown                | shadcn `DropdownMenu`（键盘导航、焦点管理、aria 内置） |
-| Avatar（initials 圆形）     | shadcn `Avatar`（fallback 逻辑内置）                   |
+| Avatar（initials 圆形）     | shadcn `Avatar`（fallback 逻辑内置，**已安装**）       |
 | Account Overview 卡片       | shadcn `Card`                                          |
 | AccountNav 侧边栏 / Tab Bar | 原生 Tailwind + Lucide（纯导航链接，无需 shadcn）      |
 | SignInButton、Layout 容器   | 原生 Tailwind                                          |
 
-需提前安装：`pnpm dlx shadcn@latest add dropdown-menu avatar card`
+需提前安装：`pnpm dlx shadcn@latest add dropdown-menu card`（`avatar` 已安装，无需重复）
 
 ## Non-Functional Requirements
 
@@ -120,41 +120,67 @@
 
 ## Acceptance Criteria
 
+> **自动化说明**：标注 ✅ 的条目使用 Playwright E2E + Customer Account mock server 实现；标注 ⚠️ 的条目技术上可行但存在脆弱性，需在实现时酌情取舍；标注 ❌ 的条目依赖真实第三方环境，只能人工验收。
+
+> **现有测试影响**：FR-2 / FR-6 完成后，`customer-account.spec.ts` 中以下两条测试需同步更新：
+>
+> - "Header Auth State" — 当前检查 `href="/api/auth/login"`，改后需改为检查 href 包含 `/api/auth/login?return_to=`
+> - "Customer Account Task Acceptance" 最后一条 — 当前通过直接 Orders 链接验证，改后需通过展开 Avatar 下拉菜单验证
+
 ### AC-1 Footer 粘底
 
 - [ ] 在 Account Overview 页面，内容少时 Footer 贴在视口底部，不浮在屏幕中间
+  - ✅ E2E：注入 mock token，访问 `/account`，断言 `footer` 的 `boundingBox().bottom` ≈ viewport height
 
 ### AC-2 Header 状态展示
 
 - [ ] 未登录时，Header 显示 Sign in 文字链接
+  - ✅ E2E：无 token，访问 `/`，断言 Sign in 可见
 - [ ] 登录后，Header 显示 initials 圆形 Avatar 按钮
+  - ✅ E2E：注入 mock token，访问 `/`，断言 Avatar 按钮可见
 - [ ] 点击 Avatar 展开下拉菜单，含 4 个导航项 + Sign out
+  - ✅ E2E：点击 Avatar，断言菜单中各选项可见
 - [ ] 点击菜单外部或按 Escape 关闭下拉菜单
+  - ✅ E2E：打开菜单后按 Escape / 点击外部，断言菜单不可见
 - [ ] 点击 Sign out 成功登出并跳回首页
+  - ✅ E2E：已有类似测试用例，复用 mock server
 
 ### AC-3 return_to
 
 - [ ] 在 `/products` 页面点击 Sign in，完成登录后回到 `/products`
+  - ✅ E2E：mock server 已支持完整 OAuth 流程，访问 `/products` → 点 Sign in → 断言回到 `/products`
 - [ ] 在 `/collections` 页面点击 Sign in，完成登录后回到 `/collections`
+  - ✅ E2E：同上
 
 ### AC-4 MobileMenu
 
-- [ ] 未登录时，Mobile 菜单显示 Sign in
+- [ ] 未登录时，Mobile 菜单显示 Sign in，不显示 Overview / Orders / Sign out
+  - ✅ E2E：设置移动端视口，无 token，打开菜单，断言菜单内容
 - [ ] 已登录时，Mobile 菜单显示 Overview / Orders / Sign out，不显示 Sign in
+  - ✅ E2E：注入 mock token，打开菜单，断言菜单内容
 
 ### AC-5 Account Layout
 
 - [ ] 桌面端：侧边栏显示用户 initials + 姓名 + email，各导航项有图标
+  - ✅ E2E：注入 mock token，设置桌面视口，断言侧边栏内容
 - [ ] 桌面端：当前页面对应的导航项有高亮 active 状态
+  - ✅ E2E：访问各 account 子路由，断言对应导航项包含 active class 或可视样式
 - [ ] 桌面端：Sign out 显示为红色带图标按钮
+  - ⚠️ E2E：可断言按钮可见，但颜色值断言依赖 CSS 计算，脆弱；建议只验证元素存在
 - [ ] 移动端：显示图标 Tab Bar，点击跳转正确，active 状态正确
+  - ✅ E2E：设置移动端视口，断言 Tab Bar 可见，点击各 Tab 验证跳转和 active 状态
 - [ ] 大屏（≥ 1280px）下账户页内容不再聚集在窄列中间
+  - ⚠️ E2E：可通过断言内容容器 `offsetWidth` 大于阈值来验证；但宽度断言与 Tailwind 类耦合，脆弱
 
 ### AC-6 Account Overview
 
 - [ ] 显示三张卡片（Orders / Addresses / Profile），各卡片点击跳转到对应子页面
+  - ✅ E2E：注入 mock token，访问 `/account`，断言三张卡片可见并验证点击跳转
 - [ ] Orders 卡片显示订单数量，Addresses 卡片显示地址数量
+  - ✅ E2E：mock server `GetCustomer` 需同步扩展以返回 addresses 数量（见 FR-5）
 
 ### AC-7 Checkout Buyer Identity
 
 - [ ] 已登录状态下添加商品到购物车后点击 Checkout，进入 Shopify checkout 页面时无需重新登录（或登录框显示已绑定账户信息）
+  - ❌ 人工验收：依赖真实 Shopify checkout 环境，E2E 无法进入第三方页面
+  - ✅ 可补充单元测试：mock `shopifyFetch`，验证 `updateCartBuyerIdentity` Server Action 在有 `cartId` cookie 时正确调用 `cartBuyerIdentityUpdate` mutation

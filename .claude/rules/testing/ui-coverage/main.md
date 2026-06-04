@@ -1,18 +1,11 @@
 ---
-globs:
-  ["src/components/**/*.tsx", "src/app/**/*.tsx", "src/context/**/*.tsx", "tests/e2e/**/*.spec.ts", "src/**/*.test.tsx"]
+paths: ["src/components/**/*.tsx", "src/app/**/*.tsx", "src/context/**/*.tsx"]
 ---
 
 # UI 变更测试覆盖规范
 
 > 约束对象：UI 变更行为。回答"改了 UI 之后要做什么"。
 > 本规则补充测试要求和强制检查义务。
-
----
-
-## 适用范围
-
-触发文件为 UI 源码（`globs` 中声明的路径）。测试文件路径以项目的 `AGENTS.md` 或同等项目规范文档为准。
 
 ---
 

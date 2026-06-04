@@ -1,6 +1,10 @@
+---
+paths: ["tests/e2e/**/*.spec.ts", "tests/e2e/**/*.ts"]
+---
+
 # Playwright / shadcn/ui 实现细节
 
-> 本文档是 `playwright.md` 的 shadcn/ui 补充，说明 Radix UI 底层行为对测试写法的影响。
+> 本文档是 `playwright/main.md` 的 shadcn/ui 补充，说明 Radix UI 底层行为对 E2E 测试写法的影响。
 
 ---
 
@@ -20,7 +24,7 @@ await page.getByRole("option", { name: "Active" }).click();
 
 ## Dialog / Sheet 作用域
 
-`DialogContent` 上的 `data-testid`（由 UI 代码设置，见 `ui/shadcn.md`）是测试作用域的边界：
+`DialogContent` 上的 `data-testid`是测试作用域的边界：
 
 ```typescript
 const dialog = page.getByTestId("confirm-dialog");

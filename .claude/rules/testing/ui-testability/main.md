@@ -1,11 +1,10 @@
 ---
-globs: ["src/components/**/*.tsx", "src/app/**/*.tsx", "src/context/**/*.tsx"]
+paths: ["src/components/**/*.tsx", "src/app/**/*.tsx", "src/context/**/*.tsx"]
 ---
 
 # UI 可测试性规范
 
-> 约束对象：UI 源码。测试写法见 `playwright.md`。
-> 库特定实现细节见文末「库特定实现」章节。
+> 约束对象：UI 源码。
 
 ---
 
@@ -33,7 +32,7 @@ UI 结构的设计必须面向**可测试性**。所有 UI 代码必须为测试
 
 label 与 input 之间必须存在无障碍关联（aria 或 HTML5 标准关联）。
 
-`page.getByLabel()` 和 `getByLabelText()` 均依赖此关联。具体实现方式由使用的 UI 库决定，见文末「库特定实现」章节。
+`page.getByLabel()` 和 `getByLabelText()` 均依赖此关联。具体实现方式由使用的 UI 库决定。
 
 ---
 
@@ -99,15 +98,6 @@ function Button({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonEle
   return <button {...props}>{children}</button>;
 }
 ```
-
----
-
-## 库特定实现
-
-根据项目实际使用的 UI 库，读取对应的实现说明：
-
-- `shadcn/ui` → 读取 `.claude/rules/ui/shadcn.md`
-- 未声明 → 忽略，仅遵循本文档原则
 
 ---
 

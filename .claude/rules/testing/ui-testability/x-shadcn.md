@@ -1,7 +1,10 @@
+---
+paths: ["src/components/**/*.tsx", "src/app/**/*.tsx", "src/context/**/*.tsx"]
+---
+
 # UI 可测试性 / shadcn/ui 实现细节
 
-> 本文档是 `ui-testability.md` 的 shadcn/ui 补充，仅说明 UI 代码写法。
-> Playwright 测试写法中的 shadcn 特定行为见 `playwright/shadcn.md`。
+> 本文档是 `ui-testability/main.md` 的 shadcn/ui 补充，仅说明 UI 源码写法。
 
 ---
 

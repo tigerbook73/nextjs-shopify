@@ -1,7 +1,6 @@
 # CLAUDE.md 生成要求
 
 本文件定义 CLAUDE.md / AGENTS.md 的内容规范，供 `/init` 命令或人工撰写时参考。
-分为两部分：**一、通用内容要求**（人工维护）和 **二、工具要求**（工具自动写入）。
 
 ---
 
@@ -29,29 +28,3 @@
 - **文件生成规则**：哪些文件由工具自动生成，禁止手动编辑
 
 ---
-
-## 二、工具要求（工具维护）
-
-每节以 `<!-- tool: <id> -->` 和 `<!-- /tool: <id> -->` 标记边界，供工具定位和更新。
-**人工编辑时请勿修改注释标记的格式和 id。允许整段删除**
-
-<!-- tool: ui-testability -->
-
-- `## 技术栈` 中必须标注 UI 库名称（如 `shadcn/ui`）。
-- `## 测试规范 > ### 测试文件路径` 中必须列出组件测试文件路径（如 `src/components/**/*.test.tsx`）。
-
-<!-- /tool: ui-testability -->
-
-<!-- tool: ui-coverage -->
-
-- `## 技术栈` 中必须标注组件测试框架名称（如 `Vitest + Testing Library`）。
-- `## 测试规范 > ### 测试文件路径` 中必须列出 E2E 测试路径（如 `tests/e2e/**/*.spec.ts`）。
-- `## 测试规范 > ### 测试文件路径` 中必须列出组件测试路径（如 `src/components/**/*.test.tsx`）。
-
-<!-- /tool: ui-coverage -->
-
-<!-- tool: playwright -->
-
-- `## 技术栈` 中必须标注 UI 库名称（如 `shadcn/ui`）。
-
-<!-- /tool: playwright -->

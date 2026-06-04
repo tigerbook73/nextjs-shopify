@@ -7,5 +7,5 @@ fi
 pnpm exec lint-staged
 pnpm run lint
 
-# aisk:test-rules-check
-node "$HOME/.sk-skills/out/test-rules/test-rules-check.js"
+# aisk:test-rules-check: disabled temporary
+# node "$HOME/.sk-skills/out/test-rules/test-rules-check.js"

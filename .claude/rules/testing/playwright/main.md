@@ -1,11 +1,10 @@
 ---
-globs: ["tests/e2e/**/*.spec.ts", "tests/e2e/**/*.ts"]
+paths: ["tests/e2e/**/*.spec.ts", "tests/e2e/**/*.ts"]
 ---
 
 # Playwright E2E 测试规范
 
 > 约束对象：E2E 测试代码。
-> 库特定行为见文末「库特定行为」章节。
 
 ---
 
@@ -26,15 +25,6 @@ globs: ["tests/e2e/**/*.spec.ts", "tests/e2e/**/*.ts"]
   ❌ page.locator('.flex .items-center')   样式选择器
   ❌ page.locator('//div/div/button')      绝对 DOM 路径
 ```
-
----
-
-## 库特定行为
-
-根据项目使用的 UI 库，读取对应的测试写法说明：
-
-- `shadcn/ui` → 读取 `.claude/rules/playwright/shadcn.md`
-- 未声明 → 忽略，仅遵循本文档原则
 
 ---
 

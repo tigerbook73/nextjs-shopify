@@ -10,10 +10,10 @@ type FormAction = (formData: FormData) => void;
 
 export default function NewAddressPage() {
   return (
-    <main>
+    <div>
       <h1 className="mb-6 text-2xl font-bold">Add address</h1>
       <AddressForm action={createAddress as unknown as FormAction} />
-    </main>
+    </div>
   );
 }
 

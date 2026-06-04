@@ -1,6 +1,6 @@
 export default function CartLoading() {
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8 h-8 w-48 animate-pulse rounded bg-gray-200" />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
@@ -16,6 +16,6 @@ export default function CartLoading() {
         </div>
         <div className="h-48 animate-pulse rounded-lg bg-gray-200" />
       </div>
-    </main>
+    </div>
   );
 }

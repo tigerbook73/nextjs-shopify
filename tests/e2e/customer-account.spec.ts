@@ -2,11 +2,12 @@
  * @test-file   CustomerAccount
  * @description E2E coverage for auth redirect flow, OAuth initiation, and header auth state
  * @ai-generated
- * @reviewed-by xxx [1]
+ * @reviewed-by Shengtian Liao @ [3]
  */
 
 import { expect, test } from "@playwright/test";
 import { COOKIE_NAMES } from "../../src/lib/shopify/customer-account/cookie-names";
+import { waitForHydration } from "./utils";
 
 const CUSTOMER_ACCOUNT_MOCK_URL = `http://127.0.0.1:${process.env.CUSTOMER_ACCOUNT_MOCK_PORT ?? 4001}`;
 
@@ -142,15 +143,19 @@ test.describe("OAuth Flow Initiation", () => {
  * @target      Header component — auth-conditional nav link rendering
  * @strategy    E2E; fresh browser context has no token cookies → unauthenticated state
  * @cases
- *   - [PASS] shows "Sign in" link pointing to /api/auth/login when no token cookie present
+ *   - [PASS] shows "Sign in" link with return_to=/ when no token cookie present
  *   - [PASS] does not show Account or Orders nav links when no token cookie present
+ *   - [PASS] shows Avatar button and hides Sign in when token cookie present
+ *   - [PASS] clicking Avatar opens dropdown with Overview / Orders / Profile / Addresses / Sign out
+ *   - [PASS] pressing Escape closes the dropdown
  */
 test.describe("Header Auth State", () => {
-  test("无 token 时 Header 显示 Sign in 链接且 href=/api/auth/login", async ({ page }) => {
+  test("无 token 时 Header 显示 Sign in 链接且 href 含 return_to=/", async ({ page }) => {
     await page.goto("/");
+    await waitForHydration(page);
     const signIn = page.getByRole("link", { name: "Sign in" });
     await expect(signIn).toBeVisible();
-    await expect(signIn).toHaveAttribute("href", "/api/auth/login");
+    await expect(signIn).toHaveAttribute("href", "/api/auth/login?return_to=/");
   });
 
   test("无 token 时 Header 不显示 Account 和 Orders 导航链接", async ({ page }) => {
@@ -158,6 +163,40 @@ test.describe("Header Auth State", () => {
     const header = page.locator("header");
     await expect(header.getByRole("link", { name: "Account", exact: true })).not.toBeVisible();
     await expect(header.getByRole("link", { name: "Orders", exact: true })).not.toBeVisible();
+  });
+
+  test("有 token 时 Header 显示 Avatar 按钮，不显示 Sign in", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/");
+    const header = page.locator("header");
+    await expect(header.getByRole("button", { name: "Account menu" })).toBeVisible();
+    await expect(header.getByRole("link", { name: "Sign in" })).not.toBeVisible();
+  });
+
+  test("点击 Avatar 展开下拉菜单，含 Overview / Orders / Profile / Addresses / Sign out", async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Account menu" }).click();
+    await expect(page.getByRole("menuitem", { name: "Overview" })).toBeVisible();
+    await expect(page.getByRole("menuitem", { name: "Orders" })).toBeVisible();
+    await expect(page.getByRole("menuitem", { name: "Profile" })).toBeVisible();
+    await expect(page.getByRole("menuitem", { name: "Addresses" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Sign out" })).toBeVisible();
+  });
+
+  test("下拉菜单展开后按 Escape 关闭", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Account menu" }).click();
+    await expect(page.getByRole("menuitem", { name: "Overview" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("menuitem", { name: "Overview" })).not.toBeVisible();
   });
 });
 
@@ -207,7 +246,7 @@ test.describe("Customer Account Task Acceptance", () => {
     await page.goto("/account");
 
     await expect(page.getByRole("heading", { name: "Ada Lovelace" })).toBeVisible();
-    await expect(page.getByText("ada@example.com")).toBeVisible();
+    await expect(page.getByTestId("account-profile-hero").getByText("ada@example.com")).toBeVisible();
     await expect(page.getByRole("link", { name: "Sign in" })).not.toBeVisible();
 
     const refreshedAccessToken = (await tokenCookies(context)).find(
@@ -273,15 +312,136 @@ test.describe("Customer Account Task Acceptance", () => {
     await expect(page.getByRole("link", { name: "ZX1001" })).toBeVisible();
   });
 
-  test("Header 已登录用户可直接跳转订单列表", async ({ page, context, baseURL }) => {
+  test("Header 已登录用户通过 Avatar 下拉菜单跳转订单列表", async ({ page, context, baseURL }) => {
     await setCustomerAccountCookies(context, baseURL);
 
     await page.goto("/");
-    const ordersLink = page.locator("header").getByRole("link", { name: "Orders" });
-    await expect(ordersLink).toBeVisible();
-    await ordersLink.click();
+    await waitForHydration(page);
+    await page.getByRole("button", { name: "Account menu" }).click();
+    await page.getByRole("menuitem", { name: "Orders" }).click();
 
     await expect(page).toHaveURL(/\/account\/orders$/);
     await expect(page.getByRole("heading", { name: "Orders" })).toBeVisible();
+  });
+});
+
+/**
+ * @test-suite  Account Overview
+ * @target      AccountPage — three-card layout, order/address counts, navigation
+ * @strategy    E2E; injects mock token, verifies card visibility and navigation
+ * @cases
+ *   - [PASS] 三张卡片（Orders / Addresses / Profile）均可见
+ *   - [PASS] Orders 卡片显示数字 "1"（mock 数据有 1 笔订单）
+ *   - [PASS] Addresses 卡片显示数字 "2"（mock 数据有 2 个地址）
+ *   - [PASS] 点击 Orders 卡片跳转至 /account/orders
+ *   - [PASS] 点击 Addresses 卡片跳转至 /account/addresses
+ *   - [PASS] 点击 Profile 卡片跳转至 /account/profile
+ */
+test.describe("Account Overview", () => {
+  test.beforeEach(async ({ request }) => {
+    await request.post(`${CUSTOMER_ACCOUNT_MOCK_URL}/reset`);
+  });
+
+  test("三张卡片（Orders / Addresses / Profile）均可见", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+
+    const overview = page.getByRole("region", { name: "Account overview" });
+    await expect(overview.getByText("Orders")).toBeVisible();
+    await expect(overview.getByText("Addresses")).toBeVisible();
+    await expect(overview.getByText("Profile")).toBeVisible();
+  });
+
+  test("Orders 卡片显示数字 1，Addresses 卡片显示数字 2", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+
+    const overview = page.getByRole("region", { name: "Account overview" });
+    await expect(overview.getByRole("link", { name: /Orders/ }).getByText("1")).toBeVisible();
+    await expect(overview.getByRole("link", { name: /Addresses/ }).getByText("2")).toBeVisible();
+  });
+
+  test("点击 Orders 卡片跳转至 /account/orders", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+    await page
+      .getByRole("region", { name: "Account overview" })
+      .getByRole("link", { name: /Orders/ })
+      .click();
+    await expect(page).toHaveURL(/\/account\/orders$/);
+  });
+
+  test("点击 Addresses 卡片跳转至 /account/addresses", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+    await page
+      .getByRole("region", { name: "Account overview" })
+      .getByRole("link", { name: /Addresses/ })
+      .click();
+    await expect(page).toHaveURL(/\/account\/addresses$/);
+  });
+
+  test("点击 Profile 卡片跳转至 /account/profile", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.goto("/account");
+    await page
+      .getByRole("region", { name: "Account overview" })
+      .getByRole("link", { name: /Profile/ })
+      .click();
+    await expect(page).toHaveURL(/\/account\/profile$/);
+  });
+});
+
+/**
+ * @test-suite  Account Layout
+ * @target      AccountNav component — sidebar user info, active state, mobile tab bar
+ * @strategy    E2E; injects mock token, tests desktop and mobile viewports
+ * @cases
+ *   - [PASS] 桌面端侧边栏显示用户名和邮箱
+ *   - [PASS] 访问 /account 时 Overview 为 active
+ *   - [PASS] 访问 /account/orders 时 Orders 为 active，Overview 不为 active
+ *   - [PASS] 移动端 Tab Bar 可见，点击 Orders Tab 跳转至 /account/orders
+ */
+test.describe("Account Layout", () => {
+  test("桌面端侧边栏显示用户名和邮箱", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/account");
+
+    const nav = page.getByRole("navigation", { name: "Account navigation" });
+    await expect(nav.getByText("Ada Lovelace")).toBeVisible();
+    await expect(nav.getByText("ada@example.com")).toBeVisible();
+  });
+
+  test("访问 /account 时 Overview 导航项为 active", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/account");
+
+    const desktopNav = page.getByTestId("account-nav-desktop");
+    await expect(desktopNav.getByRole("link", { name: "Overview" })).toHaveAttribute("aria-current", "page");
+    await expect(desktopNav.getByRole("link", { name: "Orders" })).not.toHaveAttribute("aria-current", "page");
+  });
+
+  test("访问 /account/orders 时 Orders 为 active，Overview 不为 active", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/account/orders");
+
+    const desktopNav = page.getByTestId("account-nav-desktop");
+    await expect(desktopNav.getByRole("link", { name: "Orders" })).toHaveAttribute("aria-current", "page");
+    await expect(desktopNav.getByRole("link", { name: "Overview" })).not.toHaveAttribute("aria-current", "page");
+  });
+
+  test("移动端 Tab Bar 可见，点击 Orders Tab 跳转至 /account/orders", async ({ page, context, baseURL }) => {
+    await setCustomerAccountCookies(context, baseURL);
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/account");
+
+    const tabBar = page.getByRole("navigation", { name: "Account navigation" });
+    await expect(tabBar).toBeVisible();
+
+    await tabBar.getByRole("link", { name: "Orders" }).click();
+    await expect(page).toHaveURL(/\/account\/orders$/);
   });
 });

@@ -11,7 +11,7 @@ export default async function CollectionsPage() {
   const collections = await getCollections(6);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <h1 className="mb-8 text-2xl font-bold text-gray-900">Collections</h1>
       {collections.length === 0 ? (
         <p className="text-gray-500">No collections found.</p>
@@ -22,6 +22,6 @@ export default async function CollectionsPage() {
           ))}
         </div>
       )}
-    </main>
+    </div>
   );
 }

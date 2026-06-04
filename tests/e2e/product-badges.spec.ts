@@ -2,7 +2,7 @@
  * @test-file   ProductBadges
  * @description E2E smoke test verifying /products page renders without JavaScript errors
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by Shengtian Liao @ [2]
  */
 import { expect, test } from "@playwright/test";
 
@@ -20,7 +20,7 @@ test.describe("Product Badges", () => {
 
     await page.goto("/products");
 
-    await expect(page.locator("main")).toBeVisible();
+    await expect(page.getByRole("main")).toBeVisible();
     expect(errors).toHaveLength(0);
   });
 });

@@ -2,7 +2,7 @@
  * @test-file   CartDrawer
  * @description E2E tests for cart drawer open/close, add-to-cart flow, and cart count sync
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [1]
+ * @reviewed-by Shengtian Liao @ [2]
  */
 import { expect, test, type Page } from "@playwright/test";
 import { waitForHydration } from "./utils";
@@ -79,7 +79,6 @@ test.describe("Cart Drawer", () => {
 
     await page.goto("/cart");
 
-    // 使用 heading 避免 strict mode violation（两个 <main> 匹配）
     await expect(page.getByRole("heading", { name: "Shopping Cart" })).toBeVisible();
     expect(errors).toHaveLength(0);
   });

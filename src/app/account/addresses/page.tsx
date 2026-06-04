@@ -26,7 +26,7 @@ export default async function AddressesPage() {
   }
 
   return (
-    <main>
+    <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Addresses</h1>
         <Link
@@ -91,6 +91,6 @@ export default async function AddressesPage() {
           })}
         </ul>
       )}
-    </main>
+    </div>
   );
 }

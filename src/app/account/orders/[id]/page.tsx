@@ -28,7 +28,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const trackingLinks = order.fulfillments.nodes.flatMap((f) => f.trackingInformation.filter((t) => t.url || t.number));
 
   return (
-    <main>
+    <div>
       <h1 className="mb-1 text-2xl font-bold">Order {order.name}</h1>
       <p className="mb-6 text-sm text-gray-500">
         {new Date(order.processedAt).toLocaleDateString("en-US", { dateStyle: "medium" })} · {order.financialStatus} ·{" "}
@@ -134,6 +134,6 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           </ul>
         </section>
       )}
-    </main>
+    </div>
   );
 }

@@ -118,6 +118,14 @@ export type CartLinesRemoveMutation = { cartLinesRemove?: StorefrontTypes.Maybe<
         )> }, cost: { subtotalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'>, totalAmount: Pick<StorefrontTypes.MoneyV2, 'amount' | 'currencyCode'> } }
     )>, userErrors: Array<Pick<StorefrontTypes.CartUserError, 'field' | 'message'>> }> };
 
+export type CartBuyerIdentityUpdateMutationVariables = StorefrontTypes.Exact<{
+  cartId: StorefrontTypes.Scalars['ID']['input'];
+  buyerIdentity: StorefrontTypes.CartBuyerIdentityInput;
+}>;
+
+
+export type CartBuyerIdentityUpdateMutation = { cartBuyerIdentityUpdate?: StorefrontTypes.Maybe<{ cart?: StorefrontTypes.Maybe<Pick<StorefrontTypes.Cart, 'id'>>, userErrors: Array<Pick<StorefrontTypes.CartUserError, 'field' | 'message'>> }> };
+
 export type CartDetailFragment = (
   Pick<StorefrontTypes.Cart, 'id' | 'checkoutUrl' | 'totalQuantity'>
   & { lines: { nodes: Array<(
@@ -279,6 +287,7 @@ interface GeneratedMutationTypes {
   "\n    mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {\n      cartLinesAdd(cartId: $cartId, lines: $lines) {\n        cart {\n          ...CartDetail\n        }\n        userErrors {\n          field\n          message\n        }\n      }\n    }\n    \n  ": {return: CartLinesAddMutation, variables: CartLinesAddMutationVariables},
   "\n    mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {\n      cartLinesUpdate(cartId: $cartId, lines: $lines) {\n        cart {\n          ...CartDetail\n        }\n        userErrors {\n          field\n          message\n        }\n      }\n    }\n    \n  ": {return: CartLinesUpdateMutation, variables: CartLinesUpdateMutationVariables},
   "\n    mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {\n      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {\n        cart {\n          ...CartDetail\n        }\n        userErrors {\n          field\n          message\n        }\n      }\n    }\n    \n  ": {return: CartLinesRemoveMutation, variables: CartLinesRemoveMutationVariables},
+  "\n  mutation CartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {\n    cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {\n      cart {\n        id\n      }\n      userErrors {\n        field\n        message\n      }\n    }\n  }\n": {return: CartBuyerIdentityUpdateMutation, variables: CartBuyerIdentityUpdateMutationVariables},
 }
 declare module '@shopify/storefront-api-client' {
   type InputMaybe<T> = StorefrontTypes.InputMaybe<T>;

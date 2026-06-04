@@ -5,14 +5,17 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
-const NAV_LINKS = [
+interface MobileMenuProps {
+  isLoggedIn: boolean;
+}
+
+const BASE_NAV_LINKS = [
   { href: "/products", label: "Products" },
   { href: "/collections", label: "Collections" },
   { href: "/search", label: "Search" },
-  { href: "/account", label: "Account" },
 ];
 
-export default function MobileMenu() {
+export default function MobileMenu({ isLoggedIn }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,7 +33,7 @@ export default function MobileMenu() {
             </Link>
           </div>
           <nav className="mt-10 flex flex-col gap-6">
-            {NAV_LINKS.map(({ href, label }) => (
+            {BASE_NAV_LINKS.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
@@ -40,6 +43,37 @@ export default function MobileMenu() {
                 {label}
               </Link>
             ))}
+            {isLoggedIn ? (
+              <>
+                <Link
+                  href="/account"
+                  onClick={() => setIsOpen(false)}
+                  className="text-xl font-medium text-gray-900 hover:text-gray-600"
+                >
+                  Overview
+                </Link>
+                <Link
+                  href="/account/orders"
+                  onClick={() => setIsOpen(false)}
+                  className="text-xl font-medium text-gray-900 hover:text-gray-600"
+                >
+                  Orders
+                </Link>
+                <form action="/api/auth/logout" method="POST">
+                  <button type="submit" className="text-xl font-medium text-gray-900 hover:text-gray-600">
+                    Sign out
+                  </button>
+                </form>
+              </>
+            ) : (
+              <Link
+                href="/api/auth/login"
+                onClick={() => setIsOpen(false)}
+                className="text-xl font-medium text-gray-900 hover:text-gray-600"
+              >
+                Sign in
+              </Link>
+            )}
           </nav>
         </SheetContent>
       </Sheet>

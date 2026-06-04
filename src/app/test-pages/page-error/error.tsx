@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function ErrorBoundaryTestError({ reset }: { error: Error; reset: () => void }) {
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-73px)] max-w-3xl flex-col justify-center px-6 py-16">
+    <div className="mx-auto flex min-h-[calc(100vh-73px)] max-w-3xl flex-col justify-center px-6 py-16">
       <p className="text-sm font-medium text-amber-600">产品完整性测试页面</p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-950">错误边界运行正常</h1>
       <p className="mt-4 max-w-xl text-sm leading-6 text-gray-500">
@@ -26,6 +26,6 @@ export default function ErrorBoundaryTestError({ reset }: { error: Error; reset:
           返回首页
         </Link>
       </div>
-    </main>
+    </div>
   );
 }

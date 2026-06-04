@@ -64,7 +64,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
   if (available) paginationParams.available = available;
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8">
         <nav className="mb-2 text-sm text-gray-500">
           <Link href="/collections" className="hover:underline">
@@ -104,6 +104,6 @@ export default async function CollectionPage({ params, searchParams }: Props) {
       )}
 
       <PaginationBar pageInfo={products.pageInfo} baseUrl={`/collections/${handle}`} searchParams={paginationParams} />
-    </main>
+    </div>
   );
 }

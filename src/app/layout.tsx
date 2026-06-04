@@ -47,7 +47,7 @@ export default async function RootLayout({
         <CartProvider initialCart={initialCart}>
           <AnnouncementBar dismissed={annDismissed} />
           <Header />
-          {children}
+          <main className="flex-1">{children}</main>
           <Footer />
           <CartDrawer />
           <Toaster position="top-right" />

@@ -1,6 +1,6 @@
 export default function ProductsLoading() {
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8 h-8 w-40 animate-pulse rounded bg-gray-200" />
       <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:grid-cols-4">
         {Array.from({ length: 8 }).map((_, i) => (
@@ -11,6 +11,6 @@ export default function ProductsLoading() {
           </div>
         ))}
       </div>
-    </main>
+    </div>
   );
 }

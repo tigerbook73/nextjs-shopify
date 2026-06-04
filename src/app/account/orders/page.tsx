@@ -22,7 +22,7 @@ export default async function OrdersPage() {
   }
 
   return (
-    <main>
+    <div>
       <h1 className="mb-6 text-2xl font-bold">Orders</h1>
       {orders.length === 0 ? (
         <p className="text-sm text-gray-500">No orders yet.</p>
@@ -69,6 +69,6 @@ export default async function OrdersPage() {
           ))}
         </ul>
       )}
-    </main>
+    </div>
   );
 }

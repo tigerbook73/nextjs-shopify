@@ -9,6 +9,8 @@ import type {
   CartLinesUpdateMutationVariables,
   CartLinesRemoveMutation,
   CartLinesRemoveMutationVariables,
+  CartBuyerIdentityUpdateMutation,
+  CartBuyerIdentityUpdateMutationVariables,
 } from "@/types/generated/storefront/storefront.generated";
 import { CART_DETAIL_FRAGMENT } from "../queries/cart";
 
@@ -77,3 +79,20 @@ export const CART_LINES_REMOVE_MUTATION: TypedDocumentNode<CartLinesRemoveMutati
     }
     ${CART_DETAIL_FRAGMENT}
   `);
+
+export const CART_BUYER_IDENTITY_UPDATE_MUTATION: TypedDocumentNode<
+  CartBuyerIdentityUpdateMutation,
+  CartBuyerIdentityUpdateMutationVariables
+> = parse(/* GraphQL */ `
+  mutation CartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {
+    cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {
+      cart {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`);

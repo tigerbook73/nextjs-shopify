@@ -246,7 +246,7 @@ test.describe("Customer Account Task Acceptance", () => {
     await page.goto("/account");
 
     await expect(page.getByRole("heading", { name: "Ada Lovelace" })).toBeVisible();
-    await expect(page.getByText("ada@example.com").first()).toBeVisible();
+    await expect(page.getByTestId("account-profile-hero").getByText("ada@example.com")).toBeVisible();
     await expect(page.getByRole("link", { name: "Sign in" })).not.toBeVisible();
 
     const refreshedAccessToken = (await tokenCookies(context)).find(
@@ -418,9 +418,9 @@ test.describe("Account Layout", () => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/account");
 
-    const nav = page.getByRole("navigation", { name: "Account navigation" });
-    await expect(nav.getByRole("link", { name: "Overview" }).first()).toHaveAttribute("aria-current", "page");
-    await expect(nav.getByRole("link", { name: "Orders" }).first()).not.toHaveAttribute("aria-current", "page");
+    const desktopNav = page.getByTestId("account-nav-desktop");
+    await expect(desktopNav.getByRole("link", { name: "Overview" })).toHaveAttribute("aria-current", "page");
+    await expect(desktopNav.getByRole("link", { name: "Orders" })).not.toHaveAttribute("aria-current", "page");
   });
 
   test("访问 /account/orders 时 Orders 为 active，Overview 不为 active", async ({ page, context, baseURL }) => {
@@ -428,9 +428,9 @@ test.describe("Account Layout", () => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/account/orders");
 
-    const nav = page.getByRole("navigation", { name: "Account navigation" });
-    await expect(nav.getByRole("link", { name: "Orders" }).first()).toHaveAttribute("aria-current", "page");
-    await expect(nav.getByRole("link", { name: "Overview" }).first()).not.toHaveAttribute("aria-current", "page");
+    const desktopNav = page.getByTestId("account-nav-desktop");
+    await expect(desktopNav.getByRole("link", { name: "Orders" })).toHaveAttribute("aria-current", "page");
+    await expect(desktopNav.getByRole("link", { name: "Overview" })).not.toHaveAttribute("aria-current", "page");
   });
 
   test("移动端 Tab Bar 可见，点击 Orders Tab 跳转至 /account/orders", async ({ page, context, baseURL }) => {

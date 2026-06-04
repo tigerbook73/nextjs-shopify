@@ -43,7 +43,7 @@ export default async function AccountPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center gap-4">
+      <div data-testid="account-profile-hero" className="mb-8 flex items-center gap-4">
         <CustomerAvatar displayName={customer.displayName} />
         <div>
           <h1 className="text-2xl font-bold">{customer.displayName}</h1>

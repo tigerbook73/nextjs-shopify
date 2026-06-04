@@ -34,7 +34,7 @@ export default function AccountNav({ displayName, email }: AccountNavProps) {
   return (
     <nav aria-label="Account navigation">
       {/* Desktop sidebar */}
-      <div className="hidden md:flex md:w-64 md:flex-shrink-0 md:flex-col md:gap-1">
+      <div data-testid="account-nav-desktop" className="hidden md:flex md:w-64 md:flex-shrink-0 md:flex-col md:gap-1">
         <div className="mb-4 flex items-center gap-3">
           <Avatar className="h-10 w-10">
             <AvatarFallback>{getInitials(displayName)}</AvatarFallback>
@@ -77,7 +77,7 @@ export default function AccountNav({ displayName, email }: AccountNavProps) {
       </div>
 
       {/* Mobile tab bar */}
-      <div className="flex border-b md:hidden">
+      <div data-testid="account-nav-mobile" className="flex border-b md:hidden">
         {NAV_ITEMS.map(({ href, label, Icon, exact }) => {
           const active = isActive(href, exact);
           return (

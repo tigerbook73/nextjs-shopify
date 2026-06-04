@@ -25,7 +25,7 @@ export default function MobileMenu({ isLoggedIn }: MobileMenuProps) {
       </button>
 
       <Sheet open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
-        <SheetContent side="left" className="w-full px-6 py-6 sm:max-w-full">
+        <SheetContent data-testid="mobile-menu-drawer" side="left" className="w-full px-6 py-6 sm:max-w-full">
           <SheetTitle className="sr-only">Menu</SheetTitle>
           <div className="flex items-center pr-10">
             <Link href="/" className="text-lg font-bold text-gray-900" onClick={() => setIsOpen(false)}>

@@ -48,7 +48,7 @@ export default async function AddressesPage() {
             const setDefaultWithId = setDefaultAddress.bind(null, address.id) as unknown as FormAction;
 
             return (
-              <li key={address.id} className="rounded-lg border p-4">
+              <li key={address.id} data-testid={`address-item-${encodedId}`} className="rounded-lg border p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="text-sm">
                     {isDefault && (
@@ -69,18 +69,22 @@ export default async function AddressesPage() {
                     {address.phone && <p className="text-gray-600">{address.phone}</p>}
                   </div>
                   <div className="flex shrink-0 flex-col gap-2 text-sm">
-                    <Link href={`/account/addresses/${encodedId}/edit`} className="hover:underline">
+                    <Link
+                      href={`/account/addresses/${encodedId}/edit`}
+                      data-testid="address-edit-link"
+                      className="hover:underline"
+                    >
                       Edit
                     </Link>
                     {!isDefault && (
                       <form action={setDefaultWithId}>
-                        <button type="submit" className="hover:underline">
+                        <button type="submit" data-testid="address-set-default-btn" className="hover:underline">
                           Set as default
                         </button>
                       </form>
                     )}
                     <form action={deleteWithId}>
-                      <button type="submit" className="text-red-600 hover:underline">
+                      <button type="submit" data-testid="address-delete-btn" className="text-red-600 hover:underline">
                         Delete
                       </button>
                     </form>

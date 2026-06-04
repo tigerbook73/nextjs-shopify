@@ -10,7 +10,7 @@ export default function CartSummary({ cart }: CartSummaryProps) {
   const { cost, checkoutUrl } = cart;
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-gray-50 p-6">
+    <div data-testid="cart-summary" className="rounded-lg border border-gray-200 bg-gray-50 p-6">
       <h2 className="mb-4 text-lg font-semibold text-gray-900">Order Summary</h2>
 
       <div className="space-y-2 text-sm">

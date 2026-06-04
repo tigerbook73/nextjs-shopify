@@ -33,7 +33,7 @@ export default function VariantSelector({ options, variants }: VariantSelectorPr
             // value is always string here; Base UI types it as string | null but SelectItem values are always non-null
             onValueChange={(value) => setSelected((prev) => ({ ...prev, [option.name]: value! }))}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger data-testid={`variant-select-${option.name}`} className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

@@ -29,7 +29,11 @@ export default async function OrdersPage() {
       ) : (
         <ul className="space-y-4">
           {orders.map((order) => (
-            <li key={order.id} className="rounded-lg border p-4">
+            <li
+              key={order.id}
+              data-testid={`order-item-${order.name.replace(/^#/, "")}`}
+              className="rounded-lg border p-4"
+            >
               <div className="flex items-start justify-between">
                 <div>
                   <Link

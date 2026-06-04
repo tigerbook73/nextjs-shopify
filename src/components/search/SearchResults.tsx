@@ -21,7 +21,7 @@ export default async function SearchResults({ query, after, before }: Props) {
   }
 
   return (
-    <div>
+    <div data-testid="search-results">
       <p className="mb-6 text-sm text-gray-500">
         {result.totalCount} result{result.totalCount !== 1 ? "s" : ""} for{" "}
         <span className="font-medium text-gray-900">&ldquo;{query}&rdquo;</span>

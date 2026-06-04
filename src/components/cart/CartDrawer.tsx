@@ -18,7 +18,12 @@ export default function CartDrawer() {
         if (!open) closeCart();
       }}
     >
-      <SheetContent side="right" showCloseButton={false} className="flex w-80 flex-col gap-0 p-0 sm:max-w-80">
+      <SheetContent
+        data-testid="cart-drawer"
+        side="right"
+        showCloseButton={false}
+        className="flex w-80 flex-col gap-0 p-0 sm:max-w-80"
+      >
         <SheetHeader className="flex-row items-center justify-between border-b border-gray-200 px-4 py-4">
           <SheetTitle>Your Cart</SheetTitle>
           <SheetClose aria-label="Close cart" className="text-gray-400 hover:text-gray-600">

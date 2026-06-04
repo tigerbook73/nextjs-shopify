@@ -36,7 +36,7 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
   const updateWithId = updateAddress.bind(null, addressId) as unknown as FormAction;
 
   return (
-    <main>
+    <div>
       <h1 className="mb-6 text-2xl font-bold">Edit address</h1>
       <form action={updateWithId} className="max-w-md space-y-4">
         <div className="grid grid-cols-2 gap-4">
@@ -62,7 +62,7 @@ export default async function EditAddressPage({ params }: { params: Promise<{ id
         <DefaultAddressCheckbox defaultChecked={isDefaultAddress} />
         <Button type="submit">Save changes</Button>
       </form>
-    </main>
+    </div>
   );
 }
 

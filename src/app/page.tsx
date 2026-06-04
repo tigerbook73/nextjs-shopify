@@ -8,7 +8,7 @@ export default async function HomePage() {
   const [collections, products] = await Promise.all([getCollections(4), getProducts(8)]);
 
   return (
-    <main>
+    <div>
       {/* Hero */}
       <section className="relative h-80 overflow-hidden bg-gray-900">
         <Image src="/hero.jpg" alt="Store hero" fill priority className="object-cover opacity-60" />
@@ -55,6 +55,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-    </main>
+    </div>
   );
 }

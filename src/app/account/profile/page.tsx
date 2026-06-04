@@ -25,7 +25,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <main>
+    <div>
       <h1 className="mb-6 text-2xl font-bold">Profile</h1>
       <form action={updateProfile as (formData: FormData) => void} className="max-w-md space-y-4">
         <div>
@@ -48,6 +48,6 @@ export default async function ProfilePage() {
         </div>
         <Button type="submit">Save changes</Button>
       </form>
-    </main>
+    </div>
   );
 }

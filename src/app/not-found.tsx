@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-73px)] max-w-3xl flex-col justify-center px-6 py-16">
+    <div className="mx-auto flex min-h-[calc(100vh-73px)] max-w-3xl flex-col justify-center px-6 py-16">
       <p className="text-muted-foreground text-sm font-medium">404</p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-950">页面不存在</h1>
       <p className="text-muted-foreground mt-4 max-w-xl text-sm leading-6">
@@ -19,6 +19,6 @@ export default function NotFound() {
           浏览商品
         </Link>
       </div>
-    </main>
+    </div>
   );
 }

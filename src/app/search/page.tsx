@@ -18,7 +18,7 @@ export default async function SearchPage({ searchParams }: Props) {
   const query = q?.trim() ?? "";
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <h1 className="mb-6 text-2xl font-bold text-gray-900">Search</h1>
 
       <div className="mb-8 sm:hidden">
@@ -32,6 +32,6 @@ export default async function SearchPage({ searchParams }: Props) {
       ) : (
         <p className="text-gray-500">Enter a keyword above to search products and collections.</p>
       )}
-    </main>
+    </div>
   );
 }

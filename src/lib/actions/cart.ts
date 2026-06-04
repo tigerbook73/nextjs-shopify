@@ -18,7 +18,7 @@ const CART_COOKIE = "cartId";
 const COOKIE_OPTIONS = {
   httpOnly: true,
   sameSite: "lax" as const,
-  maxAge: 60 * 3, // 3 minutes for test
+  maxAge: 60 * 60 * 24 * 30, // 3 minutes for test
 };
 
 async function getExistingCartId(): Promise<string | null> {

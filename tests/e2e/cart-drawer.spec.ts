@@ -19,8 +19,13 @@ async function gotoAvailableProduct(page: Page) {
 
   for (const href of hrefs.slice(0, 10)) {
     await page.goto(href);
+    await page.waitForLoadState("networkidle");
     const addBtn = page.getByRole("button", { name: "Add to Cart" });
-    if (await addBtn.isVisible({ timeout: 2_000 }).catch(() => false)) return;
+    const visible = await expect(addBtn)
+      .toBeVisible({ timeout: 5_000 })
+      .then(() => true)
+      .catch(() => false);
+    if (visible) return;
   }
   throw new Error("No available product found in first 10 results");
 }
@@ -104,6 +109,10 @@ test.describe("Cart Drawer", () => {
     await page.getByRole("button", { name: "Add to Cart" }).click();
     await expect(page.getByRole("dialog", { name: "Your Cart" })).toBeVisible({ timeout: 10_000 });
     await page.getByRole("button", { name: "Close cart" }).click();
+    // Wait for dialog to fully unmount before the next click — with a fast mock server the
+    // Radix close animation hasn't finished yet when the next line runs, leaving aria-hidden
+    // on the product page and making getByRole unable to find "Add to Cart".
+    await expect(page.getByRole("dialog", { name: "Your Cart" })).not.toBeVisible({ timeout: 5_000 });
 
     await page.getByRole("button", { name: "Add to Cart" }).click();
     await expect(page.getByRole("dialog", { name: "Your Cart" })).toBeVisible({ timeout: 10_000 });

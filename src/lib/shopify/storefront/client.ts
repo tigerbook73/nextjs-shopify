@@ -23,7 +23,8 @@ import {
 const SHOPIFY_STORE_DOMAIN = process.env.SHOPIFY_STORE_DOMAIN!;
 const SHOPIFY_STOREFRONT_ACCESS_TOKEN = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!;
 
-const endpoint = `https://${SHOPIFY_STORE_DOMAIN}/api/2024-10/graphql.json`;
+const endpoint =
+  process.env.SHOPIFY_STOREFRONT_GRAPHQL_ENDPOINT ?? `https://${SHOPIFY_STORE_DOMAIN}/api/2024-10/graphql.json`;
 
 const printCache = new WeakMap<DocumentNode, string>();
 function printCached(doc: DocumentNode): string {

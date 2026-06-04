@@ -32,6 +32,21 @@ pnpm env:check    # 检查必填环境变量是否齐全
 
 HTTPS 开发模式需要在 `.certs/` 目录放置自签名证书。`pnpm dev:http` 无需证书，但 Customer Account OAuth 必须在 HTTPS 下才能正常工作。
 
+## 技术栈
+
+| 层级     | 技术                                                                    |
+| -------- | ----------------------------------------------------------------------- |
+| 框架     | Next.js 16（App Router），React 19                                      |
+| 样式     | Tailwind CSS v4（CSS-first，无 `tailwind.config.ts`）+ `tw-animate-css` |
+| UI 库    | **shadcn/ui**（基于 Radix UI）；组件位于 `src/components/ui/`           |
+| 图标     | lucide-react                                                            |
+| Toast    | sonner（`<Toaster>` 挂载于根 layout）                                   |
+| 样式工具 | `clsx` + `tailwind-merge`，统一通过 `src/lib/utils.ts` 的 `cn()` 使用   |
+| 字体     | Geist Sans / Geist Mono（`next/font/google`）                           |
+| GraphQL  | `@graphql-typed-document-node/core`；类型由 `pnpm codegen` 生成         |
+| 测试     | 单元：Vitest + jsdom + Testing Library；E2E：Playwright                 |
+| 代码质量 | ESLint + Prettier + lint-staged + Husky                                 |
+
 ## 架构概览
 
 **Next.js 16 App Router**，代码全部位于 `src/` 下：

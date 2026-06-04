@@ -128,13 +128,13 @@ test.describe("Pagination", () => {
     await page.goto("/collections");
     await page.waitForLoadState("networkidle");
 
-    const collectionLinks = page.locator('a[href^="/collections/"]');
-    const count = await collectionLinks.count();
+    // Collect all hrefs before navigating — the locator re-evaluates on the current page,
+    // so iterating with nth(i) after navigation would search the wrong page.
+    const hrefs = await page
+      .locator('a[href^="/collections/"]')
+      .evaluateAll((els) => els.map((el) => el.getAttribute("href")).filter(Boolean) as string[]);
 
-    for (let i = 0; i < count; i++) {
-      const href = await collectionLinks.nth(i).getAttribute("href");
-      if (!href) continue;
-
+    for (const href of hrefs) {
       await page.goto(href);
       await page.waitForLoadState("networkidle");
 

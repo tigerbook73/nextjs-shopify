@@ -9,7 +9,7 @@ import { expect, test } from "@playwright/test";
 import { COOKIE_NAMES } from "../../src/lib/shopify/customer-account/cookie-names";
 import { waitForHydration } from "./utils";
 
-const CUSTOMER_ACCOUNT_MOCK_URL = `http://127.0.0.1:${process.env.CUSTOMER_ACCOUNT_MOCK_PORT ?? 4001}`;
+const CUSTOMER_ACCOUNT_MOCK_URL = `http://127.0.0.1:${process.env.MOCK_SERVER_PORT ?? 4001}`;
 
 const TOKEN_COOKIE_NAMES = new Set<string>([
   COOKIE_NAMES.ACCESS_TOKEN,

@@ -1,0 +1,16 @@
+name: "Setup Project Dependencies"
+description: "Checkout, setup Node.js, pnpm and install dependencies"
+
+runs:
+  using: "composite" # 👈 声明这是一个复合 Action
+  steps:
+    - uses: pnpm/action-setup@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: pnpm
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+      shell: bash # 👈 composite action 必须显式指定 shell

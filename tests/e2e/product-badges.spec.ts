@@ -14,7 +14,7 @@ import { expect, test } from "@playwright/test";
  *   - [PASS] /products 页面正常渲染，无 JS 错误
  */
 test.describe("Product Badges", () => {
-  test("/products 页面正常渲染，无 JS 错误", async ({ page }) => {
+  test("/products 页面正常渲染，无 JS 错误", { tag: ["@smoke"] }, async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (err) => errors.push(err.message));
 

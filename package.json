@@ -11,6 +11,7 @@
     "lint": "eslint && tsc --noEmit",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
     "codegen": "graphql-codegen",
     "env:check": "node scripts/check-env.mjs",
     "shopify:login": "shopify auth login",

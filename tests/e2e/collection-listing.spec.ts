@@ -25,7 +25,7 @@ test.describe("Collection Listing", () => {
     return href!;
   }
 
-  test("访问 Collection 详情页时 → <title> 包含系列名", async ({ page }) => {
+  test("访问 Collection 详情页时 → <title> 包含系列名", { tag: ["@smoke"] }, async ({ page }) => {
     await page.goto("/collections");
     const firstCollection = page.locator('a[href^="/collections/"]').first();
     const href = await firstCollection.getAttribute("href");

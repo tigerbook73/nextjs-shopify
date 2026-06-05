@@ -22,7 +22,7 @@ test.describe("Homepage", () => {
     await page.goto("/");
   });
 
-  test("访问首页时 → 不含调试内容且显示 Hero 标题", async ({ page }) => {
+  test("访问首页时 → 不含调试内容且显示 Hero 标题", { tag: ["@smoke"] }, async ({ page }) => {
     await expect(page.getByText("Phase 0")).not.toBeVisible();
     await expect(page.getByRole("heading", { name: "Discover Our Collection" })).toBeVisible();
   });
@@ -37,7 +37,7 @@ test.describe("Homepage", () => {
     await expect(page).toHaveURL(/\/collections/);
   });
 
-  test("访问首页时 → 含至少一个 CollectionCard 和一个 ProductCard", async ({ page }) => {
+  test("访问首页时 → 含至少一个 CollectionCard 和一个 ProductCard", { tag: ["@smoke"] }, async ({ page }) => {
     // CollectionCard 指向 /collections/*
     const collectionLinks = page.locator('a[href^="/collections/"]');
     await expect(collectionLinks.first()).toBeVisible();

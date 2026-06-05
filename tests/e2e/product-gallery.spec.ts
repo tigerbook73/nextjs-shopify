@@ -14,7 +14,7 @@ import { expect, test } from "@playwright/test";
  *   - [PASS] 商品详情页正常渲染，主图区域存在于 DOM
  */
 test.describe("Product Gallery", () => {
-  test("商品详情页正常渲染，主图区域存在于 DOM", async ({ page }) => {
+  test("商品详情页正常渲染，主图区域存在于 DOM", { tag: ["@smoke"] }, async ({ page }) => {
     await page.goto("/products");
 
     const firstProduct = page.locator('a[href^="/products/"]').first();

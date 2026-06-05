@@ -48,7 +48,7 @@ export default async function AddressesPage() {
             const setDefaultWithId = setDefaultAddress.bind(null, address.id) as unknown as FormAction;
 
             return (
-              <li key={address.id} className="rounded-lg border p-4">
+              <li key={address.id} data-testid={`address-item-${encodedId}`} className="rounded-lg border p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="text-sm">
                     {isDefault && (

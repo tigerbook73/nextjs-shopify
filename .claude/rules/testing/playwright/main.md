@@ -19,7 +19,8 @@ paths: ["tests/e2e/**/*.spec.ts", "tests/e2e/**/*.ts"]
   page.getByText()   — 唯一性强的文本内容
 
 第二优先级：专属测试属性
-  page.getByTestId() — 容器隔离、多语言动态文本、列表行
+  page.getByTestId() — 容器隔离、多语言动态文本、列表行容器
+                       列表行内部子元素仍优先使用语义定位
 
 禁止使用：
   ❌ page.locator('.flex .items-center')   样式选择器
@@ -30,13 +31,22 @@ paths: ["tests/e2e/**/*.spec.ts", "tests/e2e/**/*.ts"]
 
 ## 作用域链式定位
 
-存在多个相同元素时，必须先定容器、再定元素：
+存在多个相同元素时，必须先定容器、再定元素。容器用 `getByTestId`，容器内部优先语义定位：
 
 ```typescript
 // ❌ 全局捕获，strict mode error 风险
-await page.getByTestId("submit-btn").click();
+await page.getByRole("button", { name: "Submit" }).click();
 
-// ✅ 作用域隔离
+// ❌ 容器内仍用 getByTestId — 忽略了语义优先规则
 const loginCard = page.getByTestId("login-card");
 await loginCard.getByTestId("submit-btn").click();
+
+// ✅ 容器用 getByTestId 隔离，子元素用语义定位
+const loginCard = page.getByTestId("login-card");
+await loginCard.getByRole("button", { name: "Submit" }).click();
+
+// ✅ 列表行场景
+const row = page.getByTestId("address-item-xxx");
+await row.getByRole("link", { name: "Edit" }).click();
+await row.getByText("Delete").click();
 ```

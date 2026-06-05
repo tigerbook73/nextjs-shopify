@@ -36,7 +36,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       </p>
 
       {/* Items */}
-      <section className="mb-6">
+      <section data-testid="order-items-section" className="mb-6">
         <h2 className="mb-3 font-semibold">Items</h2>
         <ul className="space-y-3">
           {order.lineItems.nodes.map((item, i) => (
@@ -68,7 +68,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       </section>
 
       {/* Price summary */}
-      <section className="mb-6 max-w-xs space-y-1 text-sm">
+      <section data-testid="order-price-summary" className="mb-6 max-w-xs space-y-1 text-sm">
         {order.subtotalPrice && (
           <div className="flex justify-between">
             <span className="text-gray-500">Subtotal</span>
@@ -93,7 +93,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
       {/* Shipping address */}
       {order.shippingAddress && (
-        <section className="mb-6 text-sm">
+        <section data-testid="order-shipping-address" className="mb-6 text-sm">
           <h2 className="mb-2 font-semibold">Shipping address</h2>
           <p>
             {order.shippingAddress.firstName} {order.shippingAddress.lastName}
@@ -110,7 +110,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
       {/* Tracking */}
       {trackingLinks.length > 0 && (
-        <section className="text-sm">
+        <section data-testid="order-tracking" className="text-sm">
           <h2 className="mb-2 font-semibold">Tracking</h2>
           <ul className="space-y-1">
             {trackingLinks.map((t, i) =>

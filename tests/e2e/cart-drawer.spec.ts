@@ -52,7 +52,7 @@ function cartButton(page: Page) {
  *   - [PASS] Drawer 中移除商品后 header 计数减少
  */
 test.describe("Cart Drawer", () => {
-  test("商品详情页点击 Add to Cart 后 Drawer 面板出现且可见", async ({ page }) => {
+  test("商品详情页点击 Add to Cart 后 Drawer 面板出现且可见", { tag: ["@smoke"] }, async ({ page }) => {
     await gotoAvailableProduct(page);
     // 等待 React 水合，确保 AddToCartButton 的 onClick 已挂载
     await waitForHydration(page);

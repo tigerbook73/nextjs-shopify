@@ -25,6 +25,7 @@ export default function ProductGallery({ images }: { images: ProductImage[] }) {
             <button
               key={i}
               onClick={() => setSelectedIndex(i)}
+              aria-label={img.altText ?? `Product image ${i + 1}`}
               className={`h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 bg-gray-100 transition-colors ${
                 i === selectedIndex ? "border-gray-900" : "border-transparent hover:border-gray-300"
               }`}

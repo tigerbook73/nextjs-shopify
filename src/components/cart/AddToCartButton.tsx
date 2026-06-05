@@ -17,7 +17,7 @@ export default function AddToCartButton({ variantId, availableForSale }: AddToCa
 
   if (!availableForSale) {
     return (
-      <Button variant="secondary" disabled className="w-full">
+      <Button data-testid="add-to-cart-btn" variant="secondary" disabled className="w-full">
         Out of Stock
       </Button>
     );
@@ -25,6 +25,7 @@ export default function AddToCartButton({ variantId, availableForSale }: AddToCa
 
   return (
     <Button
+      data-testid="add-to-cart-btn"
       onClick={() => {
         startTransition(async () => {
           const result = await addToCart(variantId);

@@ -39,7 +39,7 @@ export default function UserDropdown({ displayName }: UserDropdownProps) {
           <AvatarFallback>{getInitials(displayName)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent data-testid="user-dropdown-menu" align="end">
         {NAV_ITEMS.map(({ href, label, Icon }) => (
           <DropdownMenuItem key={href} onClick={() => router.push(href)}>
             <Icon />

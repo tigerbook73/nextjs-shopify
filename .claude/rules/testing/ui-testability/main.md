@@ -14,6 +14,15 @@ UI 结构的设计必须面向**可测试性**。所有 UI 代码必须为测试
 
 ---
 
+## 选择器优先级
+
+测试定位器按以下优先级选择，能用高优先级时不得退化到低优先级：
+
+1. **语义选择器**：`getByRole`、`getByLabel`、`getByText`
+2. **`data-testid`**：兜底手段，或语义选择器无法精准定位时使用
+
+---
+
 ## 1. 图标及无显式文本的交互组件
 
 纯图标按钮、无文字的表单控件，必须配置具备业务语义的 `aria-label`。
@@ -38,7 +47,11 @@ label 与 input 之间必须存在无障碍关联（aria 或 HTML5 标准关联�
 
 ## 3. 多语言环境下的按钮
 
-项目启用 i18n 或文案高频变动时，即使按钮有显示文本，也必须注入 `data-testid`。
+满足以下任一条件时，有显示文本的按钮也必须注入 `data-testid`：
+
+- 项目已接入 i18n 框架
+- 按钮文案来自后端或 CMS（运行时动态）
+- 同一页面存在多个同名按钮且无父级 scope 可区分
 
 ```tsx
 // ❌ 文案变更后测试崩溃
@@ -71,6 +84,27 @@ items.map((item, index) => <div data-testid={`item-${index}`}>...</div>);
 
 // ✅
 items.map((item) => <div data-testid={`item-${item.id}`}>...</div>);
+```
+
+**列表项内部的子元素**（按钮、链接等），优先在父级 scope 内用语义选择器定位，无需重复注入带 ID 的 `data-testid`：
+
+```tsx
+// ✅ 父级 scope + 语义选择器，无需在子元素上重复带 ID
+const card = page.locator('[data-testid="address-item-xxx"]');
+await card.getByRole("link", { name: "Edit" }).click();
+await card.getByText("Delete").click();
+
+// ⛔ 不必要的冗余
+<Link data-testid={`addresses-edit-link-${encodedId}`}>Edit</Link>;
+```
+
+子元素若确实需要 `data-testid`（如文案不稳定、满足规则 3 的条件），使用通用命名即可，依赖父级 scope 保证唯一性：
+
+```tsx
+<li data-testid={`address-item-${encodedId}`}>
+  <Link data-testid="addresses-edit-link">Edit</Link> {/* 在父级 scope 内唯一 */}
+  <button data-testid="addresses-delete-btn">Delete</button>
+</li>
 ```
 
 ---

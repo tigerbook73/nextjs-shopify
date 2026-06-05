@@ -42,7 +42,7 @@ export default function CartItem({ line }: CartItemProps) {
   if (optimisticQuantity === 0) return null;
 
   return (
-    <div className={`flex gap-4 py-4 ${isPending ? "opacity-60" : ""}`}>
+    <div data-testid={`cart-item-${line.id}`} className={`flex gap-4 py-4 ${isPending ? "opacity-60" : ""}`}>
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
         {merchandise.product.featuredImage ? (
           <Image

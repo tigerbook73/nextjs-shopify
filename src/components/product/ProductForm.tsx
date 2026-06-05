@@ -29,7 +29,7 @@ export default function ProductForm({ options, variants }: ProductFormProps) {
     : variants[0];
 
   return (
-    <div className="space-y-4">
+    <div data-testid="product-form" className="space-y-4">
       {hasOptions &&
         options.map((option) => (
           <div key={option.name}>
@@ -39,7 +39,7 @@ export default function ProductForm({ options, variants }: ProductFormProps) {
               // value is always string here; Base UI types it as string | null but SelectItem values are always non-null
               onValueChange={(value) => setSelected((prev) => ({ ...prev, [option.name]: value! }))}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger data-testid={`product-form-select-${option.name}`} className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

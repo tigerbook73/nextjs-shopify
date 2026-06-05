@@ -23,3 +23,28 @@ jobs:
 
       - run: pnpm lint
       - run: pnpm test:unit
+
+  smoke-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm test:smoke
+        env:
+          # Playwright webServer 会将 SHOPIFY_*_GRAPHQL_ENDPOINT 指向 mock server，
+          # 但 Next.js 构建时仍需这两个变量存在（值为空即可）。
+          SHOPIFY_STORE_DOMAIN: mock.myshopify.com
+          SHOPIFY_STOREFRONT_ACCESS_TOKEN: mock-token
+          SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID: mock-client-id
+          SHOPIFY_SHOP_ID: "000000"

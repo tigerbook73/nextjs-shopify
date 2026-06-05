@@ -10,8 +10,10 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Setup environment
-        uses: ./.github/actions/setup-project # 👈 引入本地公共 Action
+        uses: ./.github/actions/setup-project
 
       - run: pnpm lint
       - run: pnpm test:unit
@@ -19,8 +21,10 @@ jobs:
   smoke-e2e:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Setup environment
-        uses: ./.github/actions/setup-project # 👈 引入本地公共 Action
+        uses: ./.github/actions/setup-project
 
       - run: pnpm exec playwright install --with-deps chromium
 

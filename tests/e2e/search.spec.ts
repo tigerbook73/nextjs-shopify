@@ -53,12 +53,11 @@ test.describe("Search", () => {
     await page.goto("/search?q=shirt");
     await page.waitForLoadState("networkidle");
 
-    await page.getByRole("link", { name: /Next page/i }).click();
+    await page.getByRole("link", { name: /Next page →/i }).click();
     await page.waitForLoadState("networkidle");
 
-    const url = new URL(page.url());
-    expect(url.searchParams.get("q")).toBe("shirt");
-    expect(url.searchParams.has("after")).toBe(true);
+    await expect(page).toHaveURL(/[?&]q=shirt/, { timeout: 10_000 });
+    await expect(page).toHaveURL(/[?&]after=/, { timeout: 10_000 });
   });
 
   test("搜索无匹配结果时显示 No results 提示", async ({ page }) => {

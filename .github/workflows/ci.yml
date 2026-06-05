@@ -10,16 +10,8 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+      - name: Setup environment
+        uses: ./.github/actions/setup-project # 👈 引入本地公共 Action
 
       - run: pnpm lint
       - run: pnpm test:unit
@@ -27,16 +19,8 @@ jobs:
   smoke-e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+      - name: Setup environment
+        uses: ./.github/actions/setup-project # 👈 引入本地公共 Action
 
       - run: pnpm exec playwright install --with-deps chromium
 

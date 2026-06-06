@@ -8,8 +8,14 @@ pre-commit:
           echo "error: direct commit to main is not allowed. Please use a feature branch."
           exit 1
         fi
-    lint-staged:
-      run: pnpm exec lint-staged
+    lint-scripts:
+      glob: "*.{ts,tsx,js,mjs}"
+      run: pnpm exec prettier --write {staged_files} && pnpm exec eslint --max-warnings 0 --no-warn-ignored {staged_files}
+      stage_fixed: true
+    prettier-config:
+      glob: "*.{json,md,yml,css}"
+      run: pnpm exec prettier --write {staged_files}
+      stage_fixed: true
     lint:
       run: pnpm run lint
     test-review-rules:

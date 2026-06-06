@@ -9,3 +9,6 @@ pnpm run lint
 
 # aisk:test-rules-check: disabled temporary
 # node "$HOME/.sk-skills/out/test-rules/test-rules-check.js"
+
+# aisk:test-review-rules-check
+node "$HOME/.sk-skills/out/test-review-rules/test-review-rules-check.js"

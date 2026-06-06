@@ -1,0 +1,16 @@
+pre-commit:
+  piped: true
+  commands:
+    check-branch:
+      run: |
+        branch=$(git symbolic-ref --short HEAD)
+        if [ "$branch" = "main" ]; then
+          echo "error: direct commit to main is not allowed. Please use a feature branch."
+          exit 1
+        fi
+    lint-staged:
+      run: pnpm exec lint-staged
+    lint:
+      run: pnpm run lint
+    test-review-rules:
+      run: node "$HOME/.sk-skills/out/test-review-rules/test-review-rules-check.js"

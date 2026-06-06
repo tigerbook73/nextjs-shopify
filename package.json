@@ -17,7 +17,7 @@
     "shopify:login": "shopify auth login",
     "shopify:logout": "shopify auth logout",
     "shopify:version": "shopify version",
-    "prepare": "husky",
+    "prepare": "lefthook install",
     "verify": "graphql-codegen && pnpm env:check && pnpm format && pnpm lint && pnpm test:unit && pnpm test:e2e"
   },
   "dependencies": {
@@ -51,8 +51,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "graphql": "^16.14.0",
-    "husky": "^9.1.7",
     "jsdom": "^29.1.1",
+    "lefthook": "^2.1.9",
     "lint-staged": "^17.0.4",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",

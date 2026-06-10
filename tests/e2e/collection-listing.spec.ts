@@ -2,7 +2,7 @@
  * @test-file   CollectionListing
  * @description E2E tests for collection detail page SEO title and sort URL parameter
  * @ai-generated
- * @reviewed-by Tom Zhang @ [1]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [2]
  */
 import { expect, test } from "@playwright/test";
 import { waitForHydration } from "./utils";

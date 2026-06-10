@@ -2,7 +2,7 @@
  * @test-file   Cart Server Actions
  * @description addToCart, removeFromCart, updateCartQuantity, updateCartBuyerIdentity — CRUD, error paths, and silent failure
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [1]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [2]
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -93,7 +93,7 @@ describe("updateCartBuyerIdentity", () => {
    * @target      early return when cartId cookie is absent
    * @strategy    unit — cookies mocked to return no cartId
    * @cases
-   *   - [SKIP] shopifyFetch not called when cartId cookie is absent
+   *   - [PASS] does not call shopifyFetch when cartId cookie is absent
    */
   describe("No cart", () => {
     it("does not call shopifyFetch when cartId cookie is absent", async () => {
@@ -129,56 +129,50 @@ describe("updateCartBuyerIdentity", () => {
  * @target      addToCart — create-or-reuse cart, add lines, revalidate, error handling
  * @strategy    unit — cookies, createCart, addCartLines mocked
  * @cases
- *   - [PASS] uses existing cartId cookie and returns success with cart
- *   - [PASS] creates a new cart when cartId cookie is absent, sets cookie, returns success
+ *   - [PASS] calls addCartLines with existing cartId and returns success
+ *   - [PASS] creates a new cart, sets the cookie, and returns success
  *   - [PASS] returns failure result when addCartLines throws
  */
 describe("addToCart", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  describe("existing cart", () => {
-    it("calls addCartLines with existing cartId and returns success", async () => {
-      const cart = makeCart(1);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
-      mockAddCartLines.mockResolvedValue(cart);
+  it("calls addCartLines with existing cartId and returns success", async () => {
+    const cart = makeCart(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
+    mockAddCartLines.mockResolvedValue(cart);
 
-      const result = await addToCart("variant-1");
+    const result = await addToCart("variant-1");
 
-      expect(mockAddCartLines).toHaveBeenCalledWith("cart-abc", [{ merchandiseId: "variant-1", quantity: 1 }]);
-      expect(mockRevalidateTag).toHaveBeenCalledWith("cart", {});
-      expect(result).toEqual({ success: true, cart });
-    });
+    expect(mockAddCartLines).toHaveBeenCalledWith("cart-abc", [{ merchandiseId: "variant-1", quantity: 1 }]);
+    expect(mockRevalidateTag).toHaveBeenCalledWith("cart", {});
+    expect(result).toEqual({ success: true, cart });
   });
 
-  describe("no cart cookie", () => {
-    it("creates a new cart, sets the cookie, and returns success", async () => {
-      const newCart = makeCart(0);
-      const returnedCart = makeCart(1);
-      const cookieStore = makeCookieStore();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(cookieStore as any);
-      mockCreateCart.mockResolvedValue(newCart);
-      mockAddCartLines.mockResolvedValue(returnedCart);
+  it("creates a new cart, sets the cookie, and returns success", async () => {
+    const newCart = makeCart(0);
+    const returnedCart = makeCart(1);
+    const cookieStore = makeCookieStore();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(cookieStore as any);
+    mockCreateCart.mockResolvedValue(newCart);
+    mockAddCartLines.mockResolvedValue(returnedCart);
 
-      const result = await addToCart("variant-1");
+    const result = await addToCart("variant-1");
 
-      expect(mockCreateCart).toHaveBeenCalledOnce();
-      expect(cookieStore.set).toHaveBeenCalledWith("cartId", newCart.id, expect.any(Object));
-      expect(result).toEqual({ success: true, cart: returnedCart });
-    });
+    expect(mockCreateCart).toHaveBeenCalledOnce();
+    expect(cookieStore.set).toHaveBeenCalledWith("cartId", newCart.id, expect.any(Object));
+    expect(result).toEqual({ success: true, cart: returnedCart });
   });
 
-  describe("addCartLines throws", () => {
-    it("returns failure result when addCartLines throws", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
-      mockAddCartLines.mockRejectedValue(new Error("Shopify error"));
+  it("returns failure result when addCartLines throws", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
+    mockAddCartLines.mockRejectedValue(new Error("Shopify error"));
 
-      const result = await addToCart("variant-1");
+    const result = await addToCart("variant-1");
 
-      expect(result).toEqual({ success: false, error: "Shopify error" });
-    });
+    expect(result).toEqual({ success: false, error: "Shopify error" });
   });
 });
 
@@ -188,49 +182,43 @@ describe("addToCart", () => {
  * @strategy    unit — cookies, removeCartLines mocked
  * @cases
  *   - [PASS] returns failure when cartId cookie is absent
- *   - [PASS] calls removeCartLines and returns success
+ *   - [PASS] calls removeCartLines with lineId and returns success
  *   - [PASS] returns failure result when removeCartLines throws
  */
 describe("removeFromCart", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  describe("no cart cookie", () => {
-    it("returns failure when cartId cookie is absent", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore() as any);
+  it("returns failure when cartId cookie is absent", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore() as any);
 
-      const result = await removeFromCart("line-1");
+    const result = await removeFromCart("line-1");
 
-      expect(result).toEqual({ success: false, error: "Cart not found" });
-      expect(mockRemoveCartLines).not.toHaveBeenCalled();
-    });
+    expect(result).toEqual({ success: false, error: "Cart not found" });
+    expect(mockRemoveCartLines).not.toHaveBeenCalled();
   });
 
-  describe("cart exists", () => {
-    it("calls removeCartLines with lineId and returns success", async () => {
-      const cart = makeCart(0);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
-      mockRemoveCartLines.mockResolvedValue(cart);
+  it("calls removeCartLines with lineId and returns success", async () => {
+    const cart = makeCart(0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
+    mockRemoveCartLines.mockResolvedValue(cart);
 
-      const result = await removeFromCart("line-1");
+    const result = await removeFromCart("line-1");
 
-      expect(mockRemoveCartLines).toHaveBeenCalledWith("cart-abc", ["line-1"]);
-      expect(mockRevalidateTag).toHaveBeenCalledWith("cart", {});
-      expect(result).toEqual({ success: true, cart });
-    });
+    expect(mockRemoveCartLines).toHaveBeenCalledWith("cart-abc", ["line-1"]);
+    expect(mockRevalidateTag).toHaveBeenCalledWith("cart", {});
+    expect(result).toEqual({ success: true, cart });
   });
 
-  describe("removeCartLines throws", () => {
-    it("returns failure result when removeCartLines throws", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
-      mockRemoveCartLines.mockRejectedValue(new Error("Network error"));
+  it("returns failure result when removeCartLines throws", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
+    mockRemoveCartLines.mockRejectedValue(new Error("Network error"));
 
-      const result = await removeFromCart("line-1");
+    const result = await removeFromCart("line-1");
 
-      expect(result).toEqual({ success: false, error: "Network error" });
-    });
+    expect(result).toEqual({ success: false, error: "Network error" });
   });
 });
 
@@ -242,61 +230,53 @@ describe("removeFromCart", () => {
  *   - [PASS] returns failure when cartId cookie is absent
  *   - [PASS] calls removeCartLines when quantity is 0
  *   - [PASS] calls updateCartLines when quantity > 0
- *   - [PASS] returns failure result when the operation throws
+ *   - [PASS] returns failure result when updateCartLines throws
  */
 describe("updateCartQuantity", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  describe("no cart cookie", () => {
-    it("returns failure when cartId cookie is absent", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore() as any);
+  it("returns failure when cartId cookie is absent", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore() as any);
 
-      const result = await updateCartQuantity("line-1", 2);
+    const result = await updateCartQuantity("line-1", 2);
 
-      expect(result).toEqual({ success: false, error: "Cart not found" });
-    });
+    expect(result).toEqual({ success: false, error: "Cart not found" });
   });
 
-  describe("quantity = 0", () => {
-    it("calls removeCartLines when quantity is 0", async () => {
-      const cart = makeCart(0);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
-      mockRemoveCartLines.mockResolvedValue(cart);
+  it("calls removeCartLines when quantity is 0", async () => {
+    const cart = makeCart(0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
+    mockRemoveCartLines.mockResolvedValue(cart);
 
-      const result = await updateCartQuantity("line-1", 0);
+    const result = await updateCartQuantity("line-1", 0);
 
-      expect(mockRemoveCartLines).toHaveBeenCalledWith("cart-abc", ["line-1"]);
-      expect(mockUpdateCartLines).not.toHaveBeenCalled();
-      expect(result).toEqual({ success: true, cart });
-    });
+    expect(mockRemoveCartLines).toHaveBeenCalledWith("cart-abc", ["line-1"]);
+    expect(mockUpdateCartLines).not.toHaveBeenCalled();
+    expect(result).toEqual({ success: true, cart });
   });
 
-  describe("quantity > 0", () => {
-    it("calls updateCartLines when quantity > 0", async () => {
-      const cart = makeCart(3);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
-      mockUpdateCartLines.mockResolvedValue(cart);
+  it("calls updateCartLines when quantity > 0", async () => {
+    const cart = makeCart(3);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
+    mockUpdateCartLines.mockResolvedValue(cart);
 
-      const result = await updateCartQuantity("line-1", 3);
+    const result = await updateCartQuantity("line-1", 3);
 
-      expect(mockUpdateCartLines).toHaveBeenCalledWith("cart-abc", [{ id: "line-1", quantity: 3 }]);
-      expect(mockRemoveCartLines).not.toHaveBeenCalled();
-      expect(result).toEqual({ success: true, cart });
-    });
+    expect(mockUpdateCartLines).toHaveBeenCalledWith("cart-abc", [{ id: "line-1", quantity: 3 }]);
+    expect(mockRemoveCartLines).not.toHaveBeenCalled();
+    expect(result).toEqual({ success: true, cart });
   });
 
-  describe("operation throws", () => {
-    it("returns failure result when updateCartLines throws", async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
-      mockUpdateCartLines.mockRejectedValue(new Error("Timeout"));
+  it("returns failure result when updateCartLines throws", async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockCookies.mockResolvedValue(makeCookieStore("cart-abc") as any);
+    mockUpdateCartLines.mockRejectedValue(new Error("Timeout"));
 
-      const result = await updateCartQuantity("line-1", 2);
+    const result = await updateCartQuantity("line-1", 2);
 
-      expect(result).toEqual({ success: false, error: "Timeout" });
-    });
+    expect(result).toEqual({ success: false, error: "Timeout" });
   });
 });

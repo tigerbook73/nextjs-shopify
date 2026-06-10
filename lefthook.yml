@@ -18,3 +18,7 @@ pre-commit:
       stage_fixed: true
     lint:
       run: pnpm run lint
+    aisk-test-review-gate-check-reviewed-by-commit-marker:
+      run: node .aisk/test-review-gate/scripts/check-reviewed-by-commit-marker.js {staged_files}
+    aisk-test-review-gate-check-test-cases-match-it:
+      run: node .aisk/test-review-gate/scripts/check-test-cases-match-it.js {staged_files}

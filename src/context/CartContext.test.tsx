@@ -2,7 +2,7 @@
  * @test-file   CartContext
  * @description CartContext provider and useCart hook — state initialization, applyCart, refreshCart, open/close cart
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";

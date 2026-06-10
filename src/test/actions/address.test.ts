@@ -2,7 +2,7 @@
  * @test-file   Address Server Actions
  * @description createAddress, updateAddress, deleteAddress, setDefaultAddress — CRUD and error paths
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";

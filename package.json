@@ -9,6 +9,7 @@
     "start": "next start",
     "format": "prettier --log-level warn --write .",
     "lint": "eslint && tsc --noEmit",
+    "test:check-cases": "node .aisk/test-review-gate/scripts/check-test-cases-match-it.js $(find . -type f \\( -name '*.test.*' -o -name '*.spec.*' \\))",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test:smoke": "playwright test --grep @smoke",

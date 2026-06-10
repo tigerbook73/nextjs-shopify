@@ -2,7 +2,7 @@
  * @test-file   Pagination
  * @description E2E tests for cursor-based pagination on Products, Search, and Collection pages
  * @ai-generated
- * @reviewed-by Tom Zhang @ [1]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [2]
  */
 import { expect, test } from "@playwright/test";
 import { waitForHydration } from "./utils";

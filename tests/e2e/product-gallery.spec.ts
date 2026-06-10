@@ -2,7 +2,7 @@
  * @test-file   ProductGallery
  * @description E2E test verifying product detail page renders with a visible main image
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 import { expect, test } from "@playwright/test";
 

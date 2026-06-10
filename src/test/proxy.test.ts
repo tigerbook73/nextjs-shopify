@@ -2,7 +2,7 @@
  * @test-file   Proxy (auth guard)
  * @description Auth guard for /account/* routes — redirect, pass-through, and token refresh scenarios
  * @ai-generated
- * @reviewed-by xxx [1]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";

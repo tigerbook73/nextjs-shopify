@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "test-results/**",
     "src/types/generated/**",
     "next-env.d.ts",
+    ".aisk/**",
   ]),
 ]);
 

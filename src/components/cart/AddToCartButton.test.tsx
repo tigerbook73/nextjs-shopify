@@ -2,7 +2,7 @@
  * @test-file   AddToCartButton
  * @description Out-of-stock branch, add-to-cart success/failure, toast and cart state side effects
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -52,8 +52,8 @@ describe("AddToCartButton", () => {
    * @target      renders disabled "Out of Stock" button when availableForSale is false
    * @strategy    component — availableForSale=false prop
    * @cases
-   *   - [PASS] renders disabled "Out of Stock" button
-   *   - [PASS] does not call addToCart when clicked while out of stock
+   *   - [PASS] renders a disabled Out of Stock button
+   *   - [PASS] does not call addToCart when the out-of-stock button is clicked
    */
   describe("Out of Stock", () => {
     it("renders a disabled Out of Stock button", () => {
@@ -74,9 +74,9 @@ describe("AddToCartButton", () => {
    * @target      clicking triggers addToCart, applies cart, shows toast, opens drawer
    * @strategy    component — addToCart mocked to resolve with success
    * @cases
-   *   - [PASS] renders enabled "Add to Cart" button when available for sale
-   *   - [PASS] calls addToCart with the correct variantId on click
-   *   - [PASS] calls applyCart and openCart on success
+   *   - [PASS] renders an enabled Add to Cart button
+   *   - [PASS] calls addToCart with the correct variantId
+   *   - [PASS] calls applyCart and openCart when addToCart returns a cart
    *   - [PASS] shows success toast after adding to cart
    */
   describe("Add to Cart — success", () => {
@@ -129,7 +129,7 @@ describe("AddToCartButton", () => {
    * @strategy    component — addToCart mocked to resolve with failure
    * @cases
    *   - [PASS] shows error toast with the returned error message
-   *   - [PASS] does not open the cart drawer on failure
+   *   - [PASS] does not call openCart on failure
    */
   describe("Add to Cart — failure", () => {
     it("shows error toast with the returned error message", async () => {

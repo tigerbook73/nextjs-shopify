@@ -2,7 +2,7 @@
  * @test-file   Homepage
  * @description E2E tests for homepage content, navigation links, and layout attributes
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [2]
  */
 import { expect, test } from "@playwright/test";
 

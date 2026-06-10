@@ -2,7 +2,7 @@
  * @test-file   Footer
  * @description E2E tests for footer section headings and copyright year
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [1]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [2]
  */
 import { expect, test } from "@playwright/test";
 

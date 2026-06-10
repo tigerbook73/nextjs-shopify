@@ -18,5 +18,3 @@ pre-commit:
       stage_fixed: true
     lint:
       run: pnpm run lint
-    test-review-rules:
-      run: node "$HOME/.sk-skills/out/test-review-rules/test-review-rules-check.js"

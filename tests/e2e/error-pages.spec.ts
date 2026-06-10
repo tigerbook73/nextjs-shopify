@@ -2,7 +2,7 @@
  * @test-file   ErrorPages
  * @description E2E tests for custom 404 page and error boundary recovery UI
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 import { expect, test } from "@playwright/test";
 

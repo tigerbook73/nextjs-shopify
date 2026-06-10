@@ -2,7 +2,7 @@
  * @test-file   MobileMenu
  * @description E2E tests for mobile hamburger menu visibility and open/close behaviors
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [2]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [3]
  */
 import { expect, test } from "@playwright/test";
 import { COOKIE_NAMES } from "../../src/lib/shopify/customer-account/cookie-names";

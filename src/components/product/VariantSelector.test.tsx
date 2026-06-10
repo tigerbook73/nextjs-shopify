@@ -2,7 +2,7 @@
  * @test-file   VariantSelector
  * @description Variant selection state, matched-variant price display, Out of Stock, compareAtPrice
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 
 import { describe, it, expect, vi } from "vitest";
@@ -63,8 +63,8 @@ describe("VariantSelector", () => {
    * @target      first option value is selected by default; option labels are visible
    * @strategy    component — rendered with mocked Select
    * @cases
-   *   - [PASS] renders option name label
-   *   - [PASS] initial selection matches first option value
+   *   - [PASS] renders the option name as a label
+   *   - [PASS] displays the price of the initially matched variant
    */
   describe("Initial render", () => {
     it("renders the option name as a label", () => {
@@ -85,7 +85,8 @@ describe("VariantSelector", () => {
    * @target      matchedVariant updates when the select value changes
    * @strategy    component — fireEvent.change on native select mock
    * @cases
-   *   - [PASS] price updates when a different size is selected
+   *   - [PASS] updates displayed price when a different option is selected
+   *   - [PASS] matches variant across multiple options
    */
   describe("Variant selection", () => {
     it("updates displayed price when a different option is selected", () => {
@@ -119,8 +120,8 @@ describe("VariantSelector", () => {
    * @target      "Out of stock" message shows when matched variant is unavailable
    * @strategy    component — availableForSale=false on matched variant
    * @cases
-   *   - [PASS] shows "Out of stock" for unavailable variant
-   *   - [PASS] does not show "Out of stock" for available variant
+   *   - [PASS] shows 'Out of stock' when the matched variant is unavailable
+   *   - [PASS] does not show 'Out of stock' when the matched variant is available
    */
   describe("Out of Stock", () => {
     it("shows 'Out of stock' when the matched variant is unavailable", () => {
@@ -141,7 +142,7 @@ describe("VariantSelector", () => {
    * @target      strikethrough price appears when compareAtPrice is present
    * @strategy    component — compareAtPrice set on matched variant
    * @cases
-   *   - [PASS] renders both sale price and strikethrough original price
+   *   - [PASS] renders strikethrough compare-at price when present
    *   - [PASS] does not render strikethrough when compareAtPrice is absent
    */
   describe("compareAtPrice", () => {

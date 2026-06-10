@@ -2,7 +2,7 @@
  * @test-file   Search
  * @description E2E tests for the /search page — empty state, results rendering, title metadata, and pagination
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 import { expect, test } from "@playwright/test";
 
@@ -11,11 +11,12 @@ import { expect, test } from "@playwright/test";
  * @target      /search page — empty state, result display, SEO title, pagination
  * @strategy    e2e; mock server handles Search operation (21 "shirt" results trigger pagination)
  * @cases
- *   - [PASS] 无 q 参数时显示提示文字，不显示结果列表
- *   - [PASS] ?q=shirt 时显示搜索结果区域和结果计数
+ *   - [PASS] 无 q 参数时显示提示文字且不显示结果
+ *   - [PASS] ?q=shirt 时显示搜索结果区域
  *   - [PASS] ?q=shirt 时页面 title 包含搜索词
  *   - [PASS] 搜索结果超过一页时显示 Next page 分页按钮
- *   - [PASS] 搜索无结果时显示 "No results" 提示
+ *   - [PASS] 翻页时 URL 同时保留搜索词和游标
+ *   - [PASS] 搜索无匹配结果时显示 No results 提示
  */
 test.describe("Search", () => {
   test("无 q 参数时显示提示文字且不显示结果", async ({ page }) => {

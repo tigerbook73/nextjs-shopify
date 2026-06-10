@@ -2,7 +2,7 @@
  * @test-file   AnnouncementBar
  * @description E2E tests for announcement bar visibility and cookie-based dismiss behavior
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 import { expect, test } from "@playwright/test";
 import { waitForHydration } from "./utils";

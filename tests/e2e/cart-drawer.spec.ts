@@ -2,7 +2,7 @@
  * @test-file   CartDrawer
  * @description E2E tests for cart drawer open/close, add-to-cart flow, and cart count sync
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [2]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [3]
  */
 import { expect, test, type Page } from "@playwright/test";
 import { waitForHydration } from "./utils";

@@ -2,7 +2,7 @@
  * @test-file   CustomerAccount
  * @description E2E coverage for auth redirect flow, OAuth initiation, and header auth state
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [3]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [4]
  */
 
 import { expect, test } from "@playwright/test";
@@ -43,16 +43,6 @@ async function expectTokenCookies(context: import("@playwright/test").BrowserCon
   );
 }
 
-/**
- * @test-suite  Protected Route Redirect
- * @target      Proxy middleware — unauthenticated access redirect behavior
- * @strategy    E2E; completes mocked OAuth flow and verifies return_to lands back on the requested page
- * @cases
- *   - [PASS] completes mock OAuth and returns to /account when visiting /account without token
- *   - [PASS] completes mock OAuth and returns to /account/orders when visiting /account/orders without token
- *   - [PASS] completes mock OAuth and returns to /account/profile when visiting /account/profile without token
- *   - [PASS] completes mock OAuth and returns to /account/addresses when visiting /account/addresses without token
- */
 test.describe("Protected Route Redirect", () => {
   const protectedRouteCases = [
     {
@@ -99,10 +89,10 @@ test.describe("Protected Route Redirect", () => {
  * @target      /api/auth/login route — PKCE code challenge generation and Shopify OAuth redirect
  * @strategy    E2E/API; requests login without following redirects and inspects the OAuth Location header
  * @cases
- *   - [PASS] redirects to Shopify /oauth/authorize with response_type=code when GET /api/auth/login
- *   - [PASS] OAuth URL contains code_challenge and code_challenge_method=S256 for PKCE when GET /api/auth/login
- *   - [PASS] OAuth URL scope includes customer-account-api:full when GET /api/auth/login
- *   - [PASS] OAuth URL contains non-empty state parameter for CSRF protection when GET /api/auth/login
+ *   - [PASS] /api/auth/login 跳转至 Shopify /oauth/authorize 且 response_type=code
+ *   - [PASS] OAuth URL 包含 code_challenge 且 code_challenge_method=S256（PKCE）
+ *   - [PASS] OAuth URL scope 包含 customer-account-api:full
+ *   - [PASS] OAuth URL 含非空 state 参数（防 CSRF）
  */
 test.describe("OAuth Flow Initiation", () => {
   async function getOAuthUrl(request: import("@playwright/test").APIRequestContext): Promise<URL> {
@@ -143,11 +133,11 @@ test.describe("OAuth Flow Initiation", () => {
  * @target      Header component — auth-conditional nav link rendering
  * @strategy    E2E; fresh browser context has no token cookies → unauthenticated state
  * @cases
- *   - [PASS] shows "Sign in" link with return_to=/ when no token cookie present
- *   - [PASS] does not show Account or Orders nav links when no token cookie present
- *   - [PASS] shows Avatar button and hides Sign in when token cookie present
- *   - [PASS] clicking Avatar opens dropdown with Overview / Orders / Profile / Addresses / Sign out
- *   - [PASS] pressing Escape closes the dropdown
+ *   - [PASS] 无 token 时 Header 显示 Sign in 链接且 href 含 return_to=/
+ *   - [PASS] 无 token 时 Header 不显示 Account 和 Orders 导航链接
+ *   - [PASS] 有 token 时 Header 显示 Avatar 按钮，不显示 Sign in
+ *   - [PASS] 点击 Avatar 展开下拉菜单，含 Overview / Orders / Profile / Addresses / Sign out
+ *   - [PASS] 下拉菜单展开后按 Escape 关闭
  */
 test.describe("Header Auth State", () => {
   test("无 token 时 Header 显示 Sign in 链接且 href 含 return_to=/", async ({ page }) => {
@@ -205,13 +195,13 @@ test.describe("Header Auth State", () => {
  * @target      customer-accounts task acceptance commands in docs/tasks/customer-accounts/design.md
  * @strategy    E2E with Customer Account API mocked in the Next.js server process
  * @cases
- *   - [PASS] unauthenticated /account access redirects to login
- *   - [PASS] logout clears all token cookies and lands on home
- *   - [PASS] expired access token refreshes without showing login
- *   - [PASS] profile form updates firstName / lastName
- *   - [PASS] address create, edit, delete, and default actions render and submit successfully
- *   - [PASS] order details show image-backed items and fulfillment tracking
- *   - [PASS] logged-in header exposes an orders shortcut
+ *   - [PASS] 未登录访问 /account 完成 mock OAuth 后回到账户页
+ *   - [PASS] 登出后跳转首页，所有 token Cookie 清除
+ *   - [PASS] access token 过期后自动续期，用户不跳转登录页
+ *   - [PASS] 账户页可修改 firstName / lastName 并即时反映
+ *   - [PASS] 地址 CRUD：可新增、编辑、删除收货地址，并设定默认地址
+ *   - [PASS] 订单详情展示商品图片和物流状态
+ *   - [PASS] Header 已登录用户通过 Avatar 下拉菜单跳转订单列表
  */
 test.describe("Customer Account Task Acceptance", () => {
   test.describe.configure({ mode: "serial" });
@@ -331,8 +321,7 @@ test.describe("Customer Account Task Acceptance", () => {
  * @strategy    E2E; injects mock token, verifies card visibility and navigation
  * @cases
  *   - [PASS] 三张卡片（Orders / Addresses / Profile）均可见
- *   - [PASS] Orders 卡片显示数字 "1"（mock 数据有 1 笔订单）
- *   - [PASS] Addresses 卡片显示数字 "2"（mock 数据有 2 个地址）
+ *   - [PASS] Orders 卡片显示数字 1，Addresses 卡片显示数字 2
  *   - [PASS] 点击 Orders 卡片跳转至 /account/orders
  *   - [PASS] 点击 Addresses 卡片跳转至 /account/addresses
  *   - [PASS] 点击 Profile 卡片跳转至 /account/profile
@@ -398,7 +387,7 @@ test.describe("Account Overview", () => {
  * @strategy    E2E; injects mock token, tests desktop and mobile viewports
  * @cases
  *   - [PASS] 桌面端侧边栏显示用户名和邮箱
- *   - [PASS] 访问 /account 时 Overview 为 active
+ *   - [PASS] 访问 /account 时 Overview 导航项为 active
  *   - [PASS] 访问 /account/orders 时 Orders 为 active，Overview 不为 active
  *   - [PASS] 移动端 Tab Bar 可见，点击 Orders Tab 跳转至 /account/orders
  */

@@ -2,7 +2,7 @@
  * @test-file   Profile Server Action
  * @description updateProfile — mutation call, revalidation, and error handling
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";

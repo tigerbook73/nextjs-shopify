@@ -2,7 +2,7 @@
  * @test-file   ProductSEO
  * @description E2E test verifying product detail page title contains the product name
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 import { expect, test } from "@playwright/test";
 

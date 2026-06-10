@@ -2,7 +2,7 @@
  * @test-file   ProductBadges
  * @description E2E smoke test verifying /products page renders without JavaScript errors
  * @ai-generated
- * @reviewed-by Shengtian Liao @ [2]
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [3]
  */
 import { expect, test } from "@playwright/test";
 

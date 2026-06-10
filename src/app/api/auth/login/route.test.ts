@@ -2,7 +2,7 @@
  * @test-file   Auth Login Route
  * @description GET /api/auth/login — PKCE cookie setup and open-redirect protection via getSafeReturnTo
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -56,8 +56,8 @@ describe("GET /api/auth/login", () => {
    * @target      verifier, state, and return_to cookies are set on every request
    * @strategy    unit — cookies mocked, pkce functions mocked to fixed values
    * @cases
-   *   - [PASS] sets PKCE verifier, OAuth state, and return_to cookies
-   *   - [PASS] redirects to Shopify OAuth URL with correct params
+   *   - [PASS] sets verifier, state, and return_to cookies
+   *   - [PASS] redirects to Shopify OAuth URL with code_challenge and state
    */
   describe("PKCE cookies", () => {
     it("sets verifier, state, and return_to cookies", async () => {
@@ -92,8 +92,8 @@ describe("GET /api/auth/login", () => {
    * @strategy    unit — verify cookie value set by GET handler
    * @cases
    *   - [PASS] accepts a relative path starting with /
-   *   - [PASS] rejects protocol-relative URL (//evil.com) → falls back to /account
-   *   - [PASS] rejects absolute URL (https://evil.com) → falls back to /account
+   *   - [PASS] rejects protocol-relative URL and falls back to /account
+   *   - [PASS] rejects absolute URL and falls back to /account
    *   - [PASS] defaults to /account when return_to param is absent
    */
   describe("getSafeReturnTo", () => {

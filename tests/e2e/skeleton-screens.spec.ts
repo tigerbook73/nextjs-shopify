@@ -2,7 +2,7 @@
  * @test-file   SkeletonScreens
  * @description Static file checks verifying loading skeleton files exist and use animate-pulse
  * @ai-generated
- * @reviewed-by
+ * @reviewed-by (!HUMAN EDIT ONLY): Shengtian Liao @ [1]
  */
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "fs";

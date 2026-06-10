@@ -1,0 +1,20 @@
+pre-commit:
+  piped: true
+  commands:
+    check-branch:
+      run: |
+        branch=$(git symbolic-ref --short HEAD)
+        if [ "$branch" = "main" ]; then
+          echo "error: direct commit to main is not allowed. Please use a feature branch."
+          exit 1
+        fi
+    lint-scripts:
+      glob: "*.{ts,tsx,js,mjs}"
+      run: pnpm exec prettier --write {staged_files} && pnpm exec eslint --max-warnings 0 --no-warn-ignored {staged_files}
+      stage_fixed: true
+    prettier-config:
+      glob: "*.{json,md,yml,css}"
+      run: pnpm exec prettier --write {staged_files}
+      stage_fixed: true
+    lint:
+      run: pnpm run lint
